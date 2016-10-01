@@ -1,0 +1,6 @@
+#directory "_build";;
+#require "str";;
+#load "data.cmo";;
+#load "engine.cmo";;
+#install_printer Engine.ListEngine.format;;
+#install_printer Engine.TreeEngine.format;;
