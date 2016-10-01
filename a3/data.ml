@@ -34,43 +34,44 @@ module MakeListDictionary (C : Comparable) = struct
   module Key = C
   type key = C.t
 
-  (* TODO: ge type ['value t] to something involving
+  (* TODO: getting type ['value t] to something involving
      association lists. *)
   (* AF: TODO: document the abstraction function.
    * RI: TODO: document any representation invariants. *)
-  type 'value t = unit
+  type 'value t = key * 'value list
 
   let rep_ok d =
-    raise Unimplemented
+    if (List.fold_left (fun (x,y) acc -> size (List.filter (fun (x,y) ->
+    if (C.compare x k)=`EQ then true else false) d) >= 2
+    then true else false) false d) then false else true
 
-  let empty = raise Unimplemented
+  let empty = []
 
-  let is_empty d =
-    raise Unimplemented
+  let is_empty d = (d=empty)
 
-  let size d =
-    raise Unimplemented
+  let size d = List.length d
 
   let insert k v d =
-    raise Unimplemented
+    (k,v)::(List.filter (fun (x,y) -> if (C.compare x k)=`EQ then false else true) d)
 
   let remove k d =
-    raise Unimplemented
+    List.filter (fun (x,y) -> if (C.compare x k)=`EQ then false else true) d
 
   let find k d =
-    raise Unimplemented
+    List.fold_left (fun acc (x,y) -> if (C.compare x k)=`EQ then y else acc) None d
 
   let member k d =
-    raise Unimplemented
+    List.fold_left (fun acc (x,y) -> (C.compare x k)=`EQ or acc) false d
 
-  let choose d =
-    raise Unimplemented
+  let choose d = match d with
+  | (k,v)::[] -> (k,v)
+  | [] -> None
 
-  let to_list d =
-    raise Unimplemented
+  let to_list d = List.sort (fun  (k1,v1) (k2,v2) -> if (C.compare k1 k2=`EQ)
+    then 0 else if (C.compare k1 k2=`GT) then 1 else -1) d
 
   let fold f init d =
-    raise Unimplemented
+    List.fold_left (fun (x,y) acc -> f x y acc) init (to_list d)
 
   let format format_val fmt d =
     Format.fprintf fmt "<abstr>" (* TODO: improve if you wish *)
