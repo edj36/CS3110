@@ -34,7 +34,7 @@ module MakeListDictionary (C : Comparable) = struct
   module Key = C
   type key = C.t
 
-  (* TODO: change type ['value t] to something involving
+  (* TODO: ge type ['value t] to something involving
      association lists. *)
   (* AF: TODO: document the abstraction function.
    * RI: TODO: document any representation invariants. *)
