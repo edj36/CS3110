@@ -38,7 +38,7 @@ module MakeListDictionary (C : Comparable) = struct
      association lists. *)
   (* AF: TODO: document the abstraction function.
    * RI: TODO: document any representation invariants. *)
-  type 'value t = key * 'value list
+  type 'value t = (key * 'value) list
 
   let comparing (k1,v1) (k2,v2) = match C.compare k1 k2 with
     |`EQ -> 0
@@ -47,7 +47,7 @@ module MakeListDictionary (C : Comparable) = struct
 
   let rep_ok d =
     if ((List.length d) = (List.length (List.sort_uniq comparing d))) then d
-    else raise Failure
+    else raise (Failure "Representation not ok")
 
   (*let rep_ok d =
     if not (List.fold_left (fun acc (x1,y1) -> (List.length (List.filter (fun (x2,y2) ->
@@ -66,7 +66,7 @@ module MakeListDictionary (C : Comparable) = struct
     List.filter (fun (x,y) -> if (C.compare x k)=`EQ then false else true) d
 
   let find k d =
-    List.fold_left (fun acc (x,y) -> if (C.compare x k)=`EQ then y else acc) None d
+    List.fold_left (fun acc (x,y) -> if (C.compare x k)=`EQ then Some y else acc) None d
 
   let member k d =
     List.fold_left (fun acc (x,y) -> (C.compare x k)=`EQ || acc) false d
@@ -78,7 +78,7 @@ module MakeListDictionary (C : Comparable) = struct
   let to_list d = List.sort comparing d
 
   let fold f init d =
-    List.fold_left (fun (x,y) acc -> f x y acc) init (to_list d)
+    List.fold_left (fun acc (x,y) -> f x y acc) init (to_list d)
 
   let format format_val fmt d =
     Format.fprintf fmt "<abstr>" (* TODO: improve if you wish *)
@@ -120,45 +120,35 @@ module MakeSetOfDictionary (D:Dictionary) = struct
   type elt = Elt.t
 
   (* TODO: change type [t] to something involving a dictionary *)
-  type t = unit
+  type t = unit D.t
 
   let rep_ok s = raise Unimplemented
 
-  let empty =
-    raise Unimplemented
+  let empty = D.empty
 
-  let is_empty s =
-    raise Unimplemented
+  let is_empty s = D.is_empty s
 
-  let size s =
-    raise Unimplemented
+  let size s = D.size s
 
-  let insert x s =
-    raise Unimplemented
+  let insert x s = D.insert x () s
 
-  let member x s =
-    raise Unimplemented
+  let member x s = D.member x s
 
-  let remove x s =
-    raise Unimplemented
+  let remove x s = D.remove x s
 
-  let choose s =
-    raise Unimplemented
+  let choose s = match D.choose s with
+  | Some (x,()) -> Some x
+  | None -> None
 
-  let fold f init s =
-    raise Unimplemented
+  let fold f init s = D.fold (fun x y acc -> f x acc) init s
 
-  let union s1 s2 =
-    raise Unimplemented
+  let union s1 s2 = fold insert s1 s2
 
-  let intersect s1 s2 =
-    raise Unimplemented
+  let intersect s1 s2 = fold (fun elem acc -> if member elem s2 then insert elem acc else acc) empty s1
 
-  let difference s1 s2 =
-    raise Unimplemented
+  let difference s1 s2 = fold remove s1 s2
 
-  let to_list s =
-    raise Unimplemented
+  let to_list s = List.map (fun (x,y) -> x) (D.to_list s)
 
   let format fmt d =
     Format.fprintf fmt "<abstr>" (* TODO: improve if you wish *)
