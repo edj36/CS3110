@@ -40,10 +40,18 @@ module MakeListDictionary (C : Comparable) = struct
    * RI: TODO: document any representation invariants. *)
   type 'value t = key * 'value list
 
+  let comparing (k1,v1) (k2,v2) = match C.compare k1 k2 with
+    |`EQ -> 0
+    |`GT -> 1
+    |`LT -> -1
+
   let rep_ok d =
-    if (List.fold_left (fun (x,y) acc -> size (List.filter (fun (x,y) ->
-    if (C.compare x k)=`EQ then true else false) d) >= 2
-    then true else false) false d) then false else true
+    if ((List.length d) = (List.length (List.sort_uniq comparing d))) then d
+    else raise Failure
+
+  (*let rep_ok d =
+    if not (List.fold_left (fun acc (x1,y1) -> (List.length (List.filter (fun (x2,y2) ->
+    (C.compare x1 x2)=`EQ) d)) >= 2 || acc) false d) then d else raise Failure*)
 
   let empty = []
 
@@ -61,14 +69,13 @@ module MakeListDictionary (C : Comparable) = struct
     List.fold_left (fun acc (x,y) -> if (C.compare x k)=`EQ then y else acc) None d
 
   let member k d =
-    List.fold_left (fun acc (x,y) -> (C.compare x k)=`EQ or acc) false d
+    List.fold_left (fun acc (x,y) -> (C.compare x k)=`EQ || acc) false d
 
   let choose d = match d with
-  | (k,v)::[] -> (k,v)
+  | (k,v)::t -> Some (k,v)
   | [] -> None
 
-  let to_list d = List.sort (fun  (k1,v1) (k2,v2) -> if (C.compare k1 k2=`EQ)
-    then 0 else if (C.compare k1 k2=`GT) then 1 else -1) d
+  let to_list d = List.sort comparing d
 
   let fold f init d =
     List.fold_left (fun (x,y) acc -> f x y acc) init (to_list d)
