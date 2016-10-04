@@ -117,9 +117,170 @@ module MakeTreeDictionary (C : Comparable) = struct
   | Two_Node (w, (x,y), z) -> 1 + size w + size z
   | Three_Node (t, (u,v), w, (x,y), z) -> 2 + size t + size w + size z
 
-  let remove k d =
-    raise Unimplemented
+(* returns a merged tree of d1 and d2 and true if d3's height is less than that
+ * of d2 *)
+  let fix_tree d1 d2 = match d2 with
+  | Two_Node (d1,(x,y),r) ->
+    begin
+      match r with
+      | Two_Node (a,(sub1,val1),b) ->
+        (Three_Node (d1,(x,y),a,(sub1,val1),b),true)
+      | Three_Node (a, (sub1,val1), b, (sub2,val2), c) ->
+        (Two_Node (Two_Node (d1,(x,y),a),(sub1,val1),
+        Two_Node (b,(sub2,val2),c)),false)
+      | Leaf -> raise Unreachable
+    end
+  | Two_Node (l,(x,y),d1) ->
+    begin
+      match l with
+      | Two_Node (a,(sub1,val1),b) ->
+        (Three_Node (a,(sub1,val1),b,(x,y),d1),true)
+      | Three_Node (a, (sub1,val1), b, (sub2,val2), c) ->
+        (Two_Node (Two_Node (a,(sub1,val1),b),(sub2,val2),
+        Two_Node (c,(x,y),d1)),false)
+      | Leaf -> raise Unreachable
+    end
+  | Three_Node (d1, (w,x), m, (y,z), r) ->
+    begin
+      match m with
+      | Two_Node (a,(sub1,val1),b) ->
+        (Two_Node (Three_Node (d1,(w,x),a,(sub1,val1),b),(y,z),r),false)
+      | Three_Node (a, (sub1,val1), b, (sub2,val2), c) ->
+        (Three_Node (Two_Node (d1,(w,x),a),(sub1,val1),
+        Two_Node (b,(sub2,val2),c),(y,z),r),false)
+      | Leaf -> raise Unreachable
+    end
+  | Three_Node (l, (w,x), d1, (y,z), r) ->
+    begin
+      match l with
+      | Two_Node (a,(sub1,val1),b) ->
+        (Two_Node (Three_Node (a,(sub1,val1),b,(w,x),d1),(y,z),r),false)
+      | Three_Node (a, (sub1,val1), b, (sub2,val2), c) ->
+        (Three_Node (Two_Node (a,(sub1,val1),b),(sub2,val2),
+        Two_Node (c,(w,x),d1),(y,z),r),false)
+      | Leaf -> raise Unreachable
+    end
+  | Three_Node (l, (w,x), m, (y,z), d1) ->
+    begin
+      match m with
+      | Two_Node (a,(sub1,val1),b) ->
+        (Two_Node (l,(w,x),Three_Node (a,(sub1,val1),b,(y,z),d1)),false)
+      | Three_Node (a, (sub1,val1), b, (sub2,val2), c) ->
+        (Three_Node (l,(w,x),Two_Node (a,(sub1,val1),b),(sub2,val2),
+        Two_Node (c,(y,z),d1)),false)
+      | Leaf -> raise Unreachable
+    end
+  | _ -> raise Unreachable
 
+  let rec find_biggest d = match d with
+  | Leaf -> raise Unreachable
+  | Two_Node (Leaf,(x,y), Leaf) -> (x,y)
+  | Three_Node (Leaf, (w,x), Leaf, (y,z), Leaf) -> (y,z)
+  | Two_Node (l,(x,y),r) -> find_biggest r
+  | Three_Node (l, (w,x), m, (y,z), r) -> find_biggest r
+
+  let rec remove_helper k1 d = match d with
+  | Leaf -> (Leaf,false)
+  | Two_Node (Leaf, (x,y), Leaf) ->
+    begin
+      match (C.compare k1 x) with
+      | `EQ -> (Leaf,true)
+      | _ -> (d,false)
+    end
+  | Three_Node (Leaf, (w,x), Leaf, (y,z), Leaf) ->
+    begin
+      match (C.compare k1 w) with
+      | `EQ -> (Two_Node (Leaf, (y,z), Leaf),false)
+      | `LT -> (d,false)
+      | `GT ->
+        begin
+          match (C.compare k1 y) with
+          | `EQ -> (Two_Node (Leaf, (w,x), Leaf),false)
+          | _ -> (d,false)
+        end
+    end
+  | Two_Node (l,(x,y),r) ->
+    begin
+      match (C.compare k1 x) with
+      | `EQ ->
+        begin
+          match l with
+          | Two_Node (a,(sub1,val1),b) ->
+            let left_biggest = find_biggest b in
+            let (sub_tree, shrunk) = remove_helper (fst left_biggest) l in
+            if (not shrunk) then (Two_Node (sub_tree,left_biggest,r),false)
+            else fix_tree sub_tree (Two_Node (sub_tree,left_biggest,r))
+          | Three_Node (a,(sub1,val1),b,(sub2,val2),c) ->
+            let left_biggest = find_biggest c in
+            let (sub_tree, shrunk) = remove_helper (fst left_biggest) l in
+            if (not shrunk) then (Two_Node (sub_tree,left_biggest,r),false)
+            else fix_tree sub_tree (Two_Node (sub_tree,left_biggest,r))
+          | Leaf -> raise Unreachable
+        end
+      | `LT -> let (sub_tree, shrunk) = remove_helper k1 l in
+        if (not shrunk) then (Two_Node (sub_tree,(x,y),r), false) else
+        fix_tree sub_tree (Two_Node (sub_tree,(x,y),r))
+      | `GT -> let (sub_tree, shrunk) = remove_helper k1 r in
+        if (not shrunk) then (Two_Node (l,(x,y),sub_tree), false) else
+        fix_tree sub_tree (Two_Node (l,(x,y),sub_tree))
+    end
+  | Three_Node (l, (w,x), m, (y,z), r) ->
+    begin
+      match (C.compare k1 w) with
+      | `EQ ->
+        begin
+          match l with
+          | Two_Node (a,(sub1,val1),b) ->
+            let left_biggest = find_biggest b in
+            let (sub_tree, shrunk) = remove_helper (fst left_biggest) l in
+            if (not shrunk)
+            then (Three_Node (sub_tree,left_biggest,m,(y,z),r),false)
+            else fix_tree sub_tree (Three_Node (sub_tree,left_biggest,m,(y,z),r))
+          | Three_Node (a,(sub1,val1),b,(sub2,val2),c) ->
+            let left_biggest = find_biggest c in
+            let (sub_tree, shrunk) = remove_helper (fst left_biggest) l in
+            if (not shrunk)
+            then (Three_Node (sub_tree,left_biggest,m,(y,z),r),false)
+            else fix_tree sub_tree (Three_Node (sub_tree,left_biggest,m,(y,z),r))
+          | Leaf -> raise Unreachable
+        end
+      | `LT -> let (sub_tree, shrunk) = remove_helper k1 l in
+        if (not shrunk)
+        then (Three_Node (sub_tree,(w,x), m, (y,z), r),false)
+        else fix_tree sub_tree (Three_Node (sub_tree,(w,x), m, (y,z), r))
+      | `GT ->
+        begin
+          match (C.compare k1 y) with
+          | `EQ ->
+            begin
+              match m with
+              | Two_Node (a,(sub1,val1),b) ->
+                let left_biggest = find_biggest b in
+                let (sub_tree, shrunk) = remove_helper (fst left_biggest) m in
+                if (not shrunk)
+                then (Three_Node (l,(w,x),sub_tree,left_biggest,r),false)
+                else fix_tree sub_tree (Three_Node (l,(w,x),sub_tree,left_biggest,r))
+              | Three_Node (a,(sub1,val1),b,(sub2,val2),c) ->
+                let left_biggest = find_biggest c in
+                let (sub_tree, shrunk) = remove_helper (fst left_biggest) m in
+                if (not shrunk)
+                then (Three_Node (l,(w,x),sub_tree,left_biggest,r),false)
+                else fix_tree sub_tree (Three_Node (l,(w,x),sub_tree,left_biggest,r))
+              | Leaf -> raise Unreachable
+            end
+          | `LT -> let (sub_tree, shrunk) = remove_helper k1 m in
+            if (not shrunk)
+            then (Three_Node (l,(w,x), sub_tree, (y,z), r),false) else
+            fix_tree sub_tree (Three_Node (l,(w,x), sub_tree, (y,z), r))
+          | `GT -> let (sub_tree, shrunk) = remove_helper k1 r in
+            if (not shrunk)
+            then (Three_Node (l,(w,x), m, (y,z), sub_tree),false) else
+            fix_tree sub_tree (Three_Node (l,(w,x), m, (y,z), sub_tree))
+        end
+    end
+
+  let remove k d =
+    fst (remove_helper k d)
 
 
   let rec insert_helper k1 v1 d = match d with
@@ -135,13 +296,16 @@ module MakeTreeDictionary (C : Comparable) = struct
     begin
       match (C.compare k1 w) with
       | `EQ -> (Three_Node (Leaf, (k1,v1), Leaf, (y,z), Leaf), false)
-      | `LT -> (Two_Node (Two_Node (Leaf, (k1,v1), Leaf), (w,x),Two_Node (Leaf, (y,z), Leaf)), true)
+      | `LT -> (Two_Node (Two_Node (Leaf, (k1,v1), Leaf), (w,x),
+        Two_Node (Leaf, (y,z), Leaf)), true)
       | `GT ->
       begin
         match (C.compare k1 y) with
         | `EQ -> (Three_Node (Leaf, (k1,v1), Leaf, (y,z), Leaf), false)
-        | `LT -> (Two_Node (Two_Node (Leaf, (w,x), Leaf), (k1,v1),Two_Node (Leaf, (y,z), Leaf)), true)
-        | `GT -> (Two_Node (Two_Node (Leaf, (w,x), Leaf), (y,z),Two_Node (Leaf, (k1,v1), Leaf)), true)
+        | `LT -> (Two_Node (Two_Node (Leaf, (w,x), Leaf), (k1,v1),
+            Two_Node (Leaf, (y,z), Leaf)), true)
+        | `GT -> (Two_Node (Two_Node (Leaf, (w,x), Leaf), (y,z),
+            Two_Node (Leaf, (k1,v1), Leaf)), true)
       end
     end
   | Two_Node (l,(x,y),r) ->
@@ -152,16 +316,22 @@ module MakeTreeDictionary (C : Comparable) = struct
         if (not kickback) then (Two_Node (sub_tree,(x,y),r),false) else
         begin
           match sub_tree with
-          | Two_Node (a, (sub1,val1), b) -> (Three_Node (a, (sub1,val1), b, (x,y), r), false)
-          | Three_Node (a, (sub1,val1), b, (sub2,val2), c) -> (Two_Node (Two_Node (a, (sub1,val1),b), (sub2,val2),Two_Node (c, (x,y),r)),true)
+          | Two_Node (a, (sub1,val1), b) ->
+              (Three_Node (a, (sub1,val1), b, (x,y), r), false)
+          | Three_Node (a, (sub1,val1), b, (sub2,val2), c) ->
+              (Two_Node (Two_Node (a, (sub1,val1),b), (sub2,val2),
+              Two_Node (c, (x,y),r)),true)
           | Leaf -> raise Unreachable
         end
       | `GT -> let (sub_tree, kickback) = insert_helper k1 v1 r in
         if (not kickback) then (Two_Node (l,(x,y),sub_tree),false) else
         begin
           match sub_tree with
-          | Two_Node (a, (sub1,val1), b) -> (Three_Node (l, (x,y), a, (sub1,val1), b), false)
-          | Three_Node (a, (sub1,val1), b, (sub2,val2), c) -> (Two_Node (Two_Node (l, (x,y),a), (sub1,val1),Two_Node (b, (sub2,val2),c)),true)
+          | Two_Node (a, (sub1,val1), b) ->
+              (Three_Node (l, (x,y), a, (sub1,val1), b), false)
+          | Three_Node (a, (sub1,val1), b, (sub2,val2), c) ->
+              (Two_Node (Two_Node (l, (x,y),a), (sub1,val1),
+              Two_Node (b, (sub2,val2),c)),true)
           | Leaf -> raise Unreachable
         end
     end
@@ -170,33 +340,51 @@ module MakeTreeDictionary (C : Comparable) = struct
       match C.compare k1 x1 with
       | `EQ -> (Three_Node (l,(k1,v1),m,(x2,y2),r),false)
       | `LT -> let (sub_tree, kickback)= insert_helper k1 v1 l in
-        if (not kickback) then (Three_Node (sub_tree,(x1,y1),m,(x2,y2),r),false) else
-        begin
-          match sub_tree with
-          | Two_Node (a, (sub1,val1), b) -> (Two_Node (Two_Node (a,(sub1,val1),b),(x1,y1),Two_Node (m,(x2,y2),r)),true)
-          | Three_Node (a, (sub1,val1), b, (sub2,val2), c) -> (Two_Node (Three_Node (a, (sub1,val1), b, (sub2,val2), c),(x1,y1),Two_Node (m,(x2,y2),r)),true)
-          | Leaf -> raise Unreachable
-        end
+        if (not kickback)
+        then (Three_Node (sub_tree,(x1,y1),m,(x2,y2),r),false)
+        else
+          begin
+            match sub_tree with
+            | Two_Node (a, (sub1,val1), b) ->
+              (Two_Node (Two_Node (a,(sub1,val1),b),(x1,y1),
+              Two_Node (m,(x2,y2),r)),true)
+            | Three_Node (a, (sub1,val1), b, (sub2,val2), c) ->
+              (Two_Node (Three_Node (a, (sub1,val1), b, (sub2,val2), c),(x1,y1),
+              Two_Node (m,(x2,y2),r)),true)
+            | Leaf -> raise Unreachable
+          end
       | `GT ->
         begin
           match C.compare k1 x2 with
           | `EQ -> (Three_Node (l,(x1,y1),m,(k1,v1),r),false)
           | `LT -> let (sub_tree, kickback)= insert_helper k1 v1 m in
-            if (not kickback) then (Three_Node (l,(x1,y1),sub_tree,(x2,y2),r),false) else
-            begin
-              match sub_tree with
-              | Two_Node (a, (sub1,val1), b) -> (Two_Node (Two_Node (l, (x1,y1), a), (sub1,val1),Two_Node (b,(x2,y2),r)),true)
-              | Three_Node (a, (sub1,val1), b, (sub2,val2), c) -> (Two_Node (Three_Node (l, (x1,y1), a, (sub1,val1), b),(sub2,val2),Two_Node (c,(x2,y2),r)),true)
-              | Leaf -> raise Unreachable
-            end
+            if (not kickback)
+            then (Three_Node (l,(x1,y1),sub_tree,(x2,y2),r),false)
+            else
+              begin
+                match sub_tree with
+                | Two_Node (a, (sub1,val1), b) ->
+                  (Two_Node (Two_Node (l, (x1,y1), a), (sub1,val1),
+                  Two_Node (b,(x2,y2),r)),true)
+                | Three_Node (a, (sub1,val1), b, (sub2,val2), c) ->
+                  (Two_Node (Three_Node (l, (x1,y1), a, (sub1,val1), b),
+                  (sub2,val2),Two_Node (c,(x2,y2),r)),true)
+                | Leaf -> raise Unreachable
+              end
           | `GT -> let (sub_tree, kickback)= insert_helper k1 v1 r in
-            if (not kickback) then (Three_Node (l,(x1,y1),m,(x2,y2),sub_tree),false) else
-            begin
-              match sub_tree with
-            | Two_Node (a, (sub1,val1), b) -> (Two_Node (Two_Node (l, (x1,y1), m), (x2,y2),Two_Node (a,(sub1,val1),b)),true)
-            | Three_Node (a, (sub1,val1), b, (sub2,val2), c) -> (Two_Node (Three_Node (l, (x1,y1), m, (x2,y2), a),(sub1,val1),Two_Node (b,(sub2,val2),c)),true)
-            | Leaf -> raise Unreachable
-            end
+            if (not kickback)
+            then (Three_Node (l,(x1,y1),m,(x2,y2),sub_tree),false)
+            else
+              begin
+                match sub_tree with
+              | Two_Node (a, (sub1,val1), b) ->
+                (Two_Node (Two_Node (l, (x1,y1), m), (x2,y2),
+                Two_Node (a,(sub1,val1),b)),true)
+              | Three_Node (a, (sub1,val1), b, (sub2,val2), c) ->
+                (Two_Node (Three_Node (l, (x1,y1), m, (x2,y2), a),(sub1,val1),
+                Two_Node (b,(sub2,val2),c)),true)
+              | Leaf -> raise Unreachable
+              end
         end
     end
 
