@@ -1,4 +1,5 @@
 exception Unimplemented
+exception Unreachable
 
 module type Comparable =
   sig
@@ -119,13 +120,91 @@ module MakeTreeDictionary (C : Comparable) = struct
   let remove k d =
     raise Unimplemented
 
-  let rec insert k v d =
 
-    raise Unimplemented
-  (*match d with
-  | Leaf -> (Leaf, (k,v), Leaf)
-  | Two_Node (x, (k1,v1), y) -> if (C.compare k1 k = `EQ) then (x, (k,v), y) else
-    if (C.compare k k1 = `LT) then (insert k v x)*)
+
+  let rec insert_helper k1 v1 d = match d with
+  | Leaf -> (Two_Node (Leaf, (k1,v1), Leaf), true)
+  | Two_Node (Leaf, (x,y), Leaf) ->
+    begin
+      match (C.compare k1 x) with
+      | `EQ -> (Two_Node (Leaf, (k1,v1), Leaf), false)
+      | `LT -> (Three_Node (Leaf, (k1,v1), Leaf, (x,y), Leaf), false)
+      | `GT -> (Three_Node (Leaf, (x,y), Leaf, (k1,v1), Leaf), false)
+    end
+  | Three_Node (Leaf, (w,x), Leaf, (y,z), Leaf) ->
+    begin
+      match (C.compare k1 w) with
+      | `EQ -> (Three_Node (Leaf, (k1,v1), Leaf, (y,z), Leaf), false)
+      | `LT -> (Two_Node (Two_Node (Leaf, (k1,v1), Leaf), (w,x),Two_Node (Leaf, (y,z), Leaf)), true)
+      | `GT ->
+      begin
+        match (C.compare k1 y) with
+        | `EQ -> (Three_Node (Leaf, (k1,v1), Leaf, (y,z), Leaf), false)
+        | `LT -> (Two_Node (Two_Node (Leaf, (w,x), Leaf), (k1,v1),Two_Node (Leaf, (y,z), Leaf)), true)
+        | `GT -> (Two_Node (Two_Node (Leaf, (w,x), Leaf), (y,z),Two_Node (Leaf, (k1,v1), Leaf)), true)
+      end
+    end
+  | Two_Node (l,(x,y),r) ->
+    begin
+      match (C.compare k1 x) with
+      | `EQ -> (Two_Node (l,(k1,v1),r),false)
+      | `LT -> let (sub_tree, kickback) = insert_helper k1 v1 l in
+        if (not kickback) then (Two_Node (sub_tree,(x,y),r),false) else
+        begin
+          match sub_tree with
+          | Two_Node (a, (sub1,val1), b) -> (Three_Node (a, (sub1,val1), b, (x,y), r), false)
+          | Three_Node (a, (sub1,val1), b, (sub2,val2), c) -> (Two_Node (Two_Node (a, (sub1,val1),b), (sub2,val2),Two_Node (c, (x,y),r)),true)
+          | Leaf -> raise Unreachable
+        end
+      | `GT -> let (sub_tree, kickback) = insert_helper k1 v1 r in
+        if (not kickback) then (Two_Node (l,(x,y),sub_tree),false) else
+        begin
+          match sub_tree with
+          | Two_Node (a, (sub1,val1), b) -> (Three_Node (l, (x,y), a, (sub1,val1), b), false)
+          | Three_Node (a, (sub1,val1), b, (sub2,val2), c) -> (Two_Node (Two_Node (l, (x,y),a), (sub1,val1),Two_Node (b, (sub2,val2),c)),true)
+          | Leaf -> raise Unreachable
+        end
+    end
+  | Three_Node (l,(x1,y1),m,(x2,y2),r) ->
+    begin
+      match C.compare k1 x1 with
+      | `EQ -> (Three_Node (l,(k1,v1),m,(x2,y2),r),false)
+      | `LT -> let (sub_tree, kickback)= insert_helper k1 v1 l in
+        if (not kickback) then (Three_Node (sub_tree,(x1,y1),m,(x2,y2),r),false) else
+        begin
+          match sub_tree with
+          | Two_Node (a, (sub1,val1), b) -> (Two_Node (Two_Node (a,(sub1,val1),b),(x1,y1),Two_Node (m,(x2,y2),r)),true)
+          | Three_Node (a, (sub1,val1), b, (sub2,val2), c) -> (Two_Node (Three_Node (a, (sub1,val1), b, (sub2,val2), c),(x1,y1),Two_Node (m,(x2,y2),r)),true)
+          | Leaf -> raise Unreachable
+        end
+      | `GT ->
+        begin
+          match C.compare k1 x2 with
+          | `EQ -> (Three_Node (l,(x1,y1),m,(k1,v1),r),false)
+          | `LT -> let (sub_tree, kickback)= insert_helper k1 v1 m in
+            if (not kickback) then (Three_Node (l,(x1,y1),sub_tree,(x2,y2),r),false) else
+            begin
+              match sub_tree with
+              | Two_Node (a, (sub1,val1), b) -> (Two_Node (Two_Node (l, (x1,y1), a), (sub1,val1),Two_Node (b,(x2,y2),r)),true)
+              | Three_Node (a, (sub1,val1), b, (sub2,val2), c) -> (Two_Node (Three_Node (l, (x1,y1), a, (sub1,val1), b),(sub2,val2),Two_Node (c,(x2,y2),r)),true)
+              | Leaf -> raise Unreachable
+            end
+          | `GT -> let (sub_tree, kickback)= insert_helper k1 v1 r in
+            if (not kickback) then (Three_Node (l,(x1,y1),m,(x2,y2),sub_tree),false) else
+            begin
+              match sub_tree with
+            | Two_Node (a, (sub1,val1), b) -> (Two_Node (Two_Node (l, (x1,y1), m), (x2,y2),Two_Node (a,(sub1,val1),b)),true)
+            | Three_Node (a, (sub1,val1), b, (sub2,val2), c) -> (Two_Node (Three_Node (l, (x1,y1), m, (x2,y2), a),(sub1,val1),Two_Node (b,(sub2,val2),c)),true)
+            | Leaf -> raise Unreachable
+            end
+        end
+    end
+
+  let insert k v d =
+    fst (insert_helper k v d)
+
+
+
 
   let rec find k d = match d with
   | Leaf -> None
