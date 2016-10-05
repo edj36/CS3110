@@ -1,6 +1,7 @@
 exception Unimplemented
 exception Unreachable
 
+
 module type Comparable =
   sig
     type t
@@ -49,10 +50,6 @@ module MakeListDictionary (C : Comparable) = struct
   let rep_ok d =
     if ((List.length d) = (List.length (List.sort_uniq comparing d))) then d
     else raise (Failure "Representation not ok")
-
-  (*let rep_ok d =
-    if not (List.fold_left (fun acc (x1,y1) -> (List.length (List.filter (fun (x2,y2) ->
-    (C.compare x1 x2)=`EQ) d)) >= 2 || acc) false d) then d else raise Failure*)
 
   let empty = []
 
@@ -103,8 +100,25 @@ module MakeTreeDictionary (C : Comparable) = struct
       * 'value t * (key * 'value) * 'value t
 
 
+  let rec rep_helper d = match d with
+  | Leaf -> (false,0)
+  | Two_Node (Leaf, (x,y), Leaf) -> (true,1)
+  | Three_Node (Leaf,(w,x),Leaf,(y,z),Leaf) ->(true,1)
+  | Two_Node (a,(x,y),b) ->
+    let apair = rep_helper a in
+    let bpair = rep_helper b in
+    let boleen = ((snd apair)=(snd bpair)) && (fst apair) && (fst bpair) in
+    (boleen, ((snd apair)+1))
+  | Three_Node (a,(w,x),b,(y,z),c) ->
+    let apair = rep_helper a in
+    let bpair = rep_helper b in
+    let cpair = rep_helper c in
+    let boleen = ((snd apair)=(snd bpair) && (snd bpair)=(snd cpair)) && (fst apair) && (fst bpair) in
+    (boleen, ((snd apair)+1))
+
+
   let rep_ok d =
-    raise Unimplemented
+    if (fst (rep_helper d)) then d else raise (Failure "Representation not ok")
 
   let empty = Leaf
 
@@ -120,7 +134,7 @@ module MakeTreeDictionary (C : Comparable) = struct
 (* returns a merged tree of d1 and d2 and true if d3's height is less than that
  * of d2 *)
   let fix_tree d1 d2 = match d2 with
-  | Two_Node (d1,(x,y),r) ->
+  | Two_Node (l,(x,y),r) when l=d1 ->
     begin
       match r with
       | Two_Node (a,(sub1,val1),b) ->
@@ -130,7 +144,7 @@ module MakeTreeDictionary (C : Comparable) = struct
         Two_Node (b,(sub2,val2),c)),false)
       | Leaf -> raise Unreachable
     end
-  | Two_Node (l,(x,y),d1) ->
+  | Two_Node (l,(x,y),r) when r=d1 ->
     begin
       match l with
       | Two_Node (a,(sub1,val1),b) ->
@@ -140,7 +154,7 @@ module MakeTreeDictionary (C : Comparable) = struct
         Two_Node (c,(x,y),d1)),false)
       | Leaf -> raise Unreachable
     end
-  | Three_Node (d1, (w,x), m, (y,z), r) ->
+  | Three_Node (l, (w,x), m, (y,z), r) when l=d1 ->
     begin
       match m with
       | Two_Node (a,(sub1,val1),b) ->
@@ -150,7 +164,7 @@ module MakeTreeDictionary (C : Comparable) = struct
         Two_Node (b,(sub2,val2),c),(y,z),r),false)
       | Leaf -> raise Unreachable
     end
-  | Three_Node (l, (w,x), d1, (y,z), r) ->
+  | Three_Node (l, (w,x), m, (y,z), r) when m=d1 ->
     begin
       match l with
       | Two_Node (a,(sub1,val1),b) ->
@@ -160,7 +174,7 @@ module MakeTreeDictionary (C : Comparable) = struct
         Two_Node (c,(w,x),d1),(y,z),r),false)
       | Leaf -> raise Unreachable
     end
-  | Three_Node (l, (w,x), m, (y,z), d1) ->
+  | Three_Node (l, (w,x), m, (y,z), r) when r=d1 ->
     begin
       match m with
       | Two_Node (a,(sub1,val1),b) ->
