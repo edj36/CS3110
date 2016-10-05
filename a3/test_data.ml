@@ -5,16 +5,28 @@ module type Tests = sig
   val tests : OUnit2.test list
 end
 
-module Icomp = struct
+module StringComparable = struct
+  type t = string
+  let compare x y = 
+    if Pervasives.compare x y < 0 then `LT 
+    else if Pervasives.compare x y = 0 then `EQ 
+    else `GT
+  let format something somethingelse = () 
+end 
+
+module IntComparable = struct
   type t = int
-  let compare x y = if (x<y) then `LT else if x=y then `EQ else `GT
-  let format x y = ()
-end
+  let compare x y = 
+    if Pervasives.compare x y < 0 then `LT 
+    else if Pervasives.compare x y = 0 then `EQ 
+    else `GT
+  let format something somethingelse = () 
+end 
 
 (* [DictTester] is where you will implement your test harness
  * to find buggy implementations. *)
 module DictTester (M:DictionaryMaker) = struct
-  module Dict = M(Icomp)
+  module Dict = M(IntComparable)
   let tests = [
   "name" >:: (fun _ -> assert_equal true (Dict.member 3 (Dict.insert 3 4 Dict.empty)));
   ]

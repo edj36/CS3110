@@ -8,8 +8,9 @@ module ListEngineTester = ListEngine
 module TreeEngineTester = TreeEngine
   
 let tests = [
-  "empty" >:: (fun _ -> assert_equal [] 
-  	(ListEngineTester.index_of_dir "" |> ListEngineTester.to_list));
+  (*"empty" >:: (fun _ -> assert_raises (Engine.Not_found)
+  	(fun _ -> (ListEngineTester.index_of_dir "")));*)
+
 ]
 
 
