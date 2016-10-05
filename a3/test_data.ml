@@ -26,7 +26,8 @@ module TreeDictTester = DictTester(MakeTreeDictionary)
 (* [tests] is where you should provide OUnit test cases for
  * your own implementations of dictionaries and sets.  You're
  * free to use [DictTester] as part of that if you choose. *)
-let tests = ListDictTester.tests @ TreeDictTester.tests
+let tests = ListDictTester.tests 
+			@ TreeDictTester.tests
 
 (* DO NOT call OUnit2.run_test_tt_main from here.  It must
  * be called only in test_main.ml.  *)
