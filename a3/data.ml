@@ -100,6 +100,17 @@ module MakeTreeDictionary (C : Comparable) = struct
       * 'value t * (key * 'value) * 'value t
 
 
+  let comparing (k1,v1) (k2,v2) = match C.compare k1 k2 with
+  |`EQ -> 0
+  |`GT -> 1
+  |`LT -> -1
+
+  let rec to_list d = match d with
+  | Leaf -> []
+  | Two_Node (w, (x,y), z) -> (to_list w) @ (x,y)::(to_list z)
+  | Three_Node (t, (u,v), w, (x,y), z) -> (to_list t) @ (u,v)::(to_list w) @ (x,y)::(to_list z)
+
+
   let rec rep_helper d = match d with
   | Leaf -> (false,0)
   | Two_Node (Leaf, (x,y), Leaf) -> (true,1)
@@ -118,7 +129,8 @@ module MakeTreeDictionary (C : Comparable) = struct
 
 
   let rep_ok d =
-    if (fst (rep_helper d)) then d else raise (Failure "Representation not ok")
+    if ((to_list d) = List.sort_uniq comparing (to_list d)) &&
+    (fst (rep_helper d)) then d else raise (Failure "Representation not ok")
 
   let empty = Leaf
 
