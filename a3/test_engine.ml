@@ -7,8 +7,8 @@ open Engine
 module ListEngineTester = ListEngine
 module TreeEngineTester = TreeEngine
 
-let list_idx = ListEngineTester.index_of_dir "test1"
-let tree_idx = TreeEngineTester.index_of_dir "test1"
+let list_idx = ListEngine.index_of_dir "test1"
+let tree_idx = TreeEngine.index_of_dir "test1"
 
 let simple_list = [("people", ["test0/small.txt"]);
 					("the", ["test0/small.txt"]);
@@ -16,34 +16,104 @@ let simple_list = [("people", ["test0/small.txt"]);
 
 let tests = [
 
-	(*Exceptions*)
-  	(*"empty" >:: (fun _ -> assert_raises Engine.Not_found
-  		(fun _ -> (ListEngineTester.index_of_dir ""))); *)
-
-	(*index_of_dir and to_list*)
+	"empty directory" >:: (fun _ -> assert_equal []
+  		((ListEngine.index_of_dir "test_empty") |> ListEngine.to_list));
 
 	(*to list of tree and list*)
 	"test1 to_list" >:: (fun _ -> assert_equal
-			(ListEngineTester.to_list list_idx)
-            (TreeEngineTester.to_list tree_idx));
+			(ListEngine.to_list list_idx)
+            (TreeEngine.to_list tree_idx));
 
+	(*index_of_dir and to_list*)
   	"test0 list" >:: (fun _ -> assert_equal simple_list
-  		((TreeEngineTester.index_of_dir "test0") |> TreeEngineTester.to_list));
+  		((ListEngine.index_of_dir "test0") |> ListEngine.to_list));
 	"test0 tree" >:: (fun _ -> assert_equal simple_list
-  		((TreeEngineTester.index_of_dir "test0") |> TreeEngineTester.to_list));
+  		((TreeEngine.index_of_dir "test0") |> TreeEngine.to_list));
 
 	(*AND NOT*)
-	"test and_not list" >:: (fun _ -> assert_equal 
-		[]
-  		(ListEngineTester.and_not list_idx ["we";"the"] [""]));
+	"test 1 and_not list" >:: (fun _ -> assert_equal 
+		["test1/medium.txt";"test1/small.txt"]
+  		(ListEngine.and_not list_idx ["we";"the"] ["apple"]));
 
-	"test and_not tree"
+	"test 1 and_not tree" >:: (fun _ -> assert_equal 
+		["test1/medium.txt";"test1/small.txt"]
+  		(TreeEngine.and_not tree_idx ["we";"the"] ["apple"]));
+
+	"test 2 and_not list" >:: (fun _ -> assert_equal 
+		["test1/small.txt"]
+  		(ListEngine.and_not list_idx ["we";"the"] ["ourselves"]));
+
+	"test 2 and_not tree" >:: (fun _ -> assert_equal 
+		["test1/small.txt"]
+  		(TreeEngine.and_not tree_idx ["we";"the"] ["ourselves"]));
+
 
 	(*AND*)
+	"test 1 and list" >:: (fun _ -> assert_equal 
+		["test1/medium.txt";"test1/small.txt"]
+  		(ListEngine.and_not list_idx ["we";"the"] []));
+
+	"test 1 and tree" >:: (fun _ -> assert_equal 
+		["test1/medium.txt";"test1/small.txt"]
+  		(TreeEngine.and_not tree_idx ["we";"the"] []));
+
+	"test 2 and list" >:: (fun _ -> assert_equal 
+		["test1/medium.txt"]
+  		(ListEngine.and_not list_idx ["we";"common"] []));
+
+	"test 2 and tree" >:: (fun _ -> assert_equal 
+		["test1/medium.txt"]
+  		(TreeEngine.and_not tree_idx ["we";"common"] []));
+
+	"test 3 and list" >:: (fun _ -> assert_equal 
+		[]
+  		(ListEngine.and_not list_idx ["apple"] []));
+
+	"test 3 and tree" >:: (fun _ -> assert_equal 
+		[]
+  		(TreeEngine.and_not tree_idx ["apple"] []));
 
 	(*OR NOT*)
+	"test 1 or_not list" >:: (fun _ -> assert_equal 
+		["test1/medium.txt";"test1/small.txt"]
+  		(ListEngine.or_not list_idx ["we";"the"] ["apple"]));
+
+	"test 1 or_not tree" >:: (fun _ -> assert_equal 
+		["test1/medium.txt";"test1/small.txt"]
+  		(TreeEngine.or_not tree_idx ["we";"the"] ["apple"]));
+
+	"test 2 or_not list" >:: (fun _ -> assert_equal 
+		["test1/small.txt"]
+  		(ListEngine.or_not list_idx ["we";"the"] ["ourselves"]));
+
+	"test 2 or_not tree" >:: (fun _ -> assert_equal 
+		["test1/small.txt"]
+  		(TreeEngine.or_not tree_idx ["we";"the"] ["ourselves"]));
 
 	(*OR*)
+	"test 1 or list" >:: (fun _ -> assert_equal 
+		["test1/medium.txt";"test1/small.txt"]
+  		(ListEngine.or_not list_idx ["we";"the"] []));
+
+	"test 1 or tree" >:: (fun _ -> assert_equal 
+		["test1/medium.txt";"test1/small.txt"]
+  		(TreeEngine.or_not tree_idx ["we";"the"] []));
+
+	"test 2 or list" >:: (fun _ -> assert_equal 
+		["test1/medium.txt";"test1/small.txt"]
+  		(ListEngine.or_not list_idx ["we";"common"] []));
+
+	"test 2 or tree" >:: (fun _ -> assert_equal 
+		["test1/medium.txt";"test1/small.txt"]
+  		(TreeEngine.or_not tree_idx ["we";"common"] []));
+
+	"test 3 or list" >:: (fun _ -> assert_equal 
+		[]
+  		(ListEngine.or_not list_idx ["apple";"banana"] []));
+
+	"test 3 or tree" >:: (fun _ -> assert_equal 
+		[]
+  		(TreeEngine.or_not tree_idx ["apple";"banana"] []));
 
 	(*
 	 * single quotes
