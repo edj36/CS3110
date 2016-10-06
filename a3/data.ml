@@ -42,6 +42,8 @@ module MakeListDictionary (C : Comparable) = struct
    * RI: TODO: document any representation invariants. *)
   type 'value t = (key * 'value) list
 
+  (* comparable function in order to be able to sort values. If k1<k2 it returns
+   * -1, if k1=k2 returns 0 and if k1>k2 it returns 1 *)
   let comparing (k1,v1) (k2,v2) = match C.compare k1 k2 with
     |`EQ -> 0
     |`GT -> 1
@@ -58,13 +60,15 @@ module MakeListDictionary (C : Comparable) = struct
   let size d = List.length d
 
   let insert k v d =
-    (k,v)::(List.filter (fun (x,y) -> if (C.compare x k)=`EQ then false else true) d)
+    (k,v)::(List.filter (fun (x,y) ->
+    if (C.compare x k)=`EQ then false else true) d)
 
   let remove k d =
     List.filter (fun (x,y) -> if (C.compare x k)=`EQ then false else true) d
 
   let find k d =
-    List.fold_left (fun acc (x,y) -> if (C.compare x k)=`EQ then Some y else acc) None d
+    List.fold_left (fun acc (x,y) ->
+    if (C.compare x k)=`EQ then Some y else acc) None d
 
   let member k d =
     List.fold_left (fun acc (x,y) -> (C.compare x k)=`EQ || acc) false d
@@ -83,8 +87,6 @@ module MakeListDictionary (C : Comparable) = struct
 
 end
 
-(* TODO (later): implement a 2-3 tree.  For now,
-   this code punts by equating the two functors. *)
 module MakeTreeDictionary (C : Comparable) = struct
   module Key = C
   type key = C.t
@@ -99,7 +101,8 @@ module MakeTreeDictionary (C : Comparable) = struct
     | Three_Node of 'value t * (key * 'value)
       * 'value t * (key * 'value) * 'value t
 
-
+  (* comparable function in order to be able to sort values. If k1<k2 it returns
+   * -1, if k1=k2 returns 0 and if k1>k2 it returns 1 *)
   let comparing (k1,v1) (k2,v2) = match C.compare k1 k2 with
   |`EQ -> 0
   |`GT -> 1
@@ -108,9 +111,10 @@ module MakeTreeDictionary (C : Comparable) = struct
   let rec to_list d = match d with
   | Leaf -> []
   | Two_Node (w, (x,y), z) -> (to_list w) @ (x,y)::(to_list z)
-  | Three_Node (t, (u,v), w, (x,y), z) -> (to_list t) @ (u,v)::(to_list w) @ (x,y)::(to_list z)
+  | Three_Node (t, (u,v), w, (x,y), z) ->
+    (to_list t) @ (u,v)::(to_list w) @ (x,y)::(to_list z)
 
-
+  (* returns true if all leaves are at the same depth *)
   let rec rep_helper d = match d with
   | Leaf -> (false,0)
   | Two_Node (Leaf, (x,y), Leaf) -> (true,1)
@@ -124,8 +128,8 @@ module MakeTreeDictionary (C : Comparable) = struct
     let apair = rep_helper a in
     let bpair = rep_helper b in
     let cpair = rep_helper c in
-    let boleen = ((snd apair)=(snd bpair) && (snd bpair)=(snd cpair)) && (fst apair) && (fst bpair) in
-    (boleen, ((snd apair)+1))
+    let boleen = ((snd apair)=(snd bpair) && (snd bpair)=(snd cpair))
+    && (fst apair) && (fst bpair) in (boleen, ((snd apair)+1))
 
 
   let rep_ok d =
@@ -143,8 +147,8 @@ module MakeTreeDictionary (C : Comparable) = struct
   | Two_Node (w, (x,y), z) -> 1 + size w + size z
   | Three_Node (t, (u,v), w, (x,y), z) -> 2 + size t + size w + size z
 
-(* returns a merged tree of d1 and d2 and true if d3's height is less than that
- * of d2 *)
+(* returns a merged tree of d1 and d2 with a standard depth for all leaves and
+ * true if d3's height is less than that of d2 *)
   let fix_tree d1 d2 = match d2 with
   | Two_Node (l,(x,y),r) when l=d1 ->
     begin
@@ -198,6 +202,7 @@ module MakeTreeDictionary (C : Comparable) = struct
     end
   | _ -> raise Unreachable
 
+  (* finds the largest value in the 2-3 tree d, if a value exists *)
   let rec find_biggest d = match d with
   | Leaf -> raise Unreachable
   | Two_Node (Leaf,(x,y), Leaf) -> (x,y)
@@ -205,6 +210,8 @@ module MakeTreeDictionary (C : Comparable) = struct
   | Two_Node (l,(x,y),r) -> find_biggest r
   | Three_Node (l, (w,x), m, (y,z), r) -> find_biggest r
 
+  (* [remove_helper k1 d] returns d with k1 removed and true if the depth of d
+   * has decreased *)
   let rec remove_helper k1 d = match d with
   | Leaf -> (Leaf,false)
   | Two_Node (Leaf, (x,y), Leaf) ->
@@ -261,13 +268,15 @@ module MakeTreeDictionary (C : Comparable) = struct
             let (sub_tree, shrunk) = remove_helper (fst left_biggest) l in
             if (not shrunk)
             then (Three_Node (sub_tree,left_biggest,m,(y,z),r),false)
-            else fix_tree sub_tree (Three_Node (sub_tree,left_biggest,m,(y,z),r))
+            else fix_tree sub_tree
+            (Three_Node (sub_tree,left_biggest,m,(y,z),r))
           | Three_Node (a,(sub1,val1),b,(sub2,val2),c) ->
             let left_biggest = find_biggest c in
             let (sub_tree, shrunk) = remove_helper (fst left_biggest) l in
             if (not shrunk)
             then (Three_Node (sub_tree,left_biggest,m,(y,z),r),false)
-            else fix_tree sub_tree (Three_Node (sub_tree,left_biggest,m,(y,z),r))
+            else fix_tree sub_tree
+            (Three_Node (sub_tree,left_biggest,m,(y,z),r))
           | Leaf -> raise Unreachable
         end
       | `LT -> let (sub_tree, shrunk) = remove_helper k1 l in
@@ -285,13 +294,15 @@ module MakeTreeDictionary (C : Comparable) = struct
                 let (sub_tree, shrunk) = remove_helper (fst left_biggest) m in
                 if (not shrunk)
                 then (Three_Node (l,(w,x),sub_tree,left_biggest,r),false)
-                else fix_tree sub_tree (Three_Node (l,(w,x),sub_tree,left_biggest,r))
+                else fix_tree sub_tree
+                (Three_Node (l,(w,x),sub_tree,left_biggest,r))
               | Three_Node (a,(sub1,val1),b,(sub2,val2),c) ->
                 let left_biggest = find_biggest c in
                 let (sub_tree, shrunk) = remove_helper (fst left_biggest) m in
                 if (not shrunk)
                 then (Three_Node (l,(w,x),sub_tree,left_biggest,r),false)
-                else fix_tree sub_tree (Three_Node (l,(w,x),sub_tree,left_biggest,r))
+                else fix_tree sub_tree
+                (Three_Node (l,(w,x),sub_tree,left_biggest,r))
               | Leaf -> raise Unreachable
             end
           | `LT -> let (sub_tree, shrunk) = remove_helper k1 m in
@@ -308,7 +319,8 @@ module MakeTreeDictionary (C : Comparable) = struct
   let remove k d =
     fst (remove_helper k d)
 
-
+  (* insert_helper returns d with (k1,v1) inserted based on the rules of a 2-3
+   * tree, and true if the depth of d has increased by 1, false otherwise *)
   let rec insert_helper k1 v1 d = match d with
   | Leaf -> (Two_Node (Leaf, (k1,v1), Leaf), true)
   | Two_Node (Leaf, (x,y), Leaf) ->
@@ -424,9 +436,9 @@ module MakeTreeDictionary (C : Comparable) = struct
   | Leaf -> None
   | Two_Node (w, (x,y), z) -> if (C.compare k x = `EQ) then Some y else if
     (C.compare k x = `LT) then find k w else find k z
-  | Three_Node (t, (u,v), w, (x,y), z) -> if (C.compare k u = `EQ) then Some v else if
-    (C.compare k u = `LT) then find k t else if (C.compare k x =`EQ) then Some y else if
-    (C.compare k x = `LT) then find k w else find k z
+  | Three_Node (t, (u,v), w, (x,y), z) -> if (C.compare k u = `EQ) then Some v
+    else if (C.compare k u = `LT) then find k t else if (C.compare k x =`EQ)
+    then Some y else if (C.compare k x = `LT) then find k w else find k z
 
   let member k d = find k d <> None
 
@@ -438,7 +450,8 @@ module MakeTreeDictionary (C : Comparable) = struct
   let rec to_list d = match d with
   | Leaf -> []
   | Two_Node (w, (x,y), z) -> (to_list w) @ (x,y)::(to_list z)
-  | Three_Node (t, (u,v), w, (x,y), z) -> (to_list t) @ (u,v)::(to_list w) @ (x,y)::(to_list z)
+  | Three_Node (t, (u,v), w, (x,y), z) ->
+    (to_list t) @ (u,v)::(to_list w) @ (x,y)::(to_list z)
 
 
   let fold f init d =
@@ -482,7 +495,7 @@ module MakeSetOfDictionary (D:Dictionary) = struct
   (* TODO: change type [t] to something involving a dictionary *)
   type t = unit D.t
 
-  let rep_ok s = raise Unimplemented
+
 
   let empty = D.empty
 
@@ -504,9 +517,13 @@ module MakeSetOfDictionary (D:Dictionary) = struct
 
   let union s1 s2 = fold insert s1 s2
 
-  let intersect s1 s2 = fold (fun elem acc -> if member elem s2 then insert elem acc else acc) empty s1
+  let intersect s1 s2 = fold (fun elem acc -> if member elem s2
+  then insert elem acc else acc) empty s1
 
   let difference s1 s2 = fold remove s1 s2
+
+  let rep_ok s = if (D.is_empty(difference s s))
+  then s else raise (Failure "Representation not ok")
 
   let to_list s = List.map (fun (x,y) -> x) (D.to_list s)
 
