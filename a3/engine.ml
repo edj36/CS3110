@@ -34,51 +34,52 @@ module MakeEngine (S:Data.Set with type Elt.t = string)
   type idx = S.t D.t 
 
   (* returns Dictionary *)
-  let rec index_of_line f words dict = 
+  let rec index_of_line d f words dict = 
     match words with
     | [] -> dict 
     | h :: t -> 
       let s =  D.find h dict in match s with 
         | None -> 
-          let new_s = S.insert f S.empty in 
+          let new_s = S.insert (d ^ Filename.dir_sep ^ f) S.empty in 
           let new_dict = D.insert h new_s dict in 
-            index_of_line f t new_dict 
+            index_of_line d f t new_dict 
         | Some x -> 
-          let new_s = S.insert f x in 
+          let new_s = S.insert (d ^ Filename.dir_sep ^ f) x in 
           let new_dict = D.insert h new_s dict in 
-            index_of_line f t new_dict 
+            index_of_line d f t new_dict 
         
 
   (* returns Dictionary *)
-  let rec file_helper f l dict = 
+  let rec file_helper d f l dict = 
     try                                           
       let line = input_line l in                  (* get line to check *)
-      let w = Str.split (Str.regexp "[^0-9a-zA-Z]*[ \t]+[^0-9a-zA-Z]*") line in 
-        file_helper f l (index_of_line f w dict)  (* check next line *)
+      let l_de = " " ^ line ^ " " in 
+      let w = Str.split (Str.regexp "[^0-9a-zA-Z]*[ \t]+[^0-9a-zA-Z]*") l_de in 
+        file_helper d f l (index_of_line d f w dict)  (* check next line *)
     with 
       | End_of_file -> dict                       (* base case *)
   
   (* returns Dictionary *)
-  let index_of_file f dict = 
-    let line = open_in f in 
-    let dict = file_helper f line dict in  
+  let index_of_file d f dict = 
+    let line = open_in (d ^ Filename.dir_sep ^ f) in
+    let dict = file_helper d f line dict in  
     let _ = close_in line in                      (* close the file *)
       dict 
 
   (* returns Dictionary *)
-  let rec dir_helper dir dict = 
+  let rec dir_helper d dir dict = 
     try 
       match Unix.readdir dir with                 (* get file to check *)
       | n when Filename.check_suffix n "txt" ->   (* open .txt files *)
-        dir_helper dir (index_of_file n dict)
-      | _ -> dir_helper dir dict                  (* check next file *)
+          dir_helper d dir (index_of_file d n dict)
+      | _ -> dir_helper d dir dict                  (* check next file *)
     with 
       | End_of_file -> dict                       (* base case *)
   
   let index_of_dir d =
     try 
       let dir = Unix.opendir d in                 (* open directory *)
-      let dict = dir_helper dir D.empty in 
+      let dict = dir_helper d dir D.empty in 
       let _ = Unix.closedir dir in                (* close directory *)
         dict
     with 
@@ -128,7 +129,7 @@ module ListEngine = MakeEngine(ListSet)(ListDict)
 module TreeDict = Data.MakeTreeDictionary(StringComparable)
 module TreeSet = Data.MakeSetOfDictionary(TreeDict)
 
-(* TODO (later): (http://gmail.com is a word) after you've implemented 2-3 trees,
+(* TODO (later): after you've implemented 2-3 trees,
    replace this definition of [TreeEngine] with one
    that calls [MakeEngine] on some appropriate parameters.
    For now, this code punts by equating the two modules. *)
