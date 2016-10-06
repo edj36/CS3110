@@ -54,8 +54,9 @@ module MakeEngine (S:Data.Set with type Elt.t = string)
     try                                           
       let line = input_line l in                  (* get line to check *)
       let l_de = " " ^ line ^ " " in 
-      let w = Str.split (Str.regexp "[^0-9a-zA-Z]*[ \t]+[^0-9a-zA-Z]*") l_de in 
-        file_helper d f l (index_of_line d f w dict)  (* check next line *)
+      let w = Str.split (Str.regexp "[^0-9a-zA-Z]*[ \t]+[^0-9a-zA-Z]*") l_de in
+      let w_low = List.map (String.lowercase_ascii) w in  
+        file_helper d f l (index_of_line d f w_low dict)  (* check next line *)
     with 
       | End_of_file -> dict                       (* base case *)
   
@@ -104,14 +105,18 @@ module MakeEngine (S:Data.Set with type Elt.t = string)
       f_set f idx t acc_set
 
   let or_not idx ors nots =
-    let or_set = f_set S.union idx ors S.empty in 
-    let not_set = f_set S.union idx nots S.empty in 
+    let ors_l = List.map (String.lowercase_ascii) ors in 
+    let nots_l = List.map (String.lowercase_ascii) nots in 
+    let or_set = f_set S.union idx ors_l S.empty in 
+    let not_set = f_set S.union idx nots_l S.empty in 
     let dif_set = S.difference or_set not_set in 
       S.to_list dif_set
 
   let and_not idx ands nots =
-    let and_set = f_set S.intersect idx ands S.empty in 
-    let not_set = f_set S.union idx nots S.empty in 
+    let ands_l = List.map (String.lowercase_ascii) ands in 
+    let nots_l = List.map (String.lowercase_ascii) nots in 
+    let and_set = f_set S.intersect idx ands_l S.empty in 
+    let not_set = f_set S.union idx nots_l S.empty in 
     let dif_set = S.difference and_set not_set in 
       S.to_list dif_set
 
@@ -134,5 +139,3 @@ module TreeSet = Data.MakeSetOfDictionary(TreeDict)
    that calls [MakeEngine] on some appropriate parameters.
    For now, this code punts by equating the two modules. *)
 module TreeEngine = MakeEngine(TreeSet)(TreeDict)
-
-
