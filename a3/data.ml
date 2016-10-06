@@ -44,7 +44,7 @@ module MakeListDictionary (C : Comparable) = struct
    * separate pairs of (x,y), (x,z) where x=x and y=z or y!=z *)
   type 'value t = (key * 'value) list
 
-  (* comparable function in order to be able to sort values. If k1<k2 it returns
+  (* comparable function in order to sort values. If k1<k2 it returns
    * -1, if k1=k2 returns 0 and if k1>k2 it returns 1 *)
   let comparing (k1,v1) (k2,v2) = match C.compare k1 k2 with
     |`EQ -> 0
@@ -445,9 +445,6 @@ module MakeTreeDictionary (C : Comparable) = struct
   let insert k v d =
     fst (insert_helper k v d)
 
-
-
-
   let rec find k d = match d with
   | Leaf -> None
   | Two_Node (w, (x,y), z) -> if (C.compare k x = `EQ) then Some y else if
@@ -468,7 +465,6 @@ module MakeTreeDictionary (C : Comparable) = struct
   | Two_Node (w, (x,y), z) -> (to_list w) @ (x,y)::(to_list z)
   | Three_Node (t, (u,v), w, (x,y), z) ->
     (to_list t) @ (u,v)::(to_list w) @ (x,y)::(to_list z)
-
 
   let fold f init d =
     List.fold_left (fun acc (x,y) -> f x y acc) init (to_list d)

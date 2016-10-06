@@ -1,0 +1,177 @@
+commit a0f8d570344b4009b037f3b42cf14aadecf6b345
+Author: edj36 <edj36@cornell.edu>
+Date:   Wed Oct 5 21:54:05 2016 -0400
+
+    engine is all lowercase
+
+ a3/engine.ml      | 19 +++++++++++--------
+ a3/test_engine.ml | 21 ++++++++++++---------
+ 2 files changed, 23 insertions(+), 17 deletions(-)
+
+commit 0f5fd19c612895d5f2f4eaad4e4bd98500fa0ffb
+Author: George Frentzel <George@Georges-MacBook-Pro.local>
+Date:   Wed Oct 5 21:20:06 2016 -0400
+
+    fixed tree imiplementation
+
+ a3/data.ml        |  2 +-
+ a3/test_data.ml   | 37 ++++++++++++++++++++++++++-----------
+ a3/test_engine.ml | 22 +++++++++++-----------
+ 3 files changed, 38 insertions(+), 23 deletions(-)
+
+commit 708f6383e8969692ada2bae16d772ae2143e9acd
+Author: edj36 <edj36@cornell.edu>
+Date:   Wed Oct 5 20:38:21 2016 -0400
+
+    updating tests for engine
+
+ a3/engine.ml       | 33 +++++++++++++++++----------------
+ a3/test0/small.txt |  3 +++
+ a3/test_engine.ml  | 42 ++++++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 60 insertions(+), 18 deletions(-)
+
+commit 8b6b6bc02c9385e17981e10fccc8875a9bc3d94a
+Merge: b4162b6 83c1c48
+Author: George Frentzel <George@Georges-MacBook-Pro.local>
+Date:   Wed Oct 5 15:55:39 2016 -0400
+
+    Merge branch 'master' of https://github.com/edj36/CS3110
+
+commit b4162b65f284c2ccf9d47957ea6ba0ad3df9b05e
+Author: George Frentzel <George@Georges-MacBook-Pro.local>
+Date:   Wed Oct 5 15:48:24 2016 -0400
+
+    completed rep_ok
+
+ a3/data.ml | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+commit 83c1c48af6fd0a12eb4cab96bf731b0553761254
+Author: edj36 <edj36@cornell.edu>
+Date:   Wed Oct 5 05:06:50 2016 -0400
+
+    working engine.ml implementation
+
+ a3/engine.ml      | 129 ++++++++++++++++++++++++++++++++++++++++++++----------
+ a3/test_data.ml   |  22 +++++++---
+ a3/test_engine.ml |   5 ++-
+ 3 files changed, 126 insertions(+), 30 deletions(-)
+
+commit 794ca633da26244d42f261a1fa40a52f53df2b5d
+Author: edj36 <edj36@cornell.edu>
+Date:   Wed Oct 5 01:20:48 2016 -0400
+
+    updating test cases to load the engine, and to use a first pass implementation of test harness
+
+ a3/test_data.ml   |  3 ++-
+ a3/test_engine.ml | 12 +++++++++++-
+ 2 files changed, 13 insertions(+), 2 deletions(-)
+
+commit dbec501eb44335a3d518a67e0b4222e90a0cf097
+Author: George Frentzel <George@Georges-MacBook-Pro.local>
+Date:   Tue Oct 4 23:01:18 2016 -0400
+
+    created a framework in testing to test the two versions
+
+ a3/data.ml      | 34 ++++++++++++++++++++++++----------
+ a3/test_data.ml | 16 ++++++++++++++--
+ 2 files changed, 38 insertions(+), 12 deletions(-)
+
+commit 83cb55e37ba7bb488ec00f8294d795e0e38da081
+Author: George Frentzel <George@Georges-MacBook-Pro.local>
+Date:   Tue Oct 4 19:45:36 2016 -0400
+
+    created remove function for 2-3 tree
+
+ a3/data.ml | 248 +++++++++++++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 218 insertions(+), 30 deletions(-)
+
+commit 5b95255ec955f201a96417e19654d0c5b200f798
+Author: George Frentzel <George@Georges-MacBook-Pro.local>
+Date:   Mon Oct 3 22:59:02 2016 -0400
+
+    implemented insert for 2-3 trees
+
+ a3/data.ml | 91 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 85 insertions(+), 6 deletions(-)
+
+commit 915f5c362d9fc820a40aec0eaa5d4d4f583c32d2
+Author: George Frentzel <George@Georges-MacBook-Pro.local>
+Date:   Mon Oct 3 15:25:31 2016 -0400
+
+    Implemented 2-3 tree besides insert, remove & rep_ok
+
+ a3/data.ml | 69 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 68 insertions(+), 1 deletion(-)
+
+commit 488c787e7b3faa023029c1ad7614f475cdf26e75
+Author: George Frentzel <George@Georges-MacBook-Pro.local>
+Date:   Sun Oct 2 18:22:05 2016 -0400
+
+    Finished MakeSetofDictionaries
+
+ a3/data.ml | 48 +++++++++++++++++++-----------------------------
+ 1 file changed, 19 insertions(+), 29 deletions(-)
+
+commit 2f083b7eeb2da16c2e28c596e646c39f27246e52
+Author: George Frentzel <George@Georges-MacBook-Pro.local>
+Date:   Sun Oct 2 11:49:41 2016 -0400
+
+    Completion of MakeListDictionary save rep_ok
+
+ a3/data.ml | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
+
+commit e76b691b6a7d3454923d092f398c410572159a34
+Author: George Frentzel <George@Georges-MacBook-Pro.local>
+Date:   Sat Oct 1 19:50:30 2016 -0400
+
+    Initial code for simple implementation
+
+ a3/data.ml | 35 ++++++++++++++++++-----------------
+ 1 file changed, 18 insertions(+), 17 deletions(-)
+
+commit 629c6be1892bcfa623c1d505606aa204634afa0c
+Author: George Frentzel <George@Georges-MacBook-Pro.local>
+Date:   Sat Oct 1 16:40:38 2016 -0400
+
+    testing commit
+
+ a3/data.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit e0bb145d4dce58106d373dc526d8b95320d53184
+Author: edj36 <edj36@cornell.edu>
+Date:   Sat Oct 1 16:38:02 2016 -0400
+
+    initial commit
+
+ a3/.ocamlinit        |    6 +
+ a3/Makefile          |    9 +
+ a3/VERSION           |    1 +
+ a3/_tags             |    0
+ a3/checkenv.sh       |   49 +
+ a3/checktypes.sh     |  384 +++
+ a3/data.ml           |  159 ++
+ a3/data.mli          |  201 ++
+ a3/engine.ml         |   54 +
+ a3/engine.mli        |   44 +
+ a3/test1/medium.txt  |    5 +
+ a3/test1/small.txt   |    3 +
+ a3/test2/pg11.txt    | 3735 +++++++++++++++++++++++++++
+ a3/test2/pg16328.txt | 7004 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ a3/test_data.ml      |   20 +
+ a3/test_data.mli     |   19 +
+ a3/test_engine.ml    |    7 +
+ a3/test_engine.mli   |    2 +
+ a3/test_main.ml      |    8 +
+ 19 files changed, 11710 insertions(+)
+
+commit 07f99f75bfac899b3767c0e250741141922ec060
+Author: edj36 <edj36@cornell.edu>
+Date:   Sat Oct 1 16:35:14 2016 -0400
+
+    Initial commit
+
+ README.md | 2 ++
+ 1 file changed, 2 insertions(+)
