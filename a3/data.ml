@@ -279,7 +279,8 @@ module MakeTreeDictionary (C : Comparable) = struct
             else fix_tree sub_tree
             (Three_Node (sub_tree,left_biggest,m,(y,z),r))
           | Three_Node (Leaf,(sub1,val1),Leaf,(sub2,val2),Leaf) ->
-            (Three_Node (Two_Node(Leaf,(sub1,val1),Leaf),(sub2,val2),m,(y,z),r),false)
+            (Three_Node (Two_Node(Leaf,(sub1,val1),Leaf),
+            (sub2,val2),m,(y,z),r),false)
           | Three_Node (a,(sub1,val1),b,(sub2,val2),c) ->
             let left_biggest = find_biggest c in
             let (sub_tree, shrunk) = remove_helper (fst left_biggest) l in
@@ -309,7 +310,8 @@ module MakeTreeDictionary (C : Comparable) = struct
                 else fix_tree sub_tree
                 (Three_Node (l,(w,x),sub_tree,left_biggest,r))
               | Three_Node (Leaf,(sub1,val1),Leaf,(sub2,val2),Leaf) ->
-                (Three_Node (l,(w,x),Two_Node (Leaf, (sub1,val1),Leaf),(sub2,val2),r),false)
+                (Three_Node (l,(w,x),Two_Node
+                (Leaf, (sub1,val1),Leaf),(sub2,val2),r),false)
               | Three_Node (a,(sub1,val1),b,(sub2,val2),c) ->
                 let left_biggest = find_biggest c in
                 let (sub_tree, shrunk) = remove_helper (fst left_biggest) m in
