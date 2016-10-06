@@ -327,7 +327,7 @@ module MakeTreeDictionary (C : Comparable) = struct
       | `GT ->
       begin
         match (C.compare k1 y) with
-        | `EQ -> (Three_Node (Leaf, (k1,v1), Leaf, (y,z), Leaf), false)
+        | `EQ -> (Three_Node (Leaf, (w,x), Leaf, (k1,v1), Leaf), false)
         | `LT -> (Two_Node (Two_Node (Leaf, (w,x), Leaf), (k1,v1),
             Two_Node (Leaf, (y,z), Leaf)), true)
         | `GT -> (Two_Node (Two_Node (Leaf, (w,x), Leaf), (y,z),
