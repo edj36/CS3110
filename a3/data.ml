@@ -1,7 +1,6 @@
 exception Unimplemented
 exception Unreachable
 
-
 module type Comparable =
   sig
     type t
@@ -36,10 +35,13 @@ module MakeListDictionary (C : Comparable) = struct
   module Key = C
   type key = C.t
 
-  (* TODO: getting type ['value t] to something involving
-     association lists. *)
-  (* AF: TODO: document the abstraction function.
-   * RI: TODO: document any representation invariants. *)
+  (* Abstraction function: the list [a1; ...; an] represents the
+   * smallest set containing all the elements a1, ..., an., where any a1 is a
+   * pair (key,'value)
+   * The list does not contain duplicates.
+   * [] represents the empty set.
+   * RI: The representation does not contain any duplicate elements, or two
+   * separate pairs of (x,y), (x,z) where x=x and y=z or y!=z *)
   type 'value t = (key * 'value) list
 
   (* comparable function in order to be able to sort values. If k1<k2 it returns
@@ -91,10 +93,10 @@ module MakeTreeDictionary (C : Comparable) = struct
   module Key = C
   type key = C.t
 
-  (* TODO: getting type ['value t] to something involving
-     association lists. *)
-  (* AF: TODO: document the abstraction function.
-   * RI: TODO: document any representation invariants. *)
+  (* AF: The values of the tree represent the dictionary that contains key value
+   * pairs equivalent to the pairs found in the tree.
+   * RI: The representation does not contain duplicate elements, and all leaves
+   * are at the same depth*)
   type 'value t =
     | Leaf
     | Two_Node of 'value t * (key * 'value) * 'value t
@@ -238,11 +240,15 @@ module MakeTreeDictionary (C : Comparable) = struct
       | `EQ ->
         begin
           match l with
+          | Two_Node (Leaf, (sub1, val1), Leaf) ->
+            fix_tree Leaf (Two_Node (Leaf,(sub1,val1),r))
           | Two_Node (a,(sub1,val1),b) ->
             let left_biggest = find_biggest b in
             let (sub_tree, shrunk) = remove_helper (fst left_biggest) l in
             if (not shrunk) then (Two_Node (sub_tree,left_biggest,r),false)
             else fix_tree sub_tree (Two_Node (sub_tree,left_biggest,r))
+          | Three_Node (Leaf,(sub1,val1),Leaf,(sub2,val2),Leaf) ->
+            (Two_Node (Two_Node (Leaf,(sub1,val1),Leaf),(sub2,val2),r),false)
           | Three_Node (a,(sub1,val1),b,(sub2,val2),c) ->
             let left_biggest = find_biggest c in
             let (sub_tree, shrunk) = remove_helper (fst left_biggest) l in
@@ -263,6 +269,8 @@ module MakeTreeDictionary (C : Comparable) = struct
       | `EQ ->
         begin
           match l with
+          | Two_Node (Leaf,(sub1,val1),Leaf) ->
+            fix_tree Leaf (Three_Node (Leaf, (sub1,val1),m,(y,z),r))
           | Two_Node (a,(sub1,val1),b) ->
             let left_biggest = find_biggest b in
             let (sub_tree, shrunk) = remove_helper (fst left_biggest) l in
@@ -270,6 +278,8 @@ module MakeTreeDictionary (C : Comparable) = struct
             then (Three_Node (sub_tree,left_biggest,m,(y,z),r),false)
             else fix_tree sub_tree
             (Three_Node (sub_tree,left_biggest,m,(y,z),r))
+          | Three_Node (Leaf,(sub1,val1),Leaf,(sub2,val2),Leaf) ->
+            (Three_Node (Two_Node(Leaf,(sub1,val1),Leaf),(sub2,val2),m,(y,z),r),false)
           | Three_Node (a,(sub1,val1),b,(sub2,val2),c) ->
             let left_biggest = find_biggest c in
             let (sub_tree, shrunk) = remove_helper (fst left_biggest) l in
@@ -289,6 +299,8 @@ module MakeTreeDictionary (C : Comparable) = struct
           | `EQ ->
             begin
               match m with
+              | Two_Node (Leaf,(sub1,val1),Leaf) ->
+                fix_tree Leaf (Three_Node (l,(w,x),Leaf,(sub1,val1),r))
               | Two_Node (a,(sub1,val1),b) ->
                 let left_biggest = find_biggest b in
                 let (sub_tree, shrunk) = remove_helper (fst left_biggest) m in
@@ -296,6 +308,8 @@ module MakeTreeDictionary (C : Comparable) = struct
                 then (Three_Node (l,(w,x),sub_tree,left_biggest,r),false)
                 else fix_tree sub_tree
                 (Three_Node (l,(w,x),sub_tree,left_biggest,r))
+              | Three_Node (Leaf,(sub1,val1),Leaf,(sub2,val2),Leaf) ->
+                (Three_Node (l,(w,x),Two_Node (Leaf, (sub1,val1),Leaf),(sub2,val2),r),false)
               | Three_Node (a,(sub1,val1),b,(sub2,val2),c) ->
                 let left_biggest = find_biggest c in
                 let (sub_tree, shrunk) = remove_helper (fst left_biggest) m in

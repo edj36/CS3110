@@ -38,6 +38,17 @@ module DictTester (M:DictionaryMaker) = struct
     Dict.insert 4 4 |>
     Dict.insert 36 4
 
+  let dictv1 =
+    Dict.empty |>
+    Dict.insert 3 4 |>
+    Dict.insert 6 4 |>
+    Dict.insert 29 4 |>
+    Dict.insert 15 4 |>
+    Dict.insert 2 4 |>
+    Dict.insert 4 4
+
+  let divtv = Dict.rep_ok dictv1
+  let dictv2 = Dict.remove 3 dictv1
 
   let dict1 = Dict1.empty |>
     Dict1.insert "a" 4 |>
