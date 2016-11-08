@@ -1,9 +1,14 @@
 module Turn : sig
 
-  type game_state
+  type state
   type player
 
-  val get_next : game_state -> player
+  val get_current : state -> player
 
-  val get_move : int -> string -> 
+  val get_next : state -> player
+
+  val get_move : int -> string ->
+
+  val next : state -> state
+  
 end
