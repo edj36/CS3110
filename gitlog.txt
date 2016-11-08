@@ -1,3 +1,72 @@
+commit deb31917cfb28c613fb1f51976f9a312fe0618b3
+Author: edj36 <edj36@cornell.edu>
+Date:   Thu Oct 6 01:47:33 2016 -0400
+
+    final commit, version getting turned in
+
+ a3/cs3110-a3-overview.pdf | Bin 62721 -> 0 bytes
+ a3/data.ml                |   6 +-
+ a3/test_data.ml           |  53 ++++++++------
+ a3/test_engine.ml         |  61 +++-------------
+ gitlog.txt                | 177 ++++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 220 insertions(+), 77 deletions(-)
+
+commit 3097104c75fcc7809743059c561ef99098b3501f
+Author: edj36 <edj36@cornell.edu>
+Date:   Thu Oct 6 01:27:42 2016 -0400
+
+    new overview document
+
+ a3/cs3110-a3-search.pdf | Bin 0 -> 55668 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit f05efc580e42cc55a5ef870b0c41d09e15baf775
+Author: George Frentzel <George@dhcp-rhodes-187.redrover.cornell.edu>
+Date:   Thu Oct 6 01:25:13 2016 -0400
+
+    met 80 char or less requirement
+
+ a3/data.ml | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+commit 1afa3cf416ac2ce73c02634d4cc2ea28abe1f8eb
+Author: George Frentzel <George@dhcp-rhodes-187.redrover.cornell.edu>
+Date:   Thu Oct 6 01:22:29 2016 -0400
+
+    fixed remove to not reach Unreachable error
+
+ a3/data.ml      | 32 +++++++++++++++++++++++---------
+ a3/test_data.ml | 11 +++++++++++
+ 2 files changed, 34 insertions(+), 9 deletions(-)
+
+commit 49aba897665ce3f53f67f4d9b47134e62fb213a1
+Author: edj36 <edj36@cornell.edu>
+Date:   Thu Oct 6 00:03:01 2016 -0400
+
+    final commit again
+
+ a3/cs3110-a3-overview.pdf | Bin 0 -> 62721 bytes
+ a3/engine.ml              |  48 ++++++++++++++--------
+ a3/test_engine.ml         | 100 +++++++++++++++++++++++++++++++++++++++-------
+ 3 files changed, 117 insertions(+), 31 deletions(-)
+
+commit fa68eff8bdc936f669e0a1066fc1fc8bf07ff605
+Merge: 0c6b22a a0f8d57
+Author: George Frentzel <George@dhcp-rhodes-187.redrover.cornell.edu>
+Date:   Thu Oct 6 00:00:43 2016 -0400
+
+    Merge branch 'master' of https://github.com/edj36/CS3110
+
+commit 0c6b22a29c20fb02e5a0046bdae5eee9b1299809
+Author: George Frentzel <George@dhcp-rhodes-187.redrover.cornell.edu>
+Date:   Wed Oct 5 23:59:31 2016 -0400
+
+    final commit tears for life
+
+ a3/data.ml      | 61 ++++++++++++++++++++++++++++++++++++---------------------
+ a3/test_data.ml | 47 +++++++++++++++++++++++++++++++++++++++-----
+ 2 files changed, 81 insertions(+), 27 deletions(-)
+
 commit a0f8d570344b4009b037f3b42cf14aadecf6b345
 Author: edj36 <edj36@cornell.edu>
 Date:   Wed Oct 5 21:54:05 2016 -0400
