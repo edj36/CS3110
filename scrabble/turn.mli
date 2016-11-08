@@ -9,6 +9,6 @@ module Turn : sig
 
   val get_move : int -> string ->
 
-  val next : state -> state
-  
+  val next_turn : state -> state
+
 end
