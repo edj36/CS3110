@@ -1,0 +1,3 @@
+module Dictionary : sig
+
+end
