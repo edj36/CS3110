@@ -1,3 +1,0 @@
-module Control : sig
-
-end
