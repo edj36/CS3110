@@ -11,4 +11,6 @@ module Turn : sig
 
   val next_turn : state -> state
 
+  val repl : move -> unit
+
 end
