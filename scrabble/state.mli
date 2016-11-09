@@ -3,6 +3,6 @@ module State : sig
 
   type game_state
 
-  val 
+  val update : turn -> game_state -> game_state
 
 end

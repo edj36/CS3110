@@ -7,7 +7,7 @@ module Turn : sig
 
   val get_next : state -> player
 
-  val get_move : int -> string ->
+  (*val get_move : int -> string *)
 
   val next_turn : state -> state
 

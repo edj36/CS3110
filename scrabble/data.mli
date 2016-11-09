@@ -8,6 +8,8 @@ type bonus_status =
   | Center
   | Normal
 
+type move = (letter * int * int) list 
+
 type tile =
 {
   coordinates : (int * int);
@@ -15,6 +17,10 @@ type tile =
   isOccupied : bool;
   char: char option
 }
+
+type player = 
+  | Human of string 
+  | AI of string 
 
 type scrabble_board = tile list list
 type score_board = (player * int) list
