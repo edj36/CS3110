@@ -10,7 +10,7 @@ module AI : sig
   val search_move : state -> move t
 
   (* draw_letter will make AI draw one letter from letter_bag *)
-  val draw_letter : state -> state
+  val draw_letter : state -> move
 
   (* get_scote will evaluate the score of the move *)
   val get_scote : move -> int
