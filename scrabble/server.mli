@@ -1,4 +1,3 @@
-(*turn, state, server*)
 module Server : sig
 
   val get_score : player -> game_state -> int
