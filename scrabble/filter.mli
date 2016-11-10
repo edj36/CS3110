@@ -1,18 +1,21 @@
-(* Signature for Filter *)
+(* A [Filter] is an abstraction that determines validity of any given
+ * move within any given state. *)
 module Filter : sig
-  (* data type for the game state *)
+
+  (* type for the game state *)
   type state
-  (* data type for the move *)
+
+  (* type for a move in the game *)
   type move
-  (* data type for the dictionary*)
+
+  (* type for the dictionary of possible scrabble words *)
   type dictionary
 
-  (* [validate] will evaluate the latest move by the player using dictionary module.
-   * if returns true, the move is valid in the current state.
-   * if it is false, then the move is invalid *)
+  (* [validate] is the boolean value indicating the validity (true if valid) 
+   * of [move] within [state], given scrabble dictionary [dictionary] *)
   val validate : state -> move -> dictionary -> bool
 
-  (* [send] will send the valid move to the server module and return updates state *)
+  (* [send] is the new [state] resulting evaluating [move] in [state] *)
   val send : state -> move -> state
 
 end

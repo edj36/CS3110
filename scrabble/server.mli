@@ -1,16 +1,21 @@
-(* Signature for server *)
+(* A [Server] is the backend of the scrabble game. *)
 module Server : sig
-  (* data type for the game state *)
+
+  (* type for the game state *)
   type state
-  (* data type for the player *)
-  type player
-  (* data type for the gui *)
+
+  (* type for a move in the game *)
+  type move
+
+  (* type for the gui in the game *)
   type gui
 
-  (* update will update the game state *)
-  val update : state -> state
+  (* [update] is the new [state] resulting from evaluating [move] in the 
+   * current [state] *)
+  val update : move -> state -> state
 
-  (* alert_gui will notify the update to the gui module *)
+  (* [alert_gui] is a unit resulting from printing predetermined contents of 
+   * [state] via [gui] for the client to view *)
   val alert_gui : state -> gui -> unit
   
 end

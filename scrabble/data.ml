@@ -8,7 +8,9 @@ type bonus_status =
   | Center
   | Normal
 
-type move = (letter * int * int) list 
+type move = 
+  | Move of (letter * int * int) list 
+  | Draw  
 
 type tile =
 {
