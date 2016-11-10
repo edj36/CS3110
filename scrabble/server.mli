@@ -12,4 +12,5 @@ module Server : sig
 
   (* alert_gui will notify the update to the gui module *)
   val alert_gui : state -> gui -> unit
+  
 end

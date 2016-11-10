@@ -6,15 +6,11 @@ module State : sig
   (* store all players of the game *)
   type player t
 
-  (* setup will initialize the state. [player t] will represent the number
+  (* [setup] will initialize the state. [player t] will represent the number
    * of players and AI(s) who play the game *)
   val setup : player t -> state
 
-  (* update will update the state after one turn of game play. *)
+  (* [update] will update the state after one turn of game play. *)
   val update : state -> state
-
-  (* quit is called when the user commands to stop playing the game.
-   * Stop updating state and finishe the game *)
-  val quit : state -> unit
 
 end
