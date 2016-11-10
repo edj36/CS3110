@@ -1,8 +1,20 @@
-(* Signature for game state *)
+(* Signature for game state. Control and manage data structure we need for
+ * the game play *)
 module State : sig
+  (* data type for the game state *)
+  type state
+  (* store all players of the game *)
+  type player t
 
-  type game_state
+  (* setup will initialize the state. [player t] will represent the number
+   * of players and AI(s) who play the game *)
+  val setup : player t -> state
 
-  val update : turn -> game_state -> game_state
+  (* update will update the state after one turn of game play. *)
+  val update : state -> state
+
+  (* quit is called when the user commands to stop playing the game.
+   * Stop updating state and finishe the game *)
+  val quit : state -> unit
 
 end
