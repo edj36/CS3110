@@ -1,5 +1,7 @@
+open Data
 
-type letter = { character: char; pt : int; count : int}
+(* pre-define players for the sake of testing *)
+let players = [ Human "Alexis"; AI "Kenta" ]
 
 (* [initial_bag] is a letter list representing the intial state of the game *)
 let initialize_bag ()=
@@ -55,13 +57,20 @@ let rand_char bag =
   | h :: t -> if num <= h.count then Some h else helper (num-h.count) t
   in helper num bag
 
-(* [initial_hand] is a letter list of 7 randomly chosen letters *)
-let initial_hand () =
-  let bag = initialize_bag () in
-  let rec helper num bag =
-    if num = 0 then []
-    else match (rand_char bag) with
-    | None -> []
-    | Some h -> let new_bag = draw_char h.character bag in
-    h :: helper (num-1) new_bag in
-  helper 7 bag
+let initial_hands (players : player list)=
+  let initial_bag = initialize_bag () in
+  let rec player_hand player bag =
+    match players with
+    | []-> []
+    | h::t->
+    let rec helper num bag =
+      if num = 0 then []
+      else match (rand_char bag) with
+        | None -> []
+        | Some h -> let new_bag = draw_char h.character bag in
+        h :: helper (num-1) new_bag in
+    let hand = helper 7 bag in
+    let new_bag =
+    List.fold_left (fun acc elm -> acc |> draw_char elm.character) bag hand in
+  [(h,hand)] :: player_hand t new_bag in
+  player_hand players initial_bag

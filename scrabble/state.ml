@@ -1,21 +1,21 @@
-(* A [State] is the current game board and all associated data of the
- * scrabble game. *)
-module State : sig
+open Data
+
+module State = struct
 
   (* type for game state *)
-  type state
+  type state = game_state
 
   (* type for a move in the game *)
-  type move
+  type move = moves
 
   (* type to store all players of the game *)
-  type players
+  type players = player list
 
   (* [setup] is the initial [state] of the game constructed from [player t] *)
-  val setup : players -> state
+  let setup players = failwith "Unimplemented"
 
   (* [update] is the new [state] resulting from evaluation of [move] in the
    * current [state] *)
-  val update : move -> state -> state
+  let update move state = failwith "Unimplemented"
 
 end
