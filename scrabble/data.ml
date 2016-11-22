@@ -13,12 +13,13 @@ module Data = struct
   type moves =
     | Move of (letter * int * int) list
     | Draw
+    | SwitchAll
+    | SwitchSome of letter list
 
   type tile =
     {
       coordinates : (int * int);
       bonus : bonus_status;
-      isOccupied : bool;
       char: char option
     }
 
@@ -26,7 +27,7 @@ module Data = struct
     | Human of string
     | AI of string
 
-  type scrabble_board = tile list list
+  type scrabble_board = tile array array
   type score_board = (player * int) list
   type letter_bag = letter list
   type player_rack = letter list
