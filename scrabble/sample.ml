@@ -33,7 +33,9 @@ let initialize_bag ()=
   {character = ' '; pt = 0; count = 2}
 ]
 
-let rec initialize_score = function
+(* [initialize_score] represents the tuple list of each player and their scores*)
+let rec initialize_score (players : player list) =
+  match players with
   | [] -> []
   | h::t -> (h, 0):: initialize_score t
 
@@ -52,13 +54,15 @@ let rand_char bag =
   let sum = List.fold_left (fun acc elm -> acc + elm.count) 0 bag in
   match sum with
   | 0 -> failwith "Bag is empty!"
-  | _ -> 
+  | _ ->
   let num = Random.int sum in
   let rec helper num lst = match lst with
   | [] -> None
   | h :: t -> if (num <= h.count) && (h.count <> 0) then Some h
   else helper (num-h.count) t in helper num bag
 
+(* [draw_letters] represents the letter option list after drawing specified
+ * number of letters from bag. *)
 let rec draw_letters num bag =
   match num with
   | 0 -> []
@@ -94,12 +98,15 @@ let dl_coordinate =
  (6,6);(8,6);(8,8);(6,8)
  ]
 
+(* [fill_coodinate] is an updated game board after filling the specified
+ * coordinates with element, [fill] *)
 let fill_coordinate coordinates fill board =
   match coordinates with
   |[]-> ()
   |(x,y)::t -> board.(x).(y)<- fill
 
-let sample_board () =
+(* [initilize_board] is a tile array array representation of game board *)
+let initilize_board () =
   let board = Array.make_matrix 15 15 { bonus= Normal; letter = None } in
   board.(7).(7) <- { bonus= Center; letter = None };
   fill_coordinate tw_coordinate { bonus= Triple_word; letter = None } board;
@@ -108,14 +115,17 @@ let sample_board () =
   fill_coordinate dl_coordinate { bonus= Double_letter; letter = None } board;
   board
 
-let rec initialize_rack players bag =
+(* [initialize_rack] is a (player * letter list) list, representating
+ * each player's hands *)
+let rec initialize_rack (players: player list) bag =
   match players with
   | []-> []
   | h::t -> let hand = draw_letters 7 bag in (h, hand) :: initialize_rack t bag
 
+(* [initialize_state] is a representation of intial game state *)
 let initialize_state (players: player list)=
   let initial_score = initialize_score players in
-  let initial_board = sample_board () in
+  let initial_board = initilize_board () in
   let initial_bag = initialize_bag () in
   let racks = initialize_rack players initial_bag in
   {
