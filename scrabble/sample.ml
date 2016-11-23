@@ -50,10 +50,13 @@ let rec draw_char c bag =
  * one letter from the letter bag *)
 let rand_char bag =
   let sum = List.fold_left (fun acc elm -> acc + elm.count) 0 bag in
+  match sum with
+  | 0 -> failwith "Bag is empty!"
+  | _ -> 
   let num = Random.int sum in
   let rec helper num lst = match lst with
   | [] -> None
-  | h :: t -> if num <= h.count then Some h
+  | h :: t -> if (num <= h.count) && (h.count <> 0) then Some h
   else helper (num-h.count) t in helper num bag
 
 let rec draw_letters num bag =
@@ -64,9 +67,46 @@ let rec draw_letters num bag =
   | None -> failwith "Bag is enpty";
   | Some l -> draw_char l.character bag); l::draw_letters (num-1) bag
 
+let tw_coordinate =
+ [(0,0);(0,7);(0,14);(7,0);(7,14);(14,0);(14,7);(14,14)]
+
+let tl_coordinate =
+ [
+ (1,5);(1,9);(5,1);(5,5);
+ (5,9);(5,13);(9,1);(9,5);
+ (9,9);(9,13);(13,5);(13,9)
+ ]
+
+let dw_coordinate =
+ [
+ (1,1);(2,2);(3,3);(4,4);
+ (10,4);(11,3);(12,2);(13,1);
+ (4,10);(3,11);(2,12);(1,13);
+ (10,10);(11,11);(12,12);(13,13)
+ ]
+
+let dl_coordinate =
+ [
+ (0,3);(0,11);(2,6);(2,8);(3,7);
+ (3,0);(11,0);(6,2);(8,2);(7,3);
+ (14,3);(14,11);(12,6);(12,8);(11,7);
+ (3,14);(11,14);(6,12);(8,12);(7,11);
+ (6,6);(8,6);(8,8);(6,8)
+ ]
+
+let fill_coordinate coordinates fill board =
+  match coordinates with
+  |[]-> ()
+  |(x,y)::t -> board.(x).(y)<- fill
+
 let sample_board () =
   let board = Array.make_matrix 15 15 { bonus= Normal; letter = None } in
-  board.(7).(7) <- { bonus= Center; letter = None }; board
+  board.(7).(7) <- { bonus= Center; letter = None };
+  fill_coordinate tw_coordinate { bonus= Triple_word; letter = None } board;
+  fill_coordinate tl_coordinate { bonus= Triple_letter; letter = None } board;
+  fill_coordinate dw_coordinate { bonus= Double_word; letter = None } board;
+  fill_coordinate dl_coordinate { bonus= Double_letter; letter = None } board;
+  board
 
 let rec initialize_rack players bag =
   match players with
