@@ -1,10 +1,8 @@
 open Data
 
-(* pre-define players for the sake of testing *)
-let players = [ Human "Alexis"; AI "Kenta" ]
+let sample_players = [Human "Eric J"; Human "Eric Z"; AI "Pehuen"; AI "Kenta"]
 
-(* [initial_bag] is a letter list representing the intial state of the game *)
-let letter_bag ()=
+let initialize_bag ()=
 [
   {character = 'A'; pt = 1; count = 9};
   {character = 'B'; pt = 3; count = 2};
@@ -35,14 +33,18 @@ let letter_bag ()=
   {character = ' '; pt = 0; count = 2}
 ]
 
+let rec initialize_score = function
+  | [] -> []
+  | h::t -> (h, 0):: initialize_score t
+
 (* [draw_char] is a letter list representing the state
  * after drawing a letter from the list *)
 let rec draw_char c bag =
   match bag with
-  |[]-> bag
-  |h::t ->
-  if h.character = c then h.count <- (h.count - 1)
-  else h :: draw_char c t
+  | []-> ()
+  | h::t ->
+  if h.character = c then h.count <- h.count - 1
+  else draw_char c t
 
 (* [rand_char] is a letter option which is simulated after randomly pick
  * one letter from the letter bag *)
@@ -51,23 +53,35 @@ let rand_char bag =
   let num = Random.int sum in
   let rec helper num lst = match lst with
   | [] -> None
-  | h :: t -> if num <= h.count then Some h else helper (num-h.count) t
-  in helper num bag
+  | h :: t -> if num <= h.count then Some h
+  else helper (num-h.count) t in helper num bag
 
-let initial_hands (players : player list)=
+let rec draw_letters num bag =
+  match num with
+  | 0 -> []
+  | _ -> let l = rand_char bag in
+  (match l with
+  | None -> failwith "Bag is enpty";
+  | Some l -> draw_char l.character bag); l::draw_letters (num-1) bag
+
+let sample_board () =
+  let board = Array.make_matrix 15 15 { bonus= Normal; letter = None } in
+  board.(7).(7) <- { bonus= Center; letter = None }; board
+
+let rec initialize_rack players bag =
+  match players with
+  | []-> []
+  | h::t -> let hand = draw_letters 7 bag in (h, hand) :: initialize_rack t bag
+
+let initialize_state (players: player list)=
+  let initial_score = initialize_score players in
+  let initial_board = sample_board () in
   let initial_bag = initialize_bag () in
-  let rec player_hand player bag =
-    match players with
-    | []-> []
-    | h::t->
-    let rec helper num bag =
-      if num = 0 then []
-      else match (rand_char bag) with
-        | None -> []
-        | Some h -> let new_bag = draw_char h.character bag in
-        h :: helper (num-1) new_bag in
-    let hand = helper 7 bag in
-    let new_bag =
-    List.fold_left (fun acc elm -> acc |> draw_char elm.character) bag hand in
-  [(h,hand)] :: player_hand t new_bag in
-  player_hand players initial_bag
+  let racks = initialize_rack players initial_bag in
+  {
+    board = initial_board;
+    score_board = initial_score;
+    letter_bag = initial_bag;
+    player_racks = racks;
+    turn = 0
+  }

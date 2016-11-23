@@ -1,6 +1,6 @@
 module Data = struct
 
-  type letter = { character: char; pt : int; count : int }
+  type letter = { character: char; pt : int; mutable count : int }
 
   type bonus_status =
     | Double_letter
@@ -18,9 +18,8 @@ module Data = struct
 
   type tile =
     {
-      coordinates : (int * int);
       bonus : bonus_status;
-      char: char option
+      letter: letter option
     }
 
   type player =
@@ -30,7 +29,7 @@ module Data = struct
   type scrabble_board = tile array array
   type score_board = (player * int) list
   type letter_bag = letter list
-  type player_rack = letter list
+  type player_rack = (player * letter option list)
 
   type game_state =
   {
