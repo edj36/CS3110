@@ -2,6 +2,12 @@ module Data = struct
 
   type letter = { character: char; pt : int; mutable count : int }
 
+  type coordinate = char * int
+
+  type direction =
+    | Across
+    | Down
+
   type bonus_status =
     | Double_letter
     | Double_word
@@ -11,15 +17,17 @@ module Data = struct
     | Normal
 
   type moves =
-    | Move of (letter * int * int) list
+    | Play of string * direction * coordinate
     | Draw
     | SwitchAll
     | SwitchSome of letter list
+    | Pass
+    | Shuffle
 
   type tile =
     {
       bonus : bonus_status;
-      letter: letter option
+      letter: letter option;
     }
 
   type player =
