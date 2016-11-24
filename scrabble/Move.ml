@@ -3,6 +3,7 @@ open String
 open Str
 open List
 
+
 module type Move = sig
   type state
   type move
@@ -11,7 +12,7 @@ module type Move = sig
   val validate : string -> bool
 end
 
-module HumanMove : Move =  struct
+module HumanMove : (Move with type state = game_state) =  struct
 
   (* type for game state *)
   type state = game_state
@@ -32,7 +33,7 @@ module HumanMove : Move =  struct
   | "Play"       -> Play ( List.nth split 1,
                            string_to_direction (List.nth split 2),
                          ( String.get (List.nth split 3) 0,
-                           int_of_string (List.nth split 4)))
+                           (int_of_string (List.nth split 4))))
   | "Draw"       -> Draw
   | "SwitchAll"  -> SwitchAll
   | "SwitchSome" -> SwitchSome []
@@ -44,7 +45,7 @@ module HumanMove : Move =  struct
 
   (* [submit_move] enters [move] to the game and is the [state] resulting from
    * [move]'s' execution *)
-  let submit_move = failwith "Unimplemented"
+  let submit_move s m = failwith "Unimplemented"
 
 end
 
@@ -52,6 +53,6 @@ end
 let rec repl c_state =
   let () = print_endline "Enter Move" in
   let s_move = read_line() in
-  let new_state = submit_move c_state (get_move s_move) in
+  let new_state = HumanMove.submit_move c_state (HumanMove.get_move s_move) in
   let () = print_endline "" in
   repl new_state
