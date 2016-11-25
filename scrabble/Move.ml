@@ -75,11 +75,3 @@ module HumanMove : (Move with type state = game_state) =  struct
     | Pass -> failwith "Unimplemented"
     | Shuffle -> failwith "Unimplemented"
 end
-
-
-let rec repl c_state =
-  let () = print_endline "Enter Move" in
-  let s_move = read_line() in
-  let new_state = HumanMove.submit_move c_state (HumanMove.get_move s_move) in
-  let () = print_endline "" in
-  repl new_state
