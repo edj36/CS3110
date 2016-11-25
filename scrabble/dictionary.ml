@@ -1,5 +1,4 @@
-let scrabble_word_list = {
-
+let scrabble_word_list = [
 AA;
 AAH;
 AAHED;
@@ -178692,4 +178691,4 @@ ZYZZYVA;
 ZYZZYVAS;
 ZZZ;
 
-}
+]
