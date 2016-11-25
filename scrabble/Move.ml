@@ -20,12 +20,17 @@ module HumanMove : (Move with type state = game_state) =  struct
   (* type for the move player makes *)
   type move = moves
 
+  (* [string_to_direction] is a type direction representation
+   * of string type input [s] *)
   let string_to_direction s =
     match s with
-    | "Across" | "a" -> Across
-    | "Down" | "d"  -> Down
+    | "Across" | "a" | "across"-> Across
+    | "Down" | "d" | "down" -> Down
     | _ -> failwith "Invaild direction"
 
+  (* [check_coordinate] is a bool indicating the validity of input coordinate
+   * false means the invalid input for the coodinate, true mweans the coodinate
+   * is valid *)
   let check_coordinate (x,y) =
     let lower_x = Char.lowercase_ascii x in
      (0 <= y) && (y <= 14)
@@ -38,9 +43,9 @@ module HumanMove : (Move with type state = game_state) =  struct
     let n = List.length split in
     match move with
     | "Play" | "play" | "p" ->
+      if (check_coordinate coordinate) && n = 5 then
       let coordinate = (String.get (List.nth split 3) 0,
       (int_of_string (List.nth split 4))) in
-      if (check_coordinate coordinate) && n = 5 then
       Play
       {
         word = List.nth split 1;
@@ -52,16 +57,23 @@ module HumanMove : (Move with type state = game_state) =  struct
       if n = 1 then Draw
       else failwith "Invalid command"
     | "SwitchAll" | "Switch_All" | "sa" | "s_a" ->
-      if n = 1 then SwitchAll else failwith "Invalid command"
+      if n = 1 then SwitchAll
+      else failwith "Invalid command"
     | "SwitchSome" | "switchsome" | "s" | "s_s"->
       if n >= 2 then
-      let char_lst = List.map (fun x -> String.get x 0) (List.tl split) in
-      SwitchSome char_lst else failwith "Invalid command"
-    | "Pass" | "pass" -> if n = 1 then Pass else failwith "Unimplemented"
-    | "Shuffle" | "shuffle" -> if n = 1 then Shuffle else failwith "Unimplemented"
+        let char_lst = List.map (fun x -> String.get x 0) (List.tl split) in
+        SwitchSome char_lst
+      else failwith "Invalid command"
+    | "Pass" | "pass" -> if n = 1 then Pass else failwith "Invalid command"
+    | "Shuffle" | "shuffle" -> if n = 1 then Shuffle else failwith "Invalid command"
     | _ -> failwith "Invalid command"
 
   let validate s = failwith "Unimplemented"
+
+  let current_player state =
+    let n = List.length state.player_racks in
+    match List.nth state.player_racks (state.turn mod n) with
+    (x,y) -> x
 
   (* [submit_move] enters [move] to the game and is the [state] resulting from
    * [move]'s' execution *)
@@ -72,6 +84,21 @@ module HumanMove : (Move with type state = game_state) =  struct
     | Draw -> failwith "Unimplemented"
     | SwitchAll -> failwith "Unimplemented"
     | SwitchSome _ -> failwith "Unimplemented"
-    | Pass -> failwith "Unimplemented"
+    | Pass ->
+      {
+        board = s.board;
+        score_board = s.score_board;
+        letter_bag = s.letter_bag;
+        player_racks = s.player_racks;
+        turn = s.turn + 1
+      }
     | Shuffle -> failwith "Unimplemented"
 end
+
+
+let rec repl c_state =
+  let () = print_endline "Enter Move" in
+  let s_move = read_line() in
+  let new_state = HumanMove.submit_move c_state (HumanMove.get_move s_move) in
+  let () = print_endline "" in
+  repl new_state
