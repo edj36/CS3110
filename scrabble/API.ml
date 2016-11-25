@@ -1,14 +1,27 @@
 open Data
 
 module API = struct
-(* [draw_char] is a letter list representing the state
- * after drawing a letter from the list *)
-let rec draw_char c bag =
+
+type state = game_state
+
+let char_to_letter c bag =
+  let rec helper c bag =
+  match bag with
+  | [] -> None
+  | h::t -> if h.character = c then Some h else helper c t in
+  match helper c bag with
+  | None -> failwith "No such char in the bag"
+  | Some l -> l
+
+(* [add_or_draw_char] is a letter list representing the state
+ * after adding or drawing a letter from the list
+ * [op] : either (+) or (-) *)
+let rec add_or_draw_char c bag op =
   match bag with
   | []-> ()
   | h::t ->
-  if h.character = c then h.count <- h.count - 1
-  else draw_char c t
+  if h.character = c then h.count <- op h.count 1
+  else add_or_draw_char c t op
 
 (* [rand_char] is a letter option which is simulated after randomly pick
  * one letter from the letter bag *)
@@ -23,7 +36,7 @@ let rand_char bag =
   | h :: t -> if (num <= h.count) && (h.count <> 0) then Some h
   else helper (num-h.count) t in helper num bag
 
-(* [draw_letters] represents the letter option list after drawing specified
+(* [draw_letters] represents the letter list after drawing specified
  * number of letters from bag. *)
 let rec draw_letters num bag =
   match num with
@@ -31,11 +44,18 @@ let rec draw_letters num bag =
   | _ -> let l = rand_char bag in
   (match l with
   | None -> failwith "Bag is enpty";
-  | Some l -> draw_char l.character bag); l::draw_letters (num-1) bag
+  | Some l -> add_or_draw_char l.character bag (-);
+  l::draw_letters (num-1) bag)
+
+(* [add_letters] represents the letter list after adding the letters to the list *)
+let rec add_letter hands bag =
+  match hands with
+  | [] -> ()
+  | h :: t -> add_or_draw_char h.character bag (+)
 
 (* [current_player] represents a player who is playing on the current turn *)
-let current_player state =
+let current_player (state:state) =
   let n = List.length state.player_racks in
-  match List.nth state.player_racks (state.turn mod n) with
-  (x,y) -> x
+  List.nth state.player_racks (state.turn mod n)
+
 end

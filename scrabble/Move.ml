@@ -2,7 +2,7 @@ open Data
 open String
 open Str
 open List
-
+open API
 
 module type Move = sig
   type state
@@ -43,9 +43,9 @@ module HumanMove : (Move with type state = game_state) =  struct
     let n = List.length split in
     match move with
     | "Play" | "play" | "p" ->
-      if (check_coordinate coordinate) && n = 5 then
       let coordinate = (String.get (List.nth split 3) 0,
       (int_of_string (List.nth split 4))) in
+      if n = 5 && (check_coordinate coordinate) then
       Play
       {
         word = List.nth split 1;

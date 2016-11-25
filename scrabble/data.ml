@@ -41,7 +41,7 @@ module Data = struct
   type scrabble_board = tile array array
   type score_board = (player * int) list
   type letter_bag = letter list
-  type player_rack = (player * letter option list)
+  type player_rack = (player * letter list)
 
   type game_state =
   {
