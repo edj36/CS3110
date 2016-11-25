@@ -17,10 +17,14 @@ module Data = struct
     | Normal
 
   type moves =
-    | Play of string * direction * coordinate
+    | Play of {
+      word : string;
+      direction : direction;
+      coordinate : coordinate
+    }
     | Draw
     | SwitchAll
-    | SwitchSome of letter list
+    | SwitchSome of char list
     | Pass
     | Shuffle
 
