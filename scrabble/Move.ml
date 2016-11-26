@@ -80,12 +80,36 @@ module HumanMove : (Move with type state = game_state) =  struct
     | h::t -> if fst h = fst hands then hands::t else h::(helper hands t) in
     helper hands racks
 
+  let translate_coodinate (x,y) =
+    ((Char.code (Char.lowercase_ascii x)  - Char.code 'a'), y)
+
   (* [submit_move] enters [move] to the game and is the [state] resulting from
    * [move]'s' execution *)
   let submit_move (s :state) (m:move) =
     match m with
     | Play {word = str; direction = dir; coordinate = crd}
-      -> s
+      ->
+      let rec helper str dir crd =
+        match String.length str with
+        | 0 -> ()
+        | n ->
+        let chr = Char.uppercase_ascii (String.get str 0) in
+        let tile = get_tile crd s.board in
+        let new_tile = match tile.letter with
+        | Some c -> if c = chr then {bonus = tile.bonus; letter = Some chr}
+        else failwith "You Cannot Override exsiting character"
+        | None -> {bonus = tile.bonus; letter = Some chr} in
+        fill_coordinate [crd] new_tile s.board;
+        let next = get_nextcoodinate crd dir in
+        helper (String.sub str 1 (String.length str - 1)) dir next in
+      helper str dir (translate_coodinate crd);
+      {
+        board = s.board;
+        score_board = s.score_board;
+        letter_bag = s.letter_bag;
+        player_racks = s.player_racks;
+        turn = s.turn + 1
+      }
     | SwitchAll ->
       let player = current_player s in
       add_letter (snd player) s.letter_bag;

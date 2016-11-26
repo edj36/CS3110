@@ -73,10 +73,10 @@ let dl_coordinate =
 
 (* [fill_coodinate] is an updated game board after filling the specified
  * coordinates with element, [fill] *)
-let fill_coordinate coordinates fill board =
+let rec fill_coordinate coordinates (fill:tile) board =
   match coordinates with
   |[]-> ()
-  |(x,y)::t -> board.(x).(y)<- fill
+  |(x,y)::t -> board.(y).(x)<- fill; fill_coordinate t fill board
 
 (* [initilize_board] is a tile array array representation of game board *)
 let initilize_board () =

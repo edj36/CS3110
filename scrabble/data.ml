@@ -30,7 +30,7 @@ module Data = struct
   type tile =
     {
       bonus : bonus_status;
-      letter: letter option;
+      letter: char option;
     }
 
   type player =
