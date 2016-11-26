@@ -71,13 +71,6 @@ let dl_coordinate =
 (6,6);(8,6);(8,8);(6,8)
 ]
 
-(* [fill_coodinate] is an updated game board after filling the specified
- * coordinates with element, [fill] *)
-let rec fill_coordinate coordinates (fill:tile) board =
-  match coordinates with
-  |[]-> ()
-  |(x,y)::t -> board.(y).(x)<- fill; fill_coordinate t fill board
-
 (* [initilize_board] is a tile array array representation of game board *)
 let initilize_board () =
   let board = Array.make_matrix 15 15 { bonus= Normal; letter = None } in

@@ -173,11 +173,3 @@ let print_state state =
   | h::t -> h^ " " ^ helper t in
   let hands = helper lst in
   let () = print_string ("Player's hand: " ^ hands ^ "\n") in ()
-
-let rec repl c_state =
-  let () = print_state c_state in
-  let () = print_endline "\nEnter Move" in
-  let s_move = read_line() in
-  let new_state = HumanMove.submit_move c_state (HumanMove.get_move s_move) in
-  let () = print_endline "" in
-  repl new_state

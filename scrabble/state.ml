@@ -78,13 +78,6 @@ module State = struct
   (6,6);(8,6);(8,8);(6,8)
   ]
 
-  (* [fill_coodinate] is an updated game board after filling the specified
-   * coordinates with element, [fill] *)
-  let fill_coordinate coordinates (fill:tile) board =
-    match coordinates with
-    |[]-> ()
-    |(x,y)::t -> board.(x).(y)<- fill
-
   (* [initilize_board] is a tile array array representation of game board *)
   let initilize_board () =
     let board = Array.make_matrix 15 15 { bonus= Normal; letter = None } in
@@ -121,7 +114,26 @@ module State = struct
   let update s m =
     match m with
     | Play {word = str; direction = dir; coordinate = crd}
-      -> s
+      -> let rec helper str dir crd =
+          match String.length str with
+          | 0 -> ()
+          | n -> let chr = Char.uppercase_ascii (String.get str 0) in
+            let tile = get_tile crd s.board in
+            let new_tile = match tile.letter with
+            | Some c -> if c = chr then {bonus = tile.bonus; letter = Some chr}
+              else failwith "You Cannot Override exsiting character"
+            | None -> {bonus = tile.bonus; letter = Some chr} in
+            fill_coordinate [crd] new_tile s.board;
+            let next = get_nextcoodinate crd dir in
+            helper (String.sub str 1 (String.length str - 1)) dir next in
+        helper str dir (translate_coodinate crd);
+      {
+        board = s.board;
+        score_board = s.score_board;
+        letter_bag = s.letter_bag;
+        player_racks = s.player_racks;
+        turn = s.turn + 1
+      }
     | SwitchAll ->
       let player = current_player s in
       add_letter (snd player) s.letter_bag;
