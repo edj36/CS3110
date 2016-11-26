@@ -37,6 +37,11 @@ module HumanMove : (Move with type state = game_state) =  struct
      && (Char.code lower_x >= Char.code 'a')
      && (Char.code 'o' >= Char.code lower_x)
 
+  let check_chars lst state =
+    let player = current_player state in
+    let letters = List.map (fun x -> char_to_letter x state.letter_bag) lst in
+    List.fold_left (fun acc x-> (List.mem x (snd player)) && acc) true letters
+
   let get_move s =
     let split = Str.split (Str.regexp " +") (s ^ " ") in
     let move = List.nth split 0 in
@@ -72,7 +77,7 @@ module HumanMove : (Move with type state = game_state) =  struct
     let rec helper hands racks =
     match racks with
     | [] -> []
-    | h::t -> if fst h = fst hands then hands::t else helper hands t in
+    | h::t -> if fst h = fst hands then hands::t else h::(helper hands t) in
     helper hands racks
 
   (* [submit_move] enters [move] to the game and is the [state] resulting from
@@ -116,7 +121,19 @@ module HumanMove : (Move with type state = game_state) =  struct
         player_racks = s.player_racks;
         turn = s.turn + 1
       }
-    | Shuffle -> failwith "Unimplemented"
+    | Shuffle ->
+      let player = current_player s in
+      let indexed = List.map (fun x -> (Random.bits (), x)) (snd player) in
+      let helper_sort x y = Pervasives.compare (fst x) (fst y) in
+      let shuffled = List.map (fun x -> snd x) (List.sort helper_sort indexed) in
+      let new_racks = update_racks ((fst player), shuffled) s in
+      {
+        board = s.board;
+        score_board = s.score_board;
+        letter_bag = s.letter_bag;
+        player_racks = new_racks;
+        turn = s.turn
+      }
 end
 
 let print_state state =

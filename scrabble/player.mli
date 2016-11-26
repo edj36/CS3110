@@ -3,9 +3,8 @@
 module Player : sig
 
   (* type for game state *)
-  type state
-
-  (* type for the move player makes *)
+  type t
+  (* type for move *)
   type move
 
   (* [make_move] is the [move] based on user input and the [move] in
@@ -18,10 +17,6 @@ module Player : sig
    * argument [move]
    * Requires:
    * [move] is of type Move within the move variant *)
-  val make_move : int -> int -> letter -> move -> move
-
-  (* [submit_move] enters [move] to the game and is the [state] resulting from
-   * [move]'s' execution *)
-  val submit_move : state -> move -> state
+  val get_move : t -> move
 
 end

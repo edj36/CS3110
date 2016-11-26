@@ -119,6 +119,12 @@ let rec get_players input_string_list =
             |"AI"    -> AI(h2)    :: get_players t
             | _      -> failwith "Invalid Player Input"
 
+let rec main_repl c_state =
+  let () = print_endline "Enter Move" in
+  let s_move = read_line() in
+  let new_state = HumanMove.submit_move c_state (HumanMove.get_move s_move) in
+  let () = print_endline "" in
+  repl new_state
 
 (*[init_repl] is the initial state created from the player list given by the
 user's input*)
@@ -130,11 +136,3 @@ let init_repl =
   let init_state = initialize_state player_list in
   let () = print_endline "" in
   main_repl init_state
-
-
-let rec main_repl c_state =
-  let () = print_endline "Enter Move" in
-  let s_move = read_line() in
-  let new_state = HumanMove.submit_move c_state (HumanMove.get_move s_move) in
-  let () = print_endline "" in
-  repl new_state
