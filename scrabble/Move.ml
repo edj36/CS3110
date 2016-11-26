@@ -53,9 +53,6 @@ module HumanMove : (Move with type state = game_state) =  struct
         coordinate = coordinate
       }
       else failwith "Invalid coordinate"
-    | "Draw" | "draw" | "d" ->
-      if n = 1 then Draw
-      else failwith "Invalid command"
     | "SwitchAll" | "Switch_All" | "sa" | "s_a" ->
       if n = 1 then SwitchAll
       else failwith "Invalid command"
@@ -70,10 +67,13 @@ module HumanMove : (Move with type state = game_state) =  struct
 
   let validate s = failwith "Unimplemented"
 
-  let current_player state =
-    let n = List.length state.player_racks in
-    match List.nth state.player_racks (state.turn mod n) with
-    (x,y) -> x
+  let update_racks hands s =
+    let racks = s.player_racks in
+    let rec helper hands racks =
+    match racks with
+    | [] -> []
+    | h::t -> if fst h = fst hands then hands::t else helper hands t in
+    helper hands racks
 
   (* [submit_move] enters [move] to the game and is the [state] resulting from
    * [move]'s' execution *)
@@ -81,9 +81,33 @@ module HumanMove : (Move with type state = game_state) =  struct
     match m with
     | Play {word = str; direction = dir; coordinate = crd}
       -> s
-    | Draw -> failwith "Unimplemented"
-    | SwitchAll -> failwith "Unimplemented"
-    | SwitchSome _ -> failwith "Unimplemented"
+    | SwitchAll ->
+      let player = current_player s in
+      add_letter (snd player) s.letter_bag;
+      let new_hand = (fst player, draw_letters 7 s.letter_bag) in
+      let new_racks = update_racks new_hand s in
+      {
+        board = s.board;
+        score_board = s.score_board;
+        letter_bag = s.letter_bag;
+        player_racks = new_racks;
+        turn = s.turn + 1
+      }
+    | SwitchSome lst ->
+      let letters = List.map (fun x -> char_to_letter x s.letter_bag) lst in
+      let player = current_player s in
+      add_letter letters s.letter_bag;
+      let removed = List.filter (fun x -> not (List.mem x letters)) (snd player) in
+      let new_hand =
+        (fst player, removed @ (draw_letters (List.length letters) s.letter_bag)) in
+      let new_racks = update_racks new_hand s in
+      {
+        board = s.board;
+        score_board = s.score_board;
+        letter_bag = s.letter_bag;
+        player_racks = new_racks;
+        turn = s.turn + 1
+      }
     | Pass ->
       {
         board = s.board;
@@ -95,9 +119,23 @@ module HumanMove : (Move with type state = game_state) =  struct
     | Shuffle -> failwith "Unimplemented"
 end
 
+let print_state state =
+  print_string ("Turn: " ^ (string_of_int state.turn) ^ "\n");
+  let player = current_player state in
+  let name = match fst player with
+  | Human n1 -> n1
+  | AI n2 -> n2 in
+  print_string (name ^ "\n");
+  let lst = List.map (fun x -> Char.escaped x.character) (snd player) in
+  let rec helper = function
+  | [] -> ""
+  | h::t -> h^ " " ^ helper t in
+  let hands = helper lst in
+  let () = print_string ("Player's hand: " ^ hands ^ "\n") in ()
 
 let rec repl c_state =
-  let () = print_endline "Enter Move" in
+  let () = print_state c_state in
+  let () = print_endline "\nEnter Move" in
   let s_move = read_line() in
   let new_state = HumanMove.submit_move c_state (HumanMove.get_move s_move) in
   let () = print_endline "" in

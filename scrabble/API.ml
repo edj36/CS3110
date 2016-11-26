@@ -51,7 +51,7 @@ let rec draw_letters num bag =
 let rec add_letter hands bag =
   match hands with
   | [] -> ()
-  | h :: t -> add_or_draw_char h.character bag (+)
+  | h :: t -> add_or_draw_char h.character bag (+); add_letter t bag
 
 (* [current_player] represents a player who is playing on the current turn *)
 let current_player (state:state) =

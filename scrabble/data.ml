@@ -22,7 +22,6 @@ module Data = struct
       direction : direction;
       coordinate : coordinate
     }
-    | Draw
     | SwitchAll
     | SwitchSome of char list
     | Pass
