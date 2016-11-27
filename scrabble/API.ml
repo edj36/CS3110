@@ -124,16 +124,16 @@ module API = struct
 
   (* [collect] is a string list representation of all words on the scrabble board *)
   (* let collect board = *)
-  let collect board =
+  let collect state =
     let rec helper dir i =
       match i with
       | -1 -> []
-      | _ -> (crawl dir i board) @ helper dir (i-1) in
+      | _ -> (crawl dir i state.board) @ helper dir (i-1) in
     (helper Across 14) @ (helper Down 14)
 
-  let get_newwords board =
-    let new_words = collect board in
-    let old_words = board.words in
+  let get_newwords state =
+    let new_words = collect state in
+    let old_words = state.words in
     let rec helper new_w old_w =
       match new_w with
       | []->[]
