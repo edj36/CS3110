@@ -36,7 +36,7 @@ module HumanMove : (Move with type state = game_state) =  struct
      (0 <= y) && (y <= 14)
      && (Char.code lower_x >= Char.code 'a')
      && (Char.code 'o' >= Char.code lower_x)
-     
+
   let get_move s =
     let split = Str.split (Str.regexp " +") (s ^ " ") in
     let move = List.nth split 0 in
@@ -98,8 +98,10 @@ module HumanMove : (Move with type state = game_state) =  struct
         else failwith "You Cannot Override exsiting character"
         | None -> {bonus = tile.bonus; letter = Some chr} in
         fill_coordinate [crd] new_tile s.board;
-        let next = get_nextcoodinate crd dir in
-        helper (String.sub str 1 (String.length str - 1)) dir next in
+        let next = try get_nextcoordinate crd dir with
+        | Failure _ -> (15,15) in
+        if next = (15,15) then ()
+        else helper (String.sub str 1 (String.length str - 1)) dir next in
       helper str dir (translate_coodinate crd);
       {
         board = s.board;

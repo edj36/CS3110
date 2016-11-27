@@ -81,7 +81,7 @@ module API = struct
 
   (* [get_nextcoodinate] is (int*int) representation of coordinate after moving
   * 1 step in the specified direction from speficied origin *)
-  let get_nextcoodinate (x,y) dir =
+  let get_nextcoordinate (x,y) dir =
     match dir with
     | Across -> if y+1 >= 0 && y+1 <= 14 then (x, y+1)
       else failwith "OutOfBoundary"
@@ -99,4 +99,36 @@ module API = struct
     match coordinates with
     |[]-> ()
     |(x,y)::t -> board.(y).(x)<- fill; fill_coordinate t fill board
+
+  (* [crawl] is a string list representation of words, specifing the direction
+   * and row/column number with [i] *)
+  let crawl dir i board =
+    let init = match dir with Across -> (i, 0)| Down -> (0, i) in
+    let rec helper dir crd acc board =
+      let tile = get_tile crd board in
+      let n = try get_nextcoordinate crd dir with
+      | Failure _ -> (15,15) in
+      if n = (15,15) then
+        match tile.letter with
+        | None -> []
+        | Some l ->
+          if acc = "" then [] else (acc ^ (Char.escaped l)) :: []
+      else
+        match tile.letter with
+        | None ->
+          if acc = "" then helper dir n "" board else acc::(helper dir n "" board)
+        | Some l ->
+          if acc = "" then helper dir n (Char.escaped l) board
+          else helper dir n (acc ^ (Char.escaped l)) board in
+    List.filter (fun x -> String.length x <> 1 ) (helper dir init "" board)
+
+  (* [collect] is a string list representation of all words on the scrabble board *)
+  (* let collect board = *)
+  let collect board =
+    let rec helper dir i =
+      match i with
+      | -1 -> []
+      | _ -> (crawl dir i board) @ helper dir (i-1) in
+    (helper Across 14) @ (helper Down 14)
+
 end

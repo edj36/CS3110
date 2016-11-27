@@ -34,7 +34,7 @@ val current_player : state -> player_rack
 
 (* [get_nextcoodinate] is (int*int) representation of coordinate after moving
  * 1 step in the specified direction from speficied origin *)
-val get_nextcoodinate : (int * int) -> direction -> (int * int)
+val get_nextcoordinate : (int * int) -> direction -> (int * int)
 
 (* [get_tile] represents tile of specified coordinate *)
 val get_tile : (int * int) -> tile array array -> tile
@@ -43,4 +43,5 @@ val get_tile : (int * int) -> tile array array -> tile
  * after filling tile at specified coordinate *)
 val fill_coordinate : (int * int) list -> tile -> tile array array
 
+(* [collect] is a string list representation of all words on the scrabble board *)
 val collect : tile array array -> string list
