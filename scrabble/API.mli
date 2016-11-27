@@ -45,3 +45,7 @@ val fill_coordinate : (int * int) list -> tile -> tile array array
 
 (* [collect] is a string list representation of all words on the scrabble board *)
 val collect : tile array array -> string list
+
+(* [get_newwords] is a string list representation of all new words made in the
+ * most recent turn *)
+val get_newwords : tile array array -> string list

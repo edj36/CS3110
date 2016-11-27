@@ -99,7 +99,8 @@ let initialize_state (players: player list)=
     score_board = initial_score;
     letter_bag = initial_bag;
     player_racks = racks;
-    turn = 0
+    turn = 0;
+    words = []
   }
 
 (* [get_players] is a list of players gathered from the user's string input*)

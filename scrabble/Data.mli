@@ -51,5 +51,6 @@ type game_state =
   score_board : score_board;
   letter_bag : letter_bag;
   player_racks : player_rack list;
-  turn : int
+  turn : int;
+  words : string list
 }

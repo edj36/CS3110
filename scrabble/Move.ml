@@ -103,12 +103,14 @@ module HumanMove : (Move with type state = game_state) =  struct
         if next = (15,15) then ()
         else helper (String.sub str 1 (String.length str - 1)) dir next in
       helper str dir (translate_coodinate crd);
+      let new_words = collect state.board in
       {
         board = s.board;
         score_board = s.score_board;
         letter_bag = s.letter_bag;
         player_racks = s.player_racks;
-        turn = s.turn + 1
+        turn = s.turn + 1;
+        words = new_words
       }
     | SwitchAll ->
       let player = current_player s in
@@ -120,7 +122,8 @@ module HumanMove : (Move with type state = game_state) =  struct
         score_board = s.score_board;
         letter_bag = s.letter_bag;
         player_racks = new_racks;
-        turn = s.turn + 1
+        turn = s.turn + 1;
+        words = s.words
       }
     | SwitchSome lst ->
       let letters = List.map (fun x -> char_to_letter x s.letter_bag) lst in
@@ -135,7 +138,8 @@ module HumanMove : (Move with type state = game_state) =  struct
         score_board = s.score_board;
         letter_bag = s.letter_bag;
         player_racks = new_racks;
-        turn = s.turn + 1
+        turn = s.turn + 1;
+        words = s.words
       }
     | Pass ->
       {
@@ -143,7 +147,8 @@ module HumanMove : (Move with type state = game_state) =  struct
         score_board = s.score_board;
         letter_bag = s.letter_bag;
         player_racks = s.player_racks;
-        turn = s.turn + 1
+        turn = s.turn + 1;
+        words = s.words
       }
     | Shuffle ->
       let player = current_player s in
@@ -156,6 +161,7 @@ module HumanMove : (Move with type state = game_state) =  struct
         score_board = s.score_board;
         letter_bag = s.letter_bag;
         player_racks = new_racks;
-        turn = s.turn
+        turn = s.turn;
+        words = s.words
       }
 end

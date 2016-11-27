@@ -21,10 +21,12 @@ let search str dict = failwith "Unimplemented"
 (* [validate] is a bool representation indicating if the move is valid or not
  * check following criteria
  * - the word is made only by the letters in the hands (Done)
+ * - the check if word fits in the board
  * - TODO the new words is a valid word in dictionary
  * - TODO when it's turn 1, you have to place over (H,8)
  * - TODO new words have to satisfy one of following rules
  *   1, Adding one or more letters to a word or letters already on the board
+ *     (only case that you can play 1 letter)
  *   2, Placing a word at right angles to a word already on the board
  *   3, Placing a complete word parallel to a word already played
       so that adjacent letters also form complete words *)

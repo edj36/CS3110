@@ -131,4 +131,14 @@ module API = struct
       | _ -> (crawl dir i board) @ helper dir (i-1) in
     (helper Across 14) @ (helper Down 14)
 
+  let get_newwords board =
+    let new_words = collect board in
+    let old_words = board.words in
+    let rec helper new_w old_w =
+      match new_w with
+      | []->[]
+      | h::t ->
+        if List.mem h old_w then helper (remove h new_w) t
+        else h :: helper new_w t
+    in helper new_words old_words
 end
