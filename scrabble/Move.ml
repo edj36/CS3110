@@ -37,10 +37,16 @@ module HumanMove : (Move with type state = game_state) =  struct
      && (Char.code lower_x >= Char.code 'a')
      && (Char.code 'o' >= Char.code lower_x)
 
-  let check_chars lst state =
-    let player = current_player state in
-    let letters = List.map (fun x -> char_to_letter x state.letter_bag) lst in
-    List.fold_left (fun acc x-> (List.mem x (snd player)) && acc) true letters
+  (* [check_char] represents bool type, indicating if all elements in char List
+   * is a member of [hands]. Also accounts for duplicates
+   * ex) if you have 2 'A's, ['A';'A'] -> true but ['A';'A';'A'] -> false *)
+  let check_char lst (rack : player_rack) =
+    let hands = letter_to_char (snd rack) in
+    let rec helper lst hands =
+    match lst with
+    | []-> true
+    | h::t -> List.mem h hands && helper t (remove h hands) in
+    helper lst hands
 
   let get_move s =
     let split = Str.split (Str.regexp " +") (s ^ " ") in
@@ -72,6 +78,8 @@ module HumanMove : (Move with type state = game_state) =  struct
 
   let validate s = failwith "Unimplemented"
 
+  (* [update_racks] is an updated player_rack list after substituting the old
+   * player_rack with new [hands] *)
   let update_racks hands s =
     let racks = s.player_racks in
     let rec helper hands racks =
@@ -80,8 +88,9 @@ module HumanMove : (Move with type state = game_state) =  struct
     | h::t -> if fst h = fst hands then hands::t else h::(helper hands t) in
     helper hands racks
 
+  (* [translate_coodinate] is an int*int representation of char*int coordinate*)
   let translate_coodinate (x,y) =
-    (y, (Char.code (Char.lowercase_ascii x)  - Char.code 'a'))
+    (y-1, (Char.code (Char.lowercase_ascii x)  - Char.code 'a'))
 
   (* [submit_move] enters [move] to the game and is the [state] resulting from
    * [move]'s' execution *)

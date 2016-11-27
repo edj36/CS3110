@@ -2,6 +2,15 @@ open Data
 
 type state
 
+(*******************  useful tools  *******************)
+
+(* [remove] represents 'a list after removing specified element from the
+ * input list *)
+val remove : 'a -> 'a list -> 'a list
+
+(* [string_to_char_list] is a char list representation of string *)
+val string_to_char_list : string -> char list
+
 (*******************  update letter bag  *******************)
 
 (* [char_to_letter] represents letter type of input char *)
@@ -17,7 +26,6 @@ val draw_letters : int -> letter list -> letter list
 (* [add_letters] represents unit resulting from updating the field of letter bag
  * after adding letter list to the letter bag *)
 val add_letter : letter list -> letter list -> unit
-
 
 (*******************  update state  *******************)
 

@@ -5,6 +5,19 @@ module API = struct
 
   type state = game_state
 
+  (* [remove] represents 'a list after removing specified element from the
+  * input list *)
+  let rec remove a lst =
+    match lst with
+    | [] -> []
+    | h :: t -> if h = a then t else h :: (remove a t)
+
+  (* [string_to_char_list] is a char list representation of string *)
+  let rec string_to_char_list str =
+    match str with
+    | "" -> []
+    | s -> String.get s 0::string_to_char_list (String.sub s 1 ((String.length s)-1))
+
   (* [char_to_letter] represents letter type of input char *)
   let char_to_letter c bag =
     let rec helper c bag =
@@ -52,6 +65,8 @@ module API = struct
     | None -> failwith "Bag is enpty";
     | Some l -> add_or_draw_char l.character bag (-);
     l::draw_letters (num-1) bag)
+
+
 
   (* [add_letters] represents the letter list after adding the letters to the list *)
   let rec add_letter hands bag =

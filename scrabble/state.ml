@@ -109,6 +109,17 @@ module State = struct
       turn = 0
     }
 
+  let update_racks hands s =
+    let racks = s.player_racks in
+    let rec helper hands racks =
+    match racks with
+    | [] -> []
+    | h::t -> if fst h = fst hands then hands::t else h::(helper hands t) in
+    helper hands racks
+
+  let translate_coodinate (x,y) =
+    (y, (Char.code (Char.lowercase_ascii x)  - Char.code 'a'))
+  
   (* [update] is the new [state] resulting from evaluation of [move] in the
    * current [state] *)
   let update s m =
