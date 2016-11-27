@@ -5,6 +5,7 @@ module API = struct
 
   type state = game_state
 
+  (* [char_to_letter] represents letter type of input char *)
   let char_to_letter c bag =
     let rec helper c bag =
     match bag with
@@ -13,6 +14,10 @@ module API = struct
     match helper c bag with
     | None -> failwith "No such char in the bag"
     | Some l -> l
+
+  (* [letter_to_char] represents chr list of input letter list*)
+  let letter_to_char lst =
+    List.map (fun x -> x.character) lst
 
   (* [add_or_draw_char] is a letter list representing the state
   * after adding or drawing a letter from the list

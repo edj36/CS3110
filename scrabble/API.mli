@@ -7,6 +7,9 @@ type state
 (* [char_to_letter] represents letter type of input char *)
 val char_to_letter : char -> letter list -> letter
 
+(* [letter_to_char] represents chr list of input letter list*)
+val letter_to_char : letter list -> char list
+
 (* [draw_letters] represents specified length of letter list drawn from
  * letter bag. letter bag will update its field *)
 val draw_letters : int -> letter list -> letter list

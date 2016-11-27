@@ -81,7 +81,7 @@ module HumanMove : (Move with type state = game_state) =  struct
     helper hands racks
 
   let translate_coodinate (x,y) =
-    ((Char.code (Char.lowercase_ascii x)  - Char.code 'a'), y)
+    (y, (Char.code (Char.lowercase_ascii x)  - Char.code 'a'))
 
   (* [submit_move] enters [move] to the game and is the [state] resulting from
    * [move]'s' execution *)
