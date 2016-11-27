@@ -36,18 +36,7 @@ module HumanMove : (Move with type state = game_state) =  struct
      (0 <= y) && (y <= 14)
      && (Char.code lower_x >= Char.code 'a')
      && (Char.code 'o' >= Char.code lower_x)
-
-  (* [check_char] represents bool type, indicating if all elements in char List
-   * is a member of [hands]. Also accounts for duplicates
-   * ex) if you have 2 'A's, ['A';'A'] -> true but ['A';'A';'A'] -> false *)
-  let check_char lst (rack : player_rack) =
-    let hands = letter_to_char (snd rack) in
-    let rec helper lst hands =
-    match lst with
-    | []-> true
-    | h::t -> List.mem h hands && helper t (remove h hands) in
-    helper lst hands
-
+     
   let get_move s =
     let split = Str.split (Str.regexp " +") (s ^ " ") in
     let move = List.nth split 0 in

@@ -42,3 +42,5 @@ val get_tile : (int * int) -> tile array array -> tile
 (* [fill_coordinate] is a tile array array representation of game board.
  * after filling tile at specified coordinate *)
 val fill_coordinate : (int * int) list -> tile -> tile array array
+
+val collect : tile array array -> string list
