@@ -1,9 +1,6 @@
 open Data
 open Utils
-
-type state = game_state
-type m = move
-type l = letter
+open State
 
 (* [check_char] represents bool type, indicating if all elements in char List
  * is a member of [hands]. Also accounts for duplicates
@@ -30,8 +27,10 @@ let check_char lst (rack : player_rack) =
  *   2, Placing a word at right angles to a word already on the board
  *   3, Placing a complete word parallel to a word already played
       so that adjacent letters also form complete words *)
-let validate move (state:state) : bool=
-  match move with
+
+let validate move state  =
+  update move state
+  (* match move with
   | Play
     {
       word = str;
@@ -40,5 +39,8 @@ let validate move (state:state) : bool=
     } ->
     let player = current_player state in
     let chr_list = string_to_char_list str in
-    check_char chr_list player 
-  | _ -> true
+    check_char chr_list player
+  | _ ->  *)
+
+
+(* validate move, call state.update if it is valid else returns original state *)

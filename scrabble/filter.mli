@@ -1,8 +1,4 @@
 
-type state
-type m
-type l 
-
 
 (*val search : string -> d -> bool*)
-val validate : m -> state -> bool
+val validate : Data.move -> Data.game_state -> Data.game_state

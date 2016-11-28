@@ -1,14 +1,11 @@
-open String
-open Str
 open Utils
 open Data
+open Filter
 
 module type Player = sig
 
   (* type for game state *)
   type t
-  (* type for move *)
-  type m
 
   (* [make_move] is the [move] based on user input and the [move] in
    * in progress:
@@ -20,16 +17,14 @@ module type Player = sig
    * argument [move]
    * Requires:
    * [m] is of type Move within the move variant *)
-  val get_move : t -> m 
+  val execute_move : t -> Data.game_state -> Data.game_state
 
 end
 
-module Human : (Player) = struct
+module Human : (Player with type t = string) = struct
 
   (* type for game state *)
   type t = string
-  (* type for the move player makes *)
-  type m = move
 
   (* [check_coordinate] is a bool indicating the validity of input coordinate
    * false means the invalid input for the coodinate, true mweans the coodinate
@@ -40,16 +35,11 @@ module Human : (Player) = struct
      && (Char.code lower_x >= Char.code 'a')
      && (Char.code 'o' >= Char.code lower_x)
 
-  let check_chars lst state =
-    let player = current_player state in
-    let letters = List.map (fun x -> char_to_letter x state.letter_bag) lst in
-    List.fold_left (fun acc x-> (List.mem x (snd player)) && acc) true letters
-
-  let get_move s =
-    let split = Str.split (Str.regexp " +") (s ^ " ") in
+  let execute_move s_move c_state =
+    let split = Str.split (Str.regexp " +") (s_move ^ " ") in
     let move = List.nth split 0 in
     let n = List.length split in
-    match move with
+    let command = match move with
     | "Play" | "play" | "p" ->
       let coordinate = (String.get (List.nth split 3) 0,
       (int_of_string (List.nth split 4))) in
@@ -66,11 +56,14 @@ module Human : (Player) = struct
       else failwith "Invalid command"
     | "SwitchSome" | "switchsome" | "s" | "s_s"->
       if n >= 2 then
-        let char_lst = List.map (fun x -> String.get x 0) (List.tl split) in SwitchSome char_lst
+        let char_lst = List.map (fun x -> String.get x 0) (List.tl split) in
+        SwitchSome char_lst
       else failwith "Invalid command"
     | "Pass" | "pass" -> if n = 1 then Pass else failwith "Invalid command"
     | "Shuffle" | "shuffle" -> if n = 1 then Shuffle else failwith "Invalid command"
-    | _ -> failwith "Invalid command"
+    | _ -> failwith "Invalid command" in
+
+    validate command c_state
 
 end
 
@@ -84,8 +77,6 @@ module AI : (Player) =  struct
 
   (*type d = Data.direction*)
 
-  let string_to_direction s = failwith "Unimplemented"
-
-  let get_move s = failwith "Unimplemented"
+  let execute_move s_move c_state = failwith "Unimplemented"
 
 end

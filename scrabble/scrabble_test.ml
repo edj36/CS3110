@@ -3,9 +3,8 @@ open Data
 open Utils
 open Player
 open Filter
-open Move
 open Server
-open State 
+open State
 
 
 let suite = "scrabble test suite" >:::
