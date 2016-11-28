@@ -5,13 +5,13 @@ module Utils = struct
 
   type state = game_state
 
-  type l = letter 
+  type l = letter
 
   type p_r = player_rack
 
   type d = direction
 
-  type t = tile 
+  type t = tile
 
   (* [remove] is a 'a list after removing specified element from the
   * input list *)
@@ -139,7 +139,7 @@ module Utils = struct
       | _ -> (crawl dir i board) @ helper dir (i-1) in
     (helper Across 14) @ (helper Down 14)
 
-  let get_newwords state =
+  let get_newwords state = 
     let new_words = collect state.board in
     let old_words = state.words in
     let rec helper new_w old_w =

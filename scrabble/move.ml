@@ -6,9 +6,9 @@ open Utils
 
 module type Move = sig
   type state
-  type move
-  val get_move : string -> move
-  val submit_move: state -> move -> state
+  type m
+  val get_move : string -> m
+  val submit_move: state -> m -> state
   val validate : string -> bool
 end
 
@@ -18,7 +18,7 @@ module HumanMove : (Move with type state = game_state) =  struct
   type state = game_state
 
   (* type for the move player makes *)
-  type move = moves
+  type m = move
 
   (* [string_to_direction] is a type direction representation
    * of string type input [s] *)
@@ -111,7 +111,7 @@ module HumanMove : (Move with type state = game_state) =  struct
         letter_bag = s.letter_bag;
         player_racks = s.player_racks;
         turn = s.turn + 1;
-        words = new_words
+        words = collect s.board
       }
     | SwitchAll ->
       let player = current_player s in
@@ -130,7 +130,12 @@ module HumanMove : (Move with type state = game_state) =  struct
       let letters = List.map (fun x -> char_to_letter x s.letter_bag) lst in
       let player = current_player s in
       add_letter letters s.letter_bag;
-      let removed = List.filter (fun x -> not (List.mem x letters)) (snd player) in
+      let removed =
+        let rec helper letter hands =
+        match letter with
+        | [] -> hands
+        | h::t -> helper t (remove h hands)
+        in helper letters (snd player) in
       let new_hand =
         (fst player, removed @ (draw_letters (List.length letters) s.letter_bag)) in
       let new_racks = update_racks new_hand s in
