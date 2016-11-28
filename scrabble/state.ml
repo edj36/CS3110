@@ -2,8 +2,7 @@ open Data
 open Utils
 open Yojson.Basic.Util
 
-let open_json () = Yojson.Basic.from_file "info.json"
-
+(* [init_letter] is a letter list representation of intial letter bag *)
 let init_letter_bag src =
 let lb = src |> member "letter_bag" |> to_list in
 let chr = List.map (fun x -> x |> member "character" |> to_string) lb in
@@ -20,6 +19,8 @@ let rec helper l1 l2 l3 =
   | _ -> failwith "list unbalanced" in
     helper chr pt count
 
+(* [init_tile] is a (int*int) list representation of coordintes for the
+ * specified bonus tile type*)
 let init_tile src name =
 let tile = src |> member name |> to_list in
 let x = List.map (fun x -> x |> member "x" |> to_int) tile in
@@ -31,7 +32,7 @@ let rec helper l1 l2 =
   | _ -> failwith "list unbalanced" in
 helper x y
 
-(* [initialize_score] represents the tuple list of each player and their scores*)
+(* [initialize_score] represents the tuple list of each player and their scores *)
 let rec initialize_score (players : player list) =
 match players with
 | [] -> []
@@ -40,7 +41,7 @@ match players with
 (* [initilize_board] is a tile array array representation of game board *)
 let initilize_board () =
 let board = Array.make_matrix 15 15 { bonus = Normal ; letter = None } in
-let src = open_json () in
+let src = Yojson.Basic.from_file "info.json" in
 let () = fill_coordinate (init_tile src "Center")
   { bonus= Center; letter = None }  board in
 let () = fill_coordinate (init_tile src "Triple_word")
@@ -62,7 +63,7 @@ match players with
 
 (* [initialize_state] is a representation of intial game state *)
 let setup players =
-let src = open_json () in
+let src = Yojson.Basic.from_file "info.json" in
 let initial_score = initialize_score players in
 let initial_board = initilize_board () in
 let initial_bag = init_letter_bag src in
