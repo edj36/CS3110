@@ -2,6 +2,8 @@ open Data
 open Utils
 open Yojson.Basic.Util
 
+(********** JASON PARSER **********)
+
 (* [init_letter] is a letter list representation of intial letter bag *)
 let init_letter_bag src =
 let lb = src |> member "letter_bag" |> to_list in
@@ -31,6 +33,8 @@ let rec helper l1 l2 =
   | h1::t1, h2::t2 -> (h1,h2) :: helper t1 t2
   | _ -> failwith "list unbalanced" in
 helper x y
+
+(********** INITIALIZE STATE **********)
 
 (* [initialize_score] represents the tuple list of each player and their scores *)
 let rec initialize_score (players : player list) =
@@ -76,6 +80,8 @@ let racks = initialize_rack players initial_bag in
   turn = 0;
   words = []
 }
+
+(********** UPDATE STATE **********)
 
 (* [update_racks] is an updated player_rack list after substituting the old
  * player_rack with new [hands] *)
