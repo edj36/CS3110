@@ -13,6 +13,14 @@ module Utils = struct
 
   type t = tile
 
+  (* [string_to_direction] is a type direction representation
+   * of string type input [s] *)
+  let string_to_direction s =
+    match s with
+    | "Across" | "a" | "across"-> Across
+    | "Down" | "d" | "down" -> Down
+    | _ -> failwith "Invaild direction"
+
   (* [remove] is a 'a list after removing specified element from the
   * input list *)
   let rec remove a lst =

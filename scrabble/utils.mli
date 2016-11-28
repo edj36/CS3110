@@ -14,6 +14,8 @@ module Utils : sig
 
 	(*******************  useful tools  *******************)
 
+	val string_to_direction : string -> d
+
 	(* [remove] represents 'a list after removing specified element from the
 	 * input list *)
 	val remove : 'a -> 'a list -> 'a list

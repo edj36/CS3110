@@ -4,14 +4,6 @@ open Str
 open List
 open Utils
 
-module type Move = sig
-  type state
-  type m
-  val get_move : string -> m
-  val submit_move: state -> m -> state
-  val validate : string -> bool
-end
-
 module HumanMove : (Move with type state = game_state) =  struct
 
   (* type for game state *)
@@ -19,14 +11,6 @@ module HumanMove : (Move with type state = game_state) =  struct
 
   (* type for the move player makes *)
   type m = move
-
-  (* [string_to_direction] is a type direction representation
-   * of string type input [s] *)
-  let string_to_direction s =
-    match s with
-    | "Across" | "a" | "across"-> Across
-    | "Down" | "d" | "down" -> Down
-    | _ -> failwith "Invaild direction"
 
   (* [check_coordinate] is a bool indicating the validity of input coordinate
    * false means the invalid input for the coodinate, true means the coodinate

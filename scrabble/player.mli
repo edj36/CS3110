@@ -1,3 +1,5 @@
+open Data
+
 (* A [Player] is a participant in the scrabble game. They can
  * submit moves to the board within the current state. *)
 module type Player = sig
@@ -6,11 +8,6 @@ module type Player = sig
   type t
   (* type for move *)
   type m
-
-  (* type for direction *)
-  type d
-
-  val string_to_direction : string -> d
 
   (* [make_move] is the [move] based on user input and the [move] in
    * in progress:
@@ -22,6 +19,6 @@ module type Player = sig
    * argument [move]
    * Requires:
    * [m] is of type Move within the move variant *)
-  val get_move : t -> m
+  val get_move : t -> m 
 
 end

@@ -1,5 +1,5 @@
 open Data
-open HumanMove
+open Move
 open Str
 open Utils
 open Yojson.Basic.Util

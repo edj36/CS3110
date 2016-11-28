@@ -1,29 +1,26 @@
 (* contains all data structure for the game *)
 
-module Data : sig 
+type letter
 
-  type letter
+type coordinate 
 
-  type coordinate 
+type direction 
 
-  type direction 
+type bonus_status 
 
-  type bonus_status 
+type move 
 
-  type move 
+type tile 
 
-  type tile 
+type player 
 
-  type player 
+type scrabble_board 
 
-  type scrabble_board 
+type score_board 
 
-  type score_board 
+type letter_bag 
 
-  type letter_bag 
+type player_rack 
 
-  type player_rack 
+type game_state
 
-  type game_state
-
-end

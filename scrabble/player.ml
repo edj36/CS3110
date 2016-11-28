@@ -1,24 +1,14 @@
 open String
 open Str
 open Utils
+open Data
 
-module Human : (Player with type t = string) =  struct
-
-  include Data  
+module Human : (Player) =  struct
 
   (* type for game state *)
   type t = string
   (* type for the move player makes *)
-  type m = Data.move
-
-  type d = Data.direction
-
-  (* [string_to_direction] is a type direction representation
-   * of string type input [s] *)
-  let string_to_direction s = match s with
-    | "Across" | "a" | "across"-> Across
-    | "Down" | "d" | "down" -> Down
-    | _ -> failwith "Invaild direction"
+  type m = move
 
   (* [check_coordinate] is a bool indicating the validity of input coordinate
    * false means the invalid input for the coodinate, true mweans the coodinate
@@ -67,10 +57,17 @@ end
 
 
 module AI : (Player with type t = game_state) =  struct
+
+  include Data 
+
   (* type for game state *)
   type t = game_state
   (* type for the move player makes *)
-  type move = move
+  (*type m = Data.move*)
+
+  (*type d = Data.direction*)
+
+  let string_to_direction s = failwith "Unimplemented"
 
   let get_move s = failwith "Unimplemented"
 
