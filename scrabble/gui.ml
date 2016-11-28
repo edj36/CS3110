@@ -1,28 +1,27 @@
 open Data
 open Utils
 
-
 (*********** GUI ***********)
 
 let print_board state =
-  print_string "\n";
+  ANSITerminal.(print_string [] "\n";
   let b = state.board in
   for j = 0 to 14 do
     for i = 0 to 14 do
       let tile = get_tile (j,i) b in
-      let chr = match tile.letter with
+      let (lst, str) = match tile.letter with
       | None -> ( match tile.bonus with 
-        | Double_letter -> " DL "
-        | Double_word -> " DW "
-        | Triple_letter -> " TL "
-        | Triple_word -> " TW "
-        | Center -> " CE "
-        | Normal -> " ** " )
-      | Some c -> " " ^ Char.escaped c ^ "  " in
-      print_string chr;
+        | Double_letter -> ([on_cyan; black], " DL ")
+        | Double_word -> ([on_blue; black], " DW ")
+        | Triple_letter -> ([on_blue; black], " TL ")
+        | Triple_word -> ([on_red; black], " TW ")
+        | Center -> ([on_magenta; white], " CE ")
+        | Normal -> ([on_white; black], " ** " ) )
+      | Some c -> ([on_white; black], " " ^ Char.escaped c ^ "  ") in
+      print_string [] " "; print_string lst str; print_string [] " ";
     done;
-    print_string "\n";
-  done
+    print_string [Reset] "\n \n";
+  done )
 
 
 let update_gui state =
