@@ -56,12 +56,6 @@ let print_state state =
 
 (*********** REPL ***********)
 
-(*
-
-repl -> player.execute_move (translate string into move)  -> filter.validate_move (check board) -> state.update (score, put on board) [return state]
-
-*)
-
 let rec repl c_state =
   let () = print_state c_state in
   let () = print_endline "\nEnter Move" in
