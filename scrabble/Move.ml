@@ -29,7 +29,7 @@ module HumanMove : (Move with type state = game_state) =  struct
     | _ -> failwith "Invaild direction"
 
   (* [check_coordinate] is a bool indicating the validity of input coordinate
-   * false means the invalid input for the coodinate, true mweans the coodinate
+   * false means the invalid input for the coodinate, true means the coodinate
    * is valid *)
   let check_coordinate (x,y) =
     let lower_x = Char.lowercase_ascii x in

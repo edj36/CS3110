@@ -1,4 +1,4 @@
-(* An [AI] is an abstraction for the computer simulated player in the 
+(* [AI] is an abstraction for the computer simulated player in the 
  * scrabble game. [AI] evaluates possible moves and submits to the game 
  * the same as a human would when playing. *)
 module AI : sig

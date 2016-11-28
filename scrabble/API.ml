@@ -1,11 +1,11 @@
 open Data
 
-(* Package of useful functions *)
+(* Package of useful functions  *)
 module API = struct
 
   type state = game_state
 
-  (* [remove] represents 'a list after removing specified element from the
+  (* [remove] is a 'a list after removing specified element from the
   * input list *)
   let rec remove a lst =
     match lst with

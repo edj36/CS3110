@@ -1,3 +1,4 @@
+(* data structures for the game *)
 module Data = struct
 
   type letter = { character: char; pt : int; mutable count : int }

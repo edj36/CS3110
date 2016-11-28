@@ -1,4 +1,4 @@
-(* Data contains all data structure for the game *)
+(* contains all data structure for the game *)
 
 type letter = { character: char; pt : int; mutable count : int }
 
