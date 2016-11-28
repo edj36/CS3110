@@ -18,7 +18,7 @@ let print_board state =
         | Triple_word -> " TW "
         | Center -> " CE "
         | Normal -> " ** " )
-      | Some c -> " " ^ Char.escaped c ^ "  " in
+      | Some c -> " " ^ Char.escaped c ^ " " in
       print_string chr;
     done;
     print_string "\n";

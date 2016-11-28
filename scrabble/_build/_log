@@ -1,0 +1,52 @@
+### Starting build.
+# Target: game.ml.depends, tags: { extension:ml, file:game.ml, ocaml, ocamldep, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamldep.opt -modules game.ml > game.ml.depends # cached
+# Target: data.mli.depends, tags: { extension:mli, file:data.mli, ocaml, ocamldep, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamldep.opt -modules data.mli > data.mli.depends # cached
+# Target: data.cmi, tags: { byte, compile, extension:mli, file:data.mli, interf, ocaml, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamlc.opt -c -I /Users/pehuenmoure/.opam/4.03.0/lib/biniou -I /Users/pehuenmoure/.opam/4.03.0/lib/easy-format -I /Users/pehuenmoure/.opam/4.03.0/lib/ocaml -I /Users/pehuenmoure/.opam/4.03.0/lib/yojson -o data.cmi data.mli # cached
+# Target: gui.mli.depends, tags: { extension:mli, file:gui.mli, ocaml, ocamldep, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamldep.opt -modules gui.mli > gui.mli.depends # cached
+# Target: gui.cmi, tags: { byte, compile, extension:mli, file:gui.mli, interf, ocaml, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamlc.opt -c -I /Users/pehuenmoure/.opam/4.03.0/lib/biniou -I /Users/pehuenmoure/.opam/4.03.0/lib/easy-format -I /Users/pehuenmoure/.opam/4.03.0/lib/ocaml -I /Users/pehuenmoure/.opam/4.03.0/lib/yojson -o gui.cmi gui.mli # cached
+# Target: player.ml.depends, tags: { extension:ml, file:player.ml, ocaml, ocamldep, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamldep.opt -modules player.ml > player.ml.depends # cached
+# Target: filter.mli.depends, tags: { extension:mli, file:filter.mli, ocaml, ocamldep, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamldep.opt -modules filter.mli > filter.mli.depends # cached
+# Target: filter.cmi, tags: { byte, compile, extension:mli, file:filter.mli, interf, ocaml, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamlc.opt -c -I /Users/pehuenmoure/.opam/4.03.0/lib/biniou -I /Users/pehuenmoure/.opam/4.03.0/lib/easy-format -I /Users/pehuenmoure/.opam/4.03.0/lib/ocaml -I /Users/pehuenmoure/.opam/4.03.0/lib/yojson -o filter.cmi filter.mli # cached
+# Target: utils.mli.depends, tags: { extension:mli, file:utils.mli, ocaml, ocamldep, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamldep.opt -modules utils.mli > utils.mli.depends # cached
+# Target: utils.cmi, tags: { byte, compile, extension:mli, file:utils.mli, interf, ocaml, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamlc.opt -c -I /Users/pehuenmoure/.opam/4.03.0/lib/biniou -I /Users/pehuenmoure/.opam/4.03.0/lib/easy-format -I /Users/pehuenmoure/.opam/4.03.0/lib/ocaml -I /Users/pehuenmoure/.opam/4.03.0/lib/yojson -o utils.cmi utils.mli # cached
+# Target: player.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:player.cmo, file:player.ml, implem, ocaml, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamlc.opt -c -I /Users/pehuenmoure/.opam/4.03.0/lib/biniou -I /Users/pehuenmoure/.opam/4.03.0/lib/easy-format -I /Users/pehuenmoure/.opam/4.03.0/lib/ocaml -I /Users/pehuenmoure/.opam/4.03.0/lib/yojson -o player.cmo player.ml # cached
+# Target: state.mli.depends, tags: { extension:mli, file:state.mli, ocaml, ocamldep, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamldep.opt -modules state.mli > state.mli.depends # cached
+# Target: state.cmi, tags: { byte, compile, extension:mli, file:state.mli, interf, ocaml, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamlc.opt -c -I /Users/pehuenmoure/.opam/4.03.0/lib/biniou -I /Users/pehuenmoure/.opam/4.03.0/lib/easy-format -I /Users/pehuenmoure/.opam/4.03.0/lib/ocaml -I /Users/pehuenmoure/.opam/4.03.0/lib/yojson -o state.cmi state.mli # cached
+# Target: game.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:game.cmo, file:game.ml, implem, ocaml, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamlc.opt -c -I /Users/pehuenmoure/.opam/4.03.0/lib/biniou -I /Users/pehuenmoure/.opam/4.03.0/lib/easy-format -I /Users/pehuenmoure/.opam/4.03.0/lib/ocaml -I /Users/pehuenmoure/.opam/4.03.0/lib/yojson -o game.cmo game.ml # cached
+# Target: data.ml.depends, tags: { extension:ml, file:data.ml, ocaml, ocamldep, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamldep.opt -modules data.ml > data.ml.depends # cached
+# Target: data.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:data.cmo, file:data.ml, implem, ocaml, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamlc.opt -c -I /Users/pehuenmoure/.opam/4.03.0/lib/biniou -I /Users/pehuenmoure/.opam/4.03.0/lib/easy-format -I /Users/pehuenmoure/.opam/4.03.0/lib/ocaml -I /Users/pehuenmoure/.opam/4.03.0/lib/yojson -o data.cmo data.ml # cached
+# Target: gui.ml.depends, tags: { extension:ml, file:gui.ml, ocaml, ocamldep, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamldep.opt -modules gui.ml > gui.ml.depends # cached
+# Target: gui.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:gui.cmo, file:gui.ml, implem, ocaml, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamlc.opt -c -I /Users/pehuenmoure/.opam/4.03.0/lib/biniou -I /Users/pehuenmoure/.opam/4.03.0/lib/easy-format -I /Users/pehuenmoure/.opam/4.03.0/lib/ocaml -I /Users/pehuenmoure/.opam/4.03.0/lib/yojson -o gui.cmo gui.ml # cached
+# Target: state.ml.depends, tags: { extension:ml, file:state.ml, ocaml, ocamldep, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamldep.opt -modules state.ml > state.ml.depends # cached
+# Target: state.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:state.cmo, file:state.ml, implem, ocaml, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamlc.opt -c -I /Users/pehuenmoure/.opam/4.03.0/lib/biniou -I /Users/pehuenmoure/.opam/4.03.0/lib/easy-format -I /Users/pehuenmoure/.opam/4.03.0/lib/ocaml -I /Users/pehuenmoure/.opam/4.03.0/lib/yojson -o state.cmo state.ml # cached
+# Target: utils.ml.depends, tags: { extension:ml, file:utils.ml, ocaml, ocamldep, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamldep.opt -modules utils.ml > utils.ml.depends # cached
+# Target: utils.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:utils.cmo, file:utils.ml, implem, ocaml, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamlc.opt -c -I /Users/pehuenmoure/.opam/4.03.0/lib/biniou -I /Users/pehuenmoure/.opam/4.03.0/lib/easy-format -I /Users/pehuenmoure/.opam/4.03.0/lib/ocaml -I /Users/pehuenmoure/.opam/4.03.0/lib/yojson -o utils.cmo utils.ml # cached
+# Target: filter.ml.depends, tags: { extension:ml, file:filter.ml, ocaml, ocamldep, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamldep.opt -modules filter.ml > filter.ml.depends # cached
+# Target: filter.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:filter.cmo, file:filter.ml, implem, ocaml, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamlc.opt -c -I /Users/pehuenmoure/.opam/4.03.0/lib/biniou -I /Users/pehuenmoure/.opam/4.03.0/lib/easy-format -I /Users/pehuenmoure/.opam/4.03.0/lib/ocaml -I /Users/pehuenmoure/.opam/4.03.0/lib/yojson -o filter.cmo filter.ml # cached
+# Target: game.byte, tags: { byte, dont_link_with, extension:byte, file:game.byte, link, ocaml, program, quiet, traverse }
+/Users/pehuenmoure/.opam/4.03.0/bin/ocamlc.opt -I /Users/pehuenmoure/.opam/4.03.0/lib/biniou -I /Users/pehuenmoure/.opam/4.03.0/lib/easy-format -I /Users/pehuenmoure/.opam/4.03.0/lib/ocaml -I /Users/pehuenmoure/.opam/4.03.0/lib/yojson str.cma unix.cma easy_format.cmo biniou.cma yojson.cmo data.cmo utils.cmo gui.cmo state.cmo filter.cmo player.cmo game.cmo -o game.byte # cached
+# Compilation successful.
