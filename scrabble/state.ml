@@ -97,72 +97,78 @@ let update_racks hands s =
 let translate_coodinate (x,y) =
   (y-1, (Char.code (Char.lowercase_ascii x)  - Char.code 'a'))
 
+(* [update_switch_all] is a new type game_state after executing
+ * switch all letters *)
+let update_switch_all state =
+  let player = current_player state in
+  add_letter (snd player) state.letter_bag;
+  let new_hand = (fst player, draw_letters 7 state.letter_bag) in
+  let new_racks = update_racks new_hand state in
+  {
+    board = state.board;
+    score_board = state.score_board;
+    letter_bag = state.letter_bag;
+    player_racks = new_racks;
+    turn = state.turn + 1;
+    words = state.words
+  }
+
+(* [update_switch_some] is a new type game_state after executing
+ * switch some letters represented by char list *)
+let update_switch_some lst state =
+  let letters = List.map (fun x -> char_to_letter x state.letter_bag) lst in
+  let player = current_player state in
+  add_letter letters state.letter_bag;
+  let removed =
+    let rec helper letter hands = match letter with
+      | [] -> hands
+      | h::t -> helper t (remove h hands)
+    in helper letters (snd player) in
+  let new_hand =
+  (fst player, removed @ (draw_letters (List.length letters) state.letter_bag)) in
+  let new_racks = update_racks new_hand state in
+  {
+    board = state.board;
+    score_board = state.score_board;
+    letter_bag = state.letter_bag;
+    player_racks = new_racks;
+    turn = state.turn + 1;
+    words = state.words
+  }
 (* [submit_move] enters [move] to the game and is the [state] resulting from
  * [move]'s' execution *)
-let update m s =
-  match m with
-  | Play {word = str; direction = dir; coordinate = crd}
-    ->
+let update m s = match m with
+  | Play {word = str; direction = dir; coordinate = crd} ->
     let rec helper str dir crd =
       match String.length str with
       | 0 -> ()
       | n ->
-      let chr = Char.uppercase_ascii (String.get str 0) in
-      let tile = get_tile crd s.board in
-      let new_tile = match tile.letter with
-      | Some c -> if c = chr then {bonus = tile.bonus; letter = Some chr}
-      else failwith "You Cannot Override exsiting character"
-      | None -> {bonus = tile.bonus; letter = Some chr} in
-      fill_coordinate [crd] new_tile s.board;
-      let next = try get_nextcoordinate crd dir with
+        let chr = Char.uppercase_ascii (String.get str 0) in
+        let tile = get_tile crd s.board in
+        let new_tile = match tile.letter with
+          | Some c -> if c = chr then {bonus = tile.bonus; letter = Some chr}
+            else failwith "You Cannot Override exsiting character"
+          | None -> {bonus = tile.bonus; letter = Some chr} in
+          fill_coordinate [crd] new_tile s.board;
+        let next = try get_nextcoordinate crd dir with
       | Failure _ -> (15,15) in
-      if next = (15,15) then ()
-      else helper (String.sub str 1 (String.length str - 1)) dir next in
+        if next = (15,15) then ()
+        else helper (String.sub str 1 (String.length str - 1)) dir next in
     helper str dir (translate_coodinate crd);
+    let temp = update_switch_some (string_to_char_list str) s in
+    let new_racks = temp.player_racks in
     let new_words = collect s.board in
     if List.length new_words = 0 then failwith "red flag" else
     {
       board = s.board;
       score_board = s.score_board;
       letter_bag = s.letter_bag;
-      player_racks = s.player_racks;
+      player_racks = new_racks;
       turn = s.turn + 1;
       words = collect s.board
     }
-  | SwitchAll ->
-    let player = current_player s in
-    add_letter (snd player) s.letter_bag;
-    let new_hand = (fst player, draw_letters 7 s.letter_bag) in
-    let new_racks = update_racks new_hand s in
-    {
-      board = s.board;
-      score_board = s.score_board;
-      letter_bag = s.letter_bag;
-      player_racks = new_racks;
-      turn = s.turn + 1;
-      words = s.words
-    }
-  | SwitchSome lst ->
-    let letters = List.map (fun x -> char_to_letter x s.letter_bag) lst in
-    let player = current_player s in
-    add_letter letters s.letter_bag;
-    let removed =
-      let rec helper letter hands =
-      match letter with
-      | [] -> hands
-      | h::t -> helper t (remove h hands)
-      in helper letters (snd player) in
-    let new_hand =
-      (fst player, removed @ (draw_letters (List.length letters) s.letter_bag)) in
-    let new_racks = update_racks new_hand s in
-    {
-      board = s.board;
-      score_board = s.score_board;
-      letter_bag = s.letter_bag;
-      player_racks = new_racks;
-      turn = s.turn + 1;
-      words = s.words
-    }
+  | SwitchAll -> update_switch_all s
+  | SwitchSome lst -> update_switch_some lst s
   | Pass ->
     {
       board = s.board;

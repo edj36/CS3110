@@ -23,7 +23,8 @@ let rec remove a lst =
 let rec string_to_char_list str =
   match str with
   | "" -> []
-  | s -> String.get s 0::string_to_char_list (String.sub s 1 ((String.length s)-1))
+  | s -> Char.uppercase_ascii (String.get s 0)
+  ::string_to_char_list (String.sub s 1 ((String.length s)-1))
 
 (* [char_to_letter] represents letter type of input char *)
 let char_to_letter c bag =
@@ -134,7 +135,7 @@ let collect board =
     | _ -> (crawl dir i board) @ helper dir (i-1) in
   (helper Across 14) @ (helper Down 14)
 
-let get_newwords state = 
+let get_newwords state =
   let new_words = collect state.board in
   let old_words = state.words in
   let rec helper new_w old_w =
@@ -144,4 +145,3 @@ let get_newwords state =
       if List.mem h old_w then helper (remove h new_w) t
       else h :: helper new_w t
   in helper new_words old_words
-
