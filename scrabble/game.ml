@@ -2,41 +2,37 @@ open Data
 open HumanMove
 open Str
 open Utils
+open Yojson.Basic.Util
+
+let open_json () = Yojson.Basic.from_file "info.json" 
+
+let init_letter_bag src =
+  let lb = src |> member "letter_bag" |> to_list in
+  let chr = List.map (fun x -> x |> member "character" |> to_string) lb in
+  let pt = List.map (fun x -> x |> member "pt" |> to_int) lb in
+  let count = List.map (fun x -> x |> member "count" |> to_int) lb in
+  let rec helper l1 l2 l3 =
+    match l1, l2, l3 with
+    | [],[],[] -> []
+    | h1::t1, h2::t2, h3::t3 ->
+      {character = String.get h1 0; pt = h2; count = h3} :: helper t1 t2 t3
+    | _ -> failwith "list unbalanced" in
+  helper chr pt count
+
+let init_tile src name =
+  let tile = src |> member name |> to_list in
+  let x = List.map (fun x -> x |> member "x" |> to_int) tile in
+  let y = List.map (fun x -> x |> member "y" |> to_int) tile in
+  let rec helper l1 l2 =
+    match l1, l2 with
+    | [],[] -> []
+    | h1::t1, h2::t2 -> (h1,h2) :: helper t1 t2
+    | _ -> failwith "list unbalanced" in
+  helper x y
+
 
 (* pre-define players for the sake of testing *)
 let players = [ Human "Alexis"; AI "Kenta" ]
-
-(* [initial_bag] is a letter list representing the intial state of the game *)
-let letter_bag ()=
-[
-  {character = 'A'; pt = 1; count = 9};
-  {character = 'B'; pt = 3; count = 2};
-  {character = 'C'; pt = 3; count = 2};
-  {character = 'D'; pt = 2; count = 4};
-  {character = 'E'; pt = 1; count = 12};
-  {character = 'F'; pt = 4; count = 2};
-  {character = 'G'; pt = 2; count = 3};
-  {character = 'H'; pt = 4; count = 2};
-  {character = 'I'; pt = 1; count = 9};
-  {character = 'J'; pt = 8; count = 1};
-  {character = 'K'; pt = 5; count = 1};
-  {character = 'L'; pt = 1; count = 4};
-  {character = 'M'; pt = 3; count = 2};
-  {character = 'N'; pt = 1; count = 6};
-  {character = 'O'; pt = 1; count = 8};
-  {character = 'P'; pt = 3; count = 2};
-  {character = 'Q'; pt = 10;count = 1};
-  {character = 'R'; pt = 1; count = 6};
-  {character = 'S'; pt = 1; count = 4};
-  {character = 'T'; pt = 1; count = 6};
-  {character = 'U'; pt = 1; count = 4};
-  {character = 'V'; pt = 4; count = 2};
-  {character = 'W'; pt = 4; count = 2};
-  {character = 'X'; pt = 8; count = 1};
-  {character = 'Y'; pt = 4; count = 2};
-  {character = 'Z'; pt = 10;count = 1};
-  {character = ' '; pt = 0; count = 2}
-]
 
 (* [initialize_score] represents the tuple list of each player and their scores*)
 let rec initialize_score (players : player list) =
@@ -44,41 +40,20 @@ let rec initialize_score (players : player list) =
   | [] -> []
   | h::t -> (h, 0):: initialize_score t
 
-let tw_coordinate =
-[(0,0);(0,7);(0,14);(7,0);(7,14);(14,0);(14,7);(14,14)]
-
-let tl_coordinate =
-[
-(1,5);(1,9);(5,1);(5,5);
-(5,9);(5,13);(9,1);(9,5);
-(9,9);(9,13);(13,5);(13,9)
-]
-
-let dw_coordinate =
-[
-(1,1);(2,2);(3,3);(4,4);
-(10,4);(11,3);(12,2);(13,1);
-(4,10);(3,11);(2,12);(1,13);
-(10,10);(11,11);(12,12);(13,13)
-]
-
-let dl_coordinate =
-[
-(0,3);(0,11);(2,6);(2,8);(3,7);
-(3,0);(11,0);(6,2);(8,2);(7,3);
-(14,3);(14,11);(12,6);(12,8);(11,7);
-(3,14);(11,14);(6,12);(8,12);(7,11);
-(6,6);(8,6);(8,8);(6,8)
-]
-
 (* [initilize_board] is a tile array array representation of game board *)
 let initilize_board () =
   let board = Array.make_matrix 15 15 { bonus= Normal; letter = None } in
-  board.(7).(7) <- { bonus= Center; letter = None };
-  fill_coordinate tw_coordinate { bonus= Triple_word; letter = None } board;
-  fill_coordinate tl_coordinate { bonus= Triple_letter; letter = None } board;
-  fill_coordinate dw_coordinate { bonus= Double_word; letter = None } board;
-  fill_coordinate dl_coordinate { bonus= Double_letter; letter = None } board;
+  let src = open_json () in
+  fill_coordinate (init_tile src "Center")
+    { bonus= Center; letter = None } board;
+  fill_coordinate (init_tile src "Triple_word")
+    { bonus= Triple_word; letter = None } board;
+  fill_coordinate (init_tile src "Triple_letter")
+    { bonus= Triple_letter; letter = None } board;
+  fill_coordinate (init_tile src "Double_word")
+    { bonus= Double_word; letter = None } board;
+  fill_coordinate (init_tile src "Double_letter")
+    { bonus= Double_letter; letter = None } board;
   board
 
 (* [initialize_rack] is a (player * letter list) list, representating
@@ -90,9 +65,10 @@ let rec initialize_rack (players: player list) bag =
 
 (* [initialize_state] is a representation of intial game state *)
 let initialize_state (players: player list)=
+  let src = open_json () in
   let initial_score = initialize_score players in
   let initial_board = initilize_board () in
-  let initial_bag = letter_bag () in
+  let initial_bag = init_letter_bag src in
   let racks = initialize_rack players initial_bag in
   {
     board = initial_board;
