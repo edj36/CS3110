@@ -71,9 +71,7 @@ end
 module AI : (Player) =  struct
 
   (* type for game state *)
-  type t = game_state
-  (* type for the move player makes *)
-  type m = move
+  type t = Data.game_state
 
   (*type d = Data.direction*)
 
