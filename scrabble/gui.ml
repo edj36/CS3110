@@ -13,7 +13,7 @@ let print_board state =
       | None -> ( match tile.bonus with 
         | Double_letter -> ([on_cyan; black], " DL ")
         | Double_word -> ([on_blue; black], " DW ")
-        | Triple_letter -> ([on_blue; black], " TL ")
+        | Triple_letter -> ([on_blue; white], " TL ")
         | Triple_word -> ([on_red; black], " TW ")
         | Center -> ([on_magenta; white], " CE ")
         | Normal -> ([on_white; black], " ** " ) )
