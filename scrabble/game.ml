@@ -128,6 +128,7 @@ let print_board state =
     print_string "\n";
   done
 
+
 let print_state state =
   print_string ("Turn: " ^ (string_of_int state.turn) ^ "\n");
   let player = current_player state in
@@ -141,7 +142,10 @@ let print_state state =
   | h::t -> h^ " " ^ helper t in
   let hands = helper lst in
   let () = print_string ("Player's hand: " ^ hands ^ "\n") in
-  let () = print_board state in ()
+  let () = print_board state in
+  let () = List.fold_left (fun acc elm -> print_string (elm ^ "\n")) () state.words
+  in ()
+
 
 let rec repl c_state =
   let () = print_state c_state in

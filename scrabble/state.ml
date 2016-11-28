@@ -144,7 +144,7 @@ module State = struct
         letter_bag = s.letter_bag;
         player_racks = s.player_racks;
         turn = s.turn + 1;
-        words = []
+        words = collect s.board
       }
     | SwitchAll ->
       let player = current_player s in
@@ -157,7 +157,7 @@ module State = struct
         letter_bag = s.letter_bag;
         player_racks = new_racks;
         turn = s.turn + 1;
-        words = []
+        words = s.words
       }
     | SwitchSome lst ->
       let letters = List.map (fun x -> char_to_letter x s.letter_bag) lst in
@@ -173,7 +173,7 @@ module State = struct
         letter_bag = s.letter_bag;
         player_racks = new_racks;
         turn = s.turn + 1;
-        words = []
+        words = s.words
       }
     | Pass ->
       {
@@ -182,7 +182,7 @@ module State = struct
         letter_bag = s.letter_bag;
         player_racks = s.player_racks;
         turn = s.turn + 1;
-        words = []
+        words = s.words
       }
     | Shuffle ->
       let player = current_player s in
@@ -196,6 +196,6 @@ module State = struct
         letter_bag = s.letter_bag;
         player_racks = new_racks;
         turn = s.turn;
-        words = []
+        words = s.words
       }
 end

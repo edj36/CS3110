@@ -103,7 +103,8 @@ module HumanMove : (Move with type state = game_state) =  struct
         if next = (15,15) then ()
         else helper (String.sub str 1 (String.length str - 1)) dir next in
       helper str dir (translate_coodinate crd);
-      let new_words = collect s in
+      let new_words = collect s.board in
+      if List.length new_words = 0 then failwith "red flag" else
       {
         board = s.board;
         score_board = s.score_board;
