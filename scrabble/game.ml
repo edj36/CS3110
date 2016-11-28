@@ -4,6 +4,10 @@ open Str
 open Utils
 open Yojson.Basic.Util
 
+type j = Yojson.json
+
+type l = letter
+
 let open_json () = Yojson.Basic.from_file "info.json" 
 
 let init_letter_bag src =
@@ -15,9 +19,9 @@ let init_letter_bag src =
     match l1, l2, l3 with
     | [],[],[] -> []
     | h1::t1, h2::t2, h3::t3 ->
-      {character = String.get h1 0; pt = h2; count = h3} :: helper t1 t2 t3
+      { character = (String.get h1 0); pt = h2; count = h3} :: helper t1 t2 t3
     | _ -> failwith "list unbalanced" in
-  helper chr pt count
+      helper chr pt count
 
 let init_tile src name =
   let tile = src |> member name |> to_list in

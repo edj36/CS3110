@@ -1,7 +1,6 @@
 
 type state
-type move
-type dictionary
+type m
 
-val search : string -> dictionary -> bool
-val validate : move -> state -> bool
+(*val search : string -> d -> bool*)
+val validate : m -> state -> bool

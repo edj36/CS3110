@@ -2,8 +2,7 @@ open Data
 open Utils
 
 type state = game_state
-type move = moves
-type dictionary　
+type m = move
 
 (* [check_char] represents bool type, indicating if all elements in char List
  * is a member of [hands]. Also accounts for duplicates
@@ -16,7 +15,7 @@ let check_char lst (rack : player_rack) =
   | h::t -> List.mem h hands && helper t (remove h hands) in
   helper lst hands
 
-let search str dict = failwith "Unimplemented"
+(*let search str dict = failwith "Unimplemented"*)
 
 (* [validate] is a bool representation indicating if the move is valid or not
  * check following criteria
@@ -40,5 +39,5 @@ let validate move (state:state) : bool=
     } ->
     let player = current_player state in
     let chr_list = string_to_char_list str in
-    check_char chr_list player　
+    check_char chr_list player 
   | _ -> true
