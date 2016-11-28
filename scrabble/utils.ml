@@ -1,7 +1,7 @@
 open Data
 
 (* Package of useful functions  *)
-module API = struct
+module Utils = struct
 
   type state = game_state
 

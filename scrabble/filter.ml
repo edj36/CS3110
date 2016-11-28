@@ -1,5 +1,5 @@
 open Data
-open API
+open Utils
 
 type state = game_state
 type move = moves
