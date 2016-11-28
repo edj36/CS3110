@@ -8,6 +8,9 @@ open State
 
 
 let suite = "scrabble test suite" >:::
-  Move_test.tests
+  Player_test.tests
+  @ Filter_test.tests
+  @ State_test.tests
+  @ Tree_test.tests
 
 let _ = run_test_tt_main suite

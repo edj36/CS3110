@@ -28,7 +28,7 @@ let check_char lst (rack : player_rack) =
  *   3, Placing a complete word parallel to a word already played
       so that adjacent letters also form complete words *)
 
-let validate move state  =
+let validate move state =
   update move state
   (* match move with
   | Play
