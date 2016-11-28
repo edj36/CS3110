@@ -1,26 +1,22 @@
+open RadixTree
+open PString
+exception Not_found
 
-module RadixTree: Tree = struct
-
-  type 'a t =
-  |RLeaf
-  |RNode of 'a * 'a t * 'a t
-
-  let empty = RLeaf
-
-  (*[is_empty] is the bool of if the tree is empty*)
-  let is_empty t  = failwith "Unimplemented"
-
-  (*[peek] is the value of tree 'a t
-  requires: 'a t to be a valid tree RNode*)
-  let peek t = failwith "Unimplemented"
+let rec rec_read channel t =
+try
+  let word = input_line (channel) in
+  let tree = PString.add word true t in
+  rec_read channel tree
+with End_of_file ->
+close_in channel; t
 
 
-  (*[insert] is the tree with 'a added in*)
-  let insert t s = failwith "Unimplemented"
+let text_read file =
+  let channel = open_in file in
+  rec_read channel empty
 
 
-  (*[search] is the bool of if 'a is a member of 'a t*)
-  let search t s = failwith "Unimplemented"
-
-
-end
+let find_word str t =
+ try
+   find str t
+ with _-> false
