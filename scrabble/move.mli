@@ -1,14 +1,7 @@
 
-module type Move = sig
+val get_move : string -> Data.move
 
-  type state
+val submit_move: Data.game_state -> Data.move -> Data.game_state
 
-  type m
+val validate : string -> bool
 
-  val get_move : string -> m
-
-  val submit_move: state -> m -> state
-
-  val validate : string -> bool
-  
-end

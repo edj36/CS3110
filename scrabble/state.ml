@@ -3,16 +3,6 @@ open Utils
 
 module State = struct
 
-  (* type for game state *)
-  type state = game_state
-
-  (* type for a move in the game *)
-  type move = moves
-
-  (* type to store all players of the game *)
-  type players = player list
-
-
   (* [initial_bag] is a letter list representing the intial state of the game *)
   let letter_bag ()=
   [
@@ -106,7 +96,8 @@ module State = struct
       score_board = initial_score;
       letter_bag = initial_bag;
       player_racks = racks;
-      turn = 0
+      turn = 0;
+      words = []
     }
 
   let update_racks hands s =
@@ -122,7 +113,7 @@ module State = struct
 
   (* [update] is the new [state] resulting from evaluation of [move] in the
    * current [state] *)
-  let update s m =
+  let update m s =
     match m with
     | Play {word = str; direction = dir; coordinate = crd}
       -> let rec helper str dir crd =
@@ -135,7 +126,7 @@ module State = struct
               else failwith "You Cannot Override exsiting character"
             | None -> {bonus = tile.bonus; letter = Some chr} in
             fill_coordinate [crd] new_tile s.board;
-            let next = get_nextcoodinate crd dir in
+            let next = get_nextcoordinate crd dir in
             helper (String.sub str 1 (String.length str - 1)) dir next in
         helper str dir (translate_coodinate crd);
       {

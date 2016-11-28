@@ -1,6 +1,6 @@
 (* data structures for the game *)
 
-type letter = { character: char; pt : int; mutable count : int }
+type letter = { character : char; pt : int; mutable count : int }
 
 type coordinate = char * int
 

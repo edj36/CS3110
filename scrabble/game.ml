@@ -4,9 +4,6 @@ open Str
 open Utils
 open Yojson.Basic.Util
 
-type j = Yojson.json
-
-type l = letter
 
 let open_json () = Yojson.Basic.from_file "info.json" 
 
@@ -19,7 +16,10 @@ let init_letter_bag src =
     match l1, l2, l3 with
     | [],[],[] -> []
     | h1::t1, h2::t2, h3::t3 ->
-      { character = (String.get h1 0); pt = h2; count = h3} :: helper t1 t2 t3
+      { 
+        character = (String.get h1 0); 
+        pt = h2; count = h3
+      } :: helper t1 t2 t3
     | _ -> failwith "list unbalanced" in
       helper chr pt count
 
@@ -34,10 +34,6 @@ let init_tile src name =
     | _ -> failwith "list unbalanced" in
   helper x y
 
-
-(* pre-define players for the sake of testing *)
-let players = [ Human "Alexis"; AI "Kenta" ]
-
 (* [initialize_score] represents the tuple list of each player and their scores*)
 let rec initialize_score (players : player list) =
   match players with
@@ -46,18 +42,18 @@ let rec initialize_score (players : player list) =
 
 (* [initilize_board] is a tile array array representation of game board *)
 let initilize_board () =
-  let board = Array.make_matrix 15 15 { bonus= Normal; letter = None } in
+  let board = Array.make_matrix 15 15 { bonus = Normal ; letter = None } in
   let src = open_json () in
-  fill_coordinate (init_tile src "Center")
-    { bonus= Center; letter = None } board;
-  fill_coordinate (init_tile src "Triple_word")
-    { bonus= Triple_word; letter = None } board;
-  fill_coordinate (init_tile src "Triple_letter")
-    { bonus= Triple_letter; letter = None } board;
-  fill_coordinate (init_tile src "Double_word")
-    { bonus= Double_word; letter = None } board;
-  fill_coordinate (init_tile src "Double_letter")
-    { bonus= Double_letter; letter = None } board;
+  let () = fill_coordinate (init_tile src "Center")
+    { bonus= Center; letter = None }  board in
+  let () = fill_coordinate (init_tile src "Triple_word")
+    { bonus= Triple_word; letter = None } board in 
+  let () = fill_coordinate (init_tile src "Triple_letter")
+    { bonus= Triple_letter; letter = None } board in
+  let () = fill_coordinate (init_tile src "Double_word")
+    { bonus= Double_word; letter = None } board in 
+  let () = fill_coordinate (init_tile src "Double_letter")
+    { bonus= Double_letter; letter = None } board in
   board
 
 (* [initialize_rack] is a (player * letter list) list, representating
@@ -133,14 +129,14 @@ let rec repl c_state =
   let () = print_state c_state in
   let () = print_endline "\nEnter Move" in
   let s_move = read_line() in
-  let new_state = HumanMove.submit_move c_state (HumanMove.get_move s_move) in
+  let new_state = submit_move c_state (get_move s_move) in
   let () = print_endline "" in
   repl new_state
 
 let rec main_repl c_state =
   let () = print_endline "Enter Move" in
   let s_move = read_line() in
-  let new_state = HumanMove.submit_move c_state (HumanMove.get_move s_move) in
+  let new_state = submit_move c_state (get_move s_move) in
   let () = print_endline "" in
   repl new_state
 

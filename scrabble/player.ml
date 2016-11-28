@@ -3,7 +3,28 @@ open Str
 open Utils
 open Data
 
-module Human : (Player) =  struct
+module type Player = sig
+
+  (* type for game state *)
+  type t
+  (* type for move *)
+  type m
+
+  (* [make_move] is the [move] based on user input and the [move] in
+   * in progress:
+   * first [int] is x coordinate of [letter]
+   * second [int] is y coordinate of [letter]
+   * [letter] is letter being put on the board at the above coordinates
+   * [make_move] adds the coordinate-letter combination to the list of
+   * existing coordinate-letter combinations already inside of the
+   * argument [move]
+   * Requires:
+   * [m] is of type Move within the move variant *)
+  val get_move : t -> m 
+
+end
+
+module Human : (Player) = struct
 
   (* type for game state *)
   type t = string
@@ -45,9 +66,7 @@ module Human : (Player) =  struct
       else failwith "Invalid command"
     | "SwitchSome" | "switchsome" | "s" | "s_s"->
       if n >= 2 then
-        let char_lst = List.map (fun x -> String.get x 0) (List.tl split) in
-        if check_chars char_lst s then SwitchSome char_lst
-        else failwith "you don't have such a letter"
+        let char_lst = List.map (fun x -> String.get x 0) (List.tl split) in SwitchSome char_lst
       else failwith "Invalid command"
     | "Pass" | "pass" -> if n = 1 then Pass else failwith "Invalid command"
     | "Shuffle" | "shuffle" -> if n = 1 then Shuffle else failwith "Invalid command"
@@ -56,14 +75,12 @@ module Human : (Player) =  struct
 end
 
 
-module AI : (Player with type t = game_state) =  struct
-
-  include Data 
+module AI : (Player) =  struct
 
   (* type for game state *)
   type t = game_state
   (* type for the move player makes *)
-  (*type m = Data.move*)
+  type m = move
 
   (*type d = Data.direction*)
 

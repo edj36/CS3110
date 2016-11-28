@@ -1,8 +1,3 @@
 
 
-type j 
-
-type l 
-
-
-val init_letter_bag: j -> l list 
+val init_letter_bag: Yojson.Basic.json -> Data.letter list 

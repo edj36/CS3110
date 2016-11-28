@@ -3,7 +3,6 @@ open Data
 open Utils
 open Player
 open Filter
-open Game
 open Move
 open Server
 open State 

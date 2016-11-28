@@ -1,8 +1,8 @@
-open Data
+(*open Data
 
 (* A [Player] is a participant in the scrabble game. They can
  * submit moves to the board within the current state. *)
-module type Player = sig
+module type Play = sig
 
   (* type for game state *)
   type t
@@ -21,4 +21,4 @@ module type Player = sig
    * [m] is of type Move within the move variant *)
   val get_move : t -> m 
 
-end
+end*)

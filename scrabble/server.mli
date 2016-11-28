@@ -1,4 +1,4 @@
-(* A [Server] is the backend of the scrabble game. *)
+(* A [Server] is the backend of the scrabble game. 
 module Server : sig
 
   (* type for the game state *)
@@ -18,4 +18,4 @@ module Server : sig
    * [state] via [gui] for the client to view *)
   val alert_gui : state -> gui -> unit
   
-end
+end*)
