@@ -1,11 +1,16 @@
 (* A [Player] is a participant in the scrabble game. They can
  * submit moves to the board within the current state. *)
-module Player : sig
+module type Player = sig
 
   (* type for game state *)
   type t
   (* type for move *)
-  type move
+  type m
+
+  (* type for direction *)
+  type d
+
+  val string_to_direction : string -> d
 
   (* [make_move] is the [move] based on user input and the [move] in
    * in progress:
@@ -16,7 +21,7 @@ module Player : sig
    * existing coordinate-letter combinations already inside of the
    * argument [move]
    * Requires:
-   * [move] is of type Move within the move variant *)
-  val get_move : t -> move
+   * [m] is of type Move within the move variant *)
+  val get_move : t -> m
 
 end

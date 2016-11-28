@@ -1,5 +1,3 @@
-open Data
-open API
 
 type state
 type move

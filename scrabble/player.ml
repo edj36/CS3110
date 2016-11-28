@@ -1,25 +1,21 @@
-open Data
 open String
 open Str
-open API
-
-module type Player = sig
-  type t
-  type move
-  val get_move : t -> move
-end
+open Utils
 
 module Human : (Player with type t = string) =  struct
+
+  include Data  
 
   (* type for game state *)
   type t = string
   (* type for the move player makes *)
-  type move = moves
+  type m = Data.move
+
+  type d = Data.direction
 
   (* [string_to_direction] is a type direction representation
    * of string type input [s] *)
-  let string_to_direction s =
-    match s with
+  let string_to_direction s = match s with
     | "Across" | "a" | "across"-> Across
     | "Down" | "d" | "down" -> Down
     | _ -> failwith "Invaild direction"
@@ -74,7 +70,7 @@ module AI : (Player with type t = game_state) =  struct
   (* type for game state *)
   type t = game_state
   (* type for the move player makes *)
-  type move = moves
+  type move = move
 
   let get_move s = failwith "Unimplemented"
 

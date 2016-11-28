@@ -1,56 +1,29 @@
 (* contains all data structure for the game *)
 
-type letter = { character: char; pt : int; mutable count : int }
+module Data : sig 
 
-type coordinate = char * int
+  type letter
 
-type direction =
-  | Across
-  | Down
+  type coordinate 
 
-type bonus_status =
-  | Double_letter
-  | Double_word
-  | Triple_letter
-  | Triple_word
-  | Center
-  | Normal
+  type direction 
 
-type moves =
-  | Play of {
-    word : string;
-    direction : direction;
-    coordinate : coordinate
-  }
-  | SwitchAll
-  | SwitchSome of char list
-  | Pass
-  | Shuffle
+  type bonus_status 
 
-type tile =
-  {
-    bonus : bonus_status;
-    letter: letter option;
-  }
+  type move 
 
-type player =
-  | Human of string
-  | AI of string
+  type tile 
 
-type scrabble_board = tile array array
+  type player 
 
-type score_board = (player * int) list
+  type scrabble_board 
 
-type letter_bag = letter list
+  type score_board 
 
-type player_rack = (player * letter list)
+  type letter_bag 
 
-type game_state =
-{
-  board : scrabble_board;
-  score_board : score_board;
-  letter_bag : letter_bag;
-  player_racks : player_rack list;
-  turn : int;
-  words : string list
-}
+  type player_rack 
+
+  type game_state
+
+end

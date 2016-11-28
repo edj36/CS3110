@@ -1,7 +1,7 @@
 open Data
 open HumanMove
 open Str
-open API
+open Utils
 
 (* pre-define players for the sake of testing *)
 let players = [ Human "Alexis"; AI "Kenta" ]

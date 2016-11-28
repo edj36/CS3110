@@ -1,13 +1,12 @@
 (* data structures for the game *)
-module Data = struct
+
+module Data = struct 
 
   type letter = { character: char; pt : int; mutable count : int }
 
   type coordinate = char * int
 
-  type direction =
-    | Across
-    | Down
+  type direction = | Across | Down
 
   type bonus_status =
     | Double_letter
@@ -17,12 +16,13 @@ module Data = struct
     | Center
     | Normal
 
-  type moves =
-    | Play of {
-      word : string;
-      direction : direction;
-      coordinate : coordinate
-    }
+  type move =
+    | Play of  
+      {
+        word : string;
+        direction : direction;
+        coordinate : coordinate
+      }
     | SwitchAll
     | SwitchSome of char list
     | Pass
@@ -39,8 +39,11 @@ module Data = struct
     | AI of string
 
   type scrabble_board = tile array array
+
   type score_board = (player * int) list
+
   type letter_bag = letter list
+
   type player_rack = (player * letter list)
 
   type game_state =
@@ -53,6 +56,7 @@ module Data = struct
     words : string list
   }
 
+end
+
 (*type scrabble_dictionary = string two_three_tree*)
 
-end

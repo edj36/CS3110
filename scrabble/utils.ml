@@ -5,6 +5,14 @@ module Utils = struct
 
   type state = game_state
 
+  type l = letter 
+
+  type p_r = player_rack
+
+  type d = direction
+
+  type t = tile 
+
   (* [remove] is a 'a list after removing specified element from the
   * input list *)
   let rec remove a lst =
