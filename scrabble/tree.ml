@@ -26,7 +26,7 @@ requires:
 * [file] to be a valid file with each line as a word*)
 let text_read file =
   let channel = open_in file in
-  rec_read channel empty
+  read_loop channel empty
 
 (*[find_word] is true if [str] is in tree [t] and false otherwise
 requires:
