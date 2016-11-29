@@ -15,7 +15,7 @@ type bonus_status =
   | Normal
 
 type move =
-  | Play of  
+  | Play of
     {
       word : string;
       direction : direction;
@@ -25,6 +25,7 @@ type move =
   | SwitchSome of char list
   | Pass
   | Shuffle
+  | End
 
 type tile =
   {
@@ -56,4 +57,3 @@ type game_state =
 
 
 (*type scrabble_dictionary = string two_three_tree*)
-

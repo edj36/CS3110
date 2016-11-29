@@ -1,6 +1,7 @@
 open Utils
 open Data
 open Filter
+exception End
 
 module type Player = sig
 
@@ -61,6 +62,7 @@ module Human : (Player with type t = string) = struct
       else failwith "Invalid command"
     | "Pass" | "pass" -> if n = 1 then Pass else failwith "Invalid command"
     | "Shuffle" | "shuffle" -> if n = 1 then Shuffle else failwith "Invalid command"
+    | "End" | "end" -> if n = 1 then raise End else failwith "Invalid command"
     | _ -> failwith "Invalid command" in
 
     validate command c_state
