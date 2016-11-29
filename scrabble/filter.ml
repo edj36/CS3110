@@ -1,6 +1,7 @@
 open Data
 open Utils
 open State
+open Tree 
 
 (* [check_char] represents bool type, indicating if all elements in char List
  * is a member of [hands]. Also accounts for duplicates
