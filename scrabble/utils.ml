@@ -134,6 +134,7 @@ let collect board =
     | _ -> (crawl dir i board) @ helper dir (i-1) in
   (helper Across 14) @ (helper Down 14)
 
+(* [get_newwords] represents string list of new words created in a recent turn*)
 let rec get_newwords new_w old_w = match new_w with
     | []->[]
     | h::t ->
