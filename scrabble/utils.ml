@@ -81,13 +81,16 @@ let rand_char bag =
 (* [draw_letters] represents the letter list after drawing specified
 * number of letters from bag. *)
 let rec draw_letters num bag =
-  match num with
-  | 0 -> []
-  | _ -> let l = rand_char bag in
-  (match l with
-  | None -> failwith "Bag is enpty";
-  | Some l -> add_or_draw_char l.character bag (-);
-  l::draw_letters (num-1) bag)
+  let sum = List.fold_left (fun a e -> a + e.count) 0 bag in
+  if sum >= num then
+    match num with
+    | 0 -> []
+    | _ -> let l = rand_char bag in
+    (match l with
+    | None -> failwith "Bag is enpty";
+    | Some l -> add_or_draw_char l.character bag (-);
+    l::draw_letters (num-1) bag)
+  else draw_letters sum bag
 
 (* [add_letters] represents the letter list after adding the letters to the list *)
 let rec add_letter hands bag =

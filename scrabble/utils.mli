@@ -1,6 +1,6 @@
 
-
 (*******************  useful tools  *******************)
+
 (* [get_nth] is the nth element of [lst] but instead of raising
  * exceptions (like List.nth) it raises failwith "error message"
  * This function was made with inspiration from this StackOverflow post:

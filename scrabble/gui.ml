@@ -3,6 +3,7 @@ open Utils
 
 (*********** GUI ***********)
 
+(* [print_board] print string *)
 let print_board state =
   ANSITerminal.(print_string [] "\n";
   let b = state.board in
@@ -23,6 +24,7 @@ let print_board state =
     print_string [Reset] "\n \n";
   done )
 
+(* [print_score] score board *)
 let rec print_score = function
   | []-> ()
   | (x,y)::t -> let name = (match x with
@@ -31,6 +33,7 @@ let rec print_score = function
   print_string (name ^ ": " ^ (string_of_int y) ^ "| ");
   print_score t
 
+(* [hpdate_gui] *)
 let update_gui state =
   print_string ("Turn: " ^ (string_of_int state.turn) ^ "\n");
   let player = current_player_rack state in
@@ -51,5 +54,6 @@ let update_gui state =
   let () = List.fold_left (fun acc elm -> print_string (elm ^ "\n")) ()
     (get_newwords (collect state.board) state.words) in
   let () = print_string "\n" in
-  let () = print_score state.score_board
+  let () = print_score state.score_board in
+  let () = print_string "\n" 
   in ()
