@@ -33,7 +33,7 @@ let rec print_score = function
 
 let update_gui state =
   print_string ("Turn: " ^ (string_of_int state.turn) ^ "\n");
-  let player = current_player state in
+  let player = current_player_rack state in
   let name = match fst player with
     | Human n1 -> n1
     | AI n2 -> n2 in
@@ -49,5 +49,6 @@ let update_gui state =
   let () = List.fold_left (fun acc elm -> print_string (elm ^ "\n")) () state.words in
   let () = print_string "\nnew words \n" in
   let () = List.fold_left (fun acc elm -> print_string (elm ^ "\n")) () (get_newwords (collect state.board) state.words) in
+  let () = print_string "\n" in
   let () = print_score state.score_board
   in ()

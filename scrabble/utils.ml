@@ -87,7 +87,12 @@ let rec add_letter hands bag =
 (* [current_player] represents a player who is playing on the current turn *)
 let current_player_rack state =
   let n = List.length state.player_racks in
-  List.nth state.player_racks (state.turn mod n)
+  try List.nth state.player_racks (state.turn mod n) with
+  | Failure _ -> failwith "Never happens"
+
+(* let rec current_player_rack state = match state.player_racks with
+  | [] -> failwith "Never happens"
+  | h :: t when h =  *)
 
 (* [get_nextcoodinate] is (int*int) representation of coordinate after moving
 * 1 step in the specified direction from speficied origin *)
@@ -141,12 +146,15 @@ let collect board =
     | _ -> (crawl dir i board) @ helper dir (i-1) in
   (helper Across 14) @ (helper Down 14)
 
+(* [list_compare] is an 'a list representation of new elements added in a
+ * new state (helper funciton for newwords, newcoordinates) *)
+let rec list_compare new_l old_l = match new_l with
+  | [] -> []
+  | h::t -> if List.mem h old_l then list_compare t (remove h old_l)
+    else h :: list_compare t old_l
+
 (* [get_newwords] represents string list of new words created in a recent turn*)
-let rec get_newwords new_w old_w = match new_w with
-    | []->[]
-    | h::t ->
-      if List.mem h old_w then get_newwords t (remove h old_w)
-      else h :: get_newwords t old_w
+let rec get_newwords new_w old_w = list_compare new_w old_w
 
 (* [collect_coordinates] is a (int*int) list representation of occupied
  * coordinates on the current board *)
@@ -173,4 +181,6 @@ let rec word_score str state =
   let letter = char_to_letter (String.get str 0) state.letter_bag in
   letter.pt + word_score (String.sub str 1 ((String.length str)-1)) state
 
-let get_newcoordinates new_l old_l = failwith "Unimplemented"
+(* [get_newcoordinates] is a (int*int) list representation of all new words
+ * made in the most recent turn *)
+let get_newcoordinates new_l old_l = list_compare new_l old_l
