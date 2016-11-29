@@ -207,3 +207,11 @@ let rec word_score str state =
 (* [get_newcoordinates] is a (int*int) list representation of all new words
  * made in the most recent turn *)
 let get_newcoordinates new_l old_l = list_compare new_l old_l
+
+(********** TESTING TOOLS **********)
+let rec get_score state name =
+  match state.score_board with
+  | [] -> 0
+  | (p, score) :: t ->
+    let n = (match p with Human n1 -> n1 |AI n2 -> n2) in
+    if n = name then score else get_score state name

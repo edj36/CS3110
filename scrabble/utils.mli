@@ -71,8 +71,13 @@ val get_newwords : string list -> string list -> string list
 val collect_coordinates : Data.scrabble_board-> (int*int) list
 
 (* [word_score] is a score of string type input word *)
-val word_score: string -> Data.game_state -> int
+val word_score : string -> Data.game_state -> int
 
 (* [get_newcoordinates] is a (int*int) list representation of all new words
  * made in the most recent turn *)
 val get_newcoordinates : (int*int) list -> (int*int) list -> (int*int) list
+
+(********** TESTING TOOLS **********)
+
+(* [get_score] is an int type representation of the score of specified player *)
+val get_score : Data.game_state -> string -> int

@@ -19,7 +19,7 @@ module type Player = sig
    * Requires:
    * [m] is of type Move within the move variant *)
   val execute_move : t -> Data.game_state -> Data.game_state
-  
+
 end
 
 module Human : (Player with type t = string) = struct
