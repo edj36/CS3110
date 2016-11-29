@@ -32,7 +32,7 @@ module Human : (Player with type t = string) = struct
    * is valid *)
   let check_coordinate (x,y) =
     let lower_x = Char.lowercase_ascii x in
-     (0 <= y) && (y <= 14)
+     (1 <= y) && (y <= 15)
      && (Char.code lower_x >= Char.code 'a')
      && (Char.code 'o' >= Char.code lower_x)
 
