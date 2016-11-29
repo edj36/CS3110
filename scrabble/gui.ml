@@ -38,7 +38,5 @@ let update_gui state =
   let hands = helper lst in
   let () = print_string ("Player's hand: " ^ hands ^ "\n") in
   let () = print_board state in
-  let () = List.fold_left (fun acc elm -> print_string (elm ^ "\n")) () state.words in
-  let () = print_string "\nnew words \n" in
-  let () = List.fold_left (fun acc elm -> print_string (elm ^ "\n")) () (get_newwords state)
+  let () = List.fold_left (fun acc elm -> print_string (elm ^ "\n")) () state.words
   in ()

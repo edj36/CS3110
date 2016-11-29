@@ -139,6 +139,7 @@ let update_switch_some lst state =
  * [move]'s' execution *)
 let update m s = match m with
   | Play {word = str; direction = dir; coordinate = crd} ->
+    let prev_words = collect s.board in
     let rec helper str dir crd =
       match String.length str with
       | 0 -> ()
@@ -157,15 +158,13 @@ let update m s = match m with
     helper str dir (translate_coodinate crd);
     let temp = update_switch_some (string_to_char_list str) s in
     let new_racks = temp.player_racks in
-    let new_words = collect s.board in
-    if List.length new_words = 0 then failwith "red flag" else
     {
       board = s.board;
       score_board = s.score_board;
       letter_bag = s.letter_bag;
       player_racks = new_racks;
       turn = s.turn + 1;
-      words = collect s.board
+      words = prev_words
     }
   | SwitchAll -> update_switch_all s
   | SwitchSome lst -> update_switch_some lst s
