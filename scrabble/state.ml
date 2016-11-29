@@ -103,7 +103,7 @@ let translate_coodinate (x,y) =
 (* [update_switch_all] is a new type game_state after executing
  * switch all letters *)
 let update_switch_all state =
-  let player = current_player state in
+  let player = current_player_rack state in
   add_letter (snd player) state.letter_bag;
   let new_hand = (fst player, draw_letters 7 state.letter_bag) in
   let new_racks = update_racks new_hand state in
@@ -120,7 +120,7 @@ let update_switch_all state =
  * switch some letters represented by char list *)
 let update_switch_some lst state =
   let letters = List.map (fun x -> char_to_letter x state.letter_bag) lst in
-  let player = current_player state in
+  let player = current_player_rack state in
   add_letter letters state.letter_bag;
   let removed =
     let rec helper letter hands = match letter with
@@ -145,7 +145,7 @@ let update_switch_some lst state =
 (*[update_scoreboard] is an updated score_board after substituting the old
  * score_board with the current player's score *)
 let update_scoreboard pt state =
-  let player = fst (current_player state) in
+  let player = fst (current_player_rack state) in
   let rec helper pt player score_board =
     match score_board with
     | [] -> []
@@ -203,7 +203,7 @@ let update m s = match m with
       words = s.words
     }
   | Shuffle ->
-    let player = current_player s in
+    let player = current_player_rack s in
     Random.self_init();
     let indexed = List.map (fun x -> (Random.bits (), x)) (snd player) in
     let helper_sort x y = Pervasives.compare (fst x) (fst y) in
