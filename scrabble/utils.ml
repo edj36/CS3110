@@ -53,6 +53,7 @@ let rand_char bag =
   match sum with
   | 0 -> failwith "Bag is empty!"
   | _ ->
+  Random.self_init ();
   let num = Random.int sum in
   let rec helper num lst = match lst with
   | [] -> None

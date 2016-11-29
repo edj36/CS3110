@@ -180,6 +180,7 @@ let update m s = match m with
     }
   | Shuffle ->
     let player = current_player s in
+    Random.self_init();
     let indexed = List.map (fun x -> (Random.bits (), x)) (snd player) in
     let helper_sort x y = Pervasives.compare (fst x) (fst y) in
     let shuffled = List.map (fun x -> snd x) (List.sort helper_sort indexed) in
