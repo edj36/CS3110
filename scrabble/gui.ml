@@ -17,7 +17,7 @@ let print_board state =
         | Triple_word -> ([on_red; black], " TW ")
         | Center -> ([on_magenta; white], " CE ")
         | Normal -> ([on_white; black], " ** " ) )
-      | Some c -> ([on_white; black], " " ^ Char.escaped c ^ "  ") in
+      | Some c -> ([on_yellow; black], " " ^ Char.escaped c ^ "  ") in
       print_string [] " "; print_string lst str; print_string [] " ";
     done;
     print_string [Reset] "\n \n";
