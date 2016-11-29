@@ -203,7 +203,7 @@ let rec bonus_score crds state =
 let update m s = match m with
   | Play {word = str; direction = dir; coordinate = crd} ->
     let prev_words = collect s.board in
-    let prev_crds = collect_coordinates s in
+    let prev_crds = collect_coordinates s.board in
     let rec helper str dir crd board =
       match String.length str with
       | 0 -> board
@@ -221,8 +221,8 @@ let update m s = match m with
         else helper (String.sub str 1 (String.length str - 1)) dir next update in
     let new_board = helper str dir (translate_coodinate crd) s.board in
     (*score*)
-    let new_words = get_newwords (collect s.board) s.words in
-    let new_crds = get_newcoordinates (collect_coordinates s) prev_crds in
+    let new_words = get_newwords (collect new_board) s.words in
+    let new_crds = get_newcoordinates (collect_coordinates new_board) prev_crds in
     let basic_score = List.fold_left (fun a e -> a + (word_score e s)) 0 new_words in
     let bonus_score = bonus_score new_crds s in
     let new_scoreboard = update_scoreboard (basic_score + bonus_score) s in

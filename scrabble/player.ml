@@ -32,23 +32,23 @@ module Human : (Player with type t = string) = struct
    * is valid *)
   let check_coordinate (x,y) =
     let lower_x = Char.lowercase_ascii x in
-     (1 <= y) && (y <= 15)
+     (0 <= y) && (y <= 15)
      && (Char.code lower_x >= Char.code 'a')
-     && (Char.code 'o' >= Char.code lower_x)
+     && (Char.code 'p' >= Char.code lower_x)
 
   let execute_move s_move c_state =
     let split = Str.split (Str.regexp " +") (s_move ^ " ") in
-    let move = List.nth split 0 in
+    let move = get_nth (split, 0) in
     let n = List.length split in
     let command = match move with
     | "Play" | "play" | "p" ->
-      let coordinate = (String.get (List.nth split 3) 0,
-      (int_of_string (List.nth split 4))) in
+      let coordinate = (String.get (get_nth (split, 3)) 0,
+      (int_of_string (get_nth (split, 4)))) in
       if n = 5 && (check_coordinate coordinate) then
       Play
       {
-        word = List.nth split 1;
-        direction = string_to_direction (List.nth split 2);
+        word = get_nth (split, 1);
+        direction = string_to_direction (get_nth (split, 2));
         coordinate = coordinate
       }
       else failwith "Invalid coordinate"
@@ -76,20 +76,6 @@ module AI : (Player) =  struct
   type t = Data.game_state
 
   (*type d = Data.direction*)
-
-
-  (*[check_tile_board] is the coordinate of first tile found on board  *)
-  let check_tile_board board x y = failwith "Unimplemented"
-
-  (**)
-  let space_check board coordinate direction = failwith "Unimplemented"
-
-
-  let get_rack_letters board coordinate rack length = failwith "Unimplemented"
-
-
-  let permutation letterlist = failwith "Unimplemented"
-
 
   let execute_move s_move c_state = failwith "Unimplemented"
 

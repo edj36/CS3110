@@ -68,7 +68,7 @@ val get_newwords : string list -> string list -> string list
 
 (* [collect_coordinates] is a (int*int) list representation of occupied
  * coordinates on the current board *)
-val collect_coordinates : Data.game_state -> (int*int) list
+val collect_coordinates : Data.scrabble_board-> (int*int) list
 
 (* [word_score] is a score of string type input word *)
 val word_score: string -> Data.game_state -> int

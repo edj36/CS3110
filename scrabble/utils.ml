@@ -130,7 +130,7 @@ let rec subst lst n a =
  * coordinates with element, [fill] *)
 let rec fill_coordinate coordinates fill board =
   match coordinates with
-  |[]-> [[]]
+  |[]-> board
   |(x,y)::t ->
     let temp = get_nth (board, y) in
     fill_coordinate t fill (subst board y (subst temp x fill))
@@ -178,7 +178,7 @@ let rec get_newwords new_w old_w = list_compare new_w old_w
 
 (* [collect_coordinates] is a (int*int) list representation of occupied
  * coordinates on the current board *)
-let collect_coordinates state =
+let collect_coordinates board =
   let rec help_a i1 board =
     match i1 with
     | -1 -> []
@@ -191,7 +191,7 @@ let collect_coordinates state =
           | None -> help_d i1 (i2-1) board
           | Some _ -> (i1,i2) :: help_d i1 (i2-1) board) in
     help_d i1 14 board @ help_a (i1-1) board in
-  help_a 14 state.board
+  help_a 14 board
 
 (* [word_score] is an int representation of raw score of word *)
 let rec word_score str state =
