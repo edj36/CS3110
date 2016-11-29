@@ -44,19 +44,22 @@ let rec initialize_score (players : player list) =
 
 (* [initilize_board] is a tile array array representation of game board *)
 let initilize_board () =
-  let board = Array.make_matrix 15 15 { bonus = Normal ; letter = None } in
+  let board =
+    let rec helper i fill =
+      if i = 0 then [] else fill :: helper (i-1) fill in
+    helper 15 (helper 15 { bonus = Normal ; letter = None }) in
   let src = Yojson.Basic.from_file "info.json" in
-  let () = fill_coordinate (init_tile src "Center")
+  let board1 = fill_coordinate (init_tile src "Center")
     { bonus= Center; letter = None }  board in
-  let () = fill_coordinate (init_tile src "Triple_word")
-    { bonus= Triple_word; letter = None } board in
-  let () = fill_coordinate (init_tile src "Triple_letter")
-    { bonus= Triple_letter; letter = None } board in
-  let () = fill_coordinate (init_tile src "Double_word")
-    { bonus= Double_word; letter = None } board in
-  let () = fill_coordinate (init_tile src "Double_letter")
-    { bonus= Double_letter; letter = None } board in
-  board
+  let board2 = fill_coordinate (init_tile src "Triple_word")
+    { bonus= Triple_word; letter = None } board1 in
+  let board3 = fill_coordinate (init_tile src "Triple_letter")
+    { bonus= Triple_letter; letter = None } board2 in
+  let board4 = fill_coordinate (init_tile src "Double_word")
+    { bonus= Double_word; letter = None } board3 in
+  let board5 = fill_coordinate (init_tile src "Double_letter")
+    { bonus= Double_letter; letter = None } board4 in
+  board5
 
 (* [initialize_rack] is a (player * letter list) list, representating
 * each player's hands *)
@@ -201,22 +204,22 @@ let update m s = match m with
   | Play {word = str; direction = dir; coordinate = crd} ->
     let prev_words = collect s.board in
     let prev_crds = collect_coordinates s in
-    let rec helper str dir crd =
+    let rec helper str dir crd board =
       match String.length str with
-      | 0 -> ()
+      | 0 -> board
       | n ->
         let chr = Char.uppercase_ascii (String.get str 0) in
-        let tile = get_tile crd s.board in
+        let tile = get_tile crd board in
         let new_tile = match tile.letter with
           | Some c -> if c = chr then {bonus = tile.bonus; letter = Some chr}
             else failwith "You Cannot Override exsiting character"
           | None -> {bonus = tile.bonus; letter = Some chr} in
-          fill_coordinate [crd] new_tile s.board;
+            let update = fill_coordinate [crd] new_tile board in
         let next = try get_nextcoordinate crd dir with
-      | Failure _ -> (15,15) in
-        if next = (15,15) then ()
-        else helper (String.sub str 1 (String.length str - 1)) dir next in
-    helper str dir (translate_coodinate crd);
+          | Failure _ -> (15,15) in
+        if next = (15,15) then board
+        else helper (String.sub str 1 (String.length str - 1)) dir next update in
+    let new_board = helper str dir (translate_coodinate crd) s.board in
     (*score*)
     let new_words = get_newwords (collect s.board) s.words in
     let new_crds = get_newcoordinates (collect_coordinates s) prev_crds in
@@ -226,7 +229,7 @@ let update m s = match m with
     let temp = update_switch_some (string_to_char_list str) s in
     let new_racks = temp.player_racks in
     {
-      board = s.board;
+      board = new_board;
       score_board = new_scoreboard;
       letter_bag = s.letter_bag;
       player_racks = new_racks;

@@ -38,17 +38,17 @@ module Human : (Player with type t = string) = struct
 
   let execute_move s_move c_state =
     let split = Str.split (Str.regexp " +") (s_move ^ " ") in
-    let move = get_nth (split, 0) in
+    let move = List.nth split 0 in
     let n = List.length split in
     let command = match move with
     | "Play" | "play" | "p" ->
-      let coordinate = (String.get (get_nth (split, 3)) 0,
-      (int_of_string (get_nth (split, 4)))) in
+      let coordinate = (String.get (List.nth split 3) 0,
+      (int_of_string (List.nth split 4))) in
       if n = 5 && (check_coordinate coordinate) then
       Play
       {
-        word = get_nth (split, 1);
-        direction = string_to_direction (get_nth (split, 2));
+        word = List.nth split 1;
+        direction = string_to_direction (List.nth split 2);
         coordinate = coordinate
       }
       else failwith "Invalid coordinate"
@@ -89,7 +89,6 @@ module AI : (Player) =  struct
 
 
   let permutation letterlist = failwith "Unimplemented"
-
 
 
   let execute_move s_move c_state = failwith "Unimplemented"

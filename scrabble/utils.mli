@@ -1,6 +1,12 @@
 
 
 (*******************  useful tools  *******************)
+(* [get_nth] is the nth element of [lst] but instead of raising
+ * exceptions (like List.nth) it raises failwith "error message"
+ * This function was made with inspiration from this StackOverflow post:
+ * http://stackoverflow.com/questions/9795504/return-the-nth-element-of-a-list-in-ocaml
+ *)
+val get_nth: 'a list * int -> 'a
 
 (* [letter_to_char] represents chr list of input letter list *)
 val letter_to_char : Data.letter list -> char list
@@ -45,7 +51,7 @@ val get_tile : (int * int) -> Data.scrabble_board -> Data.tile
 
 (* [fill_coordinate] is a tile array array representation of game board.
  * after filling tile at specified coordinate *)
-val fill_coordinate : (int * int) list -> Data.tile -> Data.scrabble_board -> unit
+val fill_coordinate : (int * int) list -> Data.tile -> Data.scrabble_board -> Data.scrabble_board
 
 (* [crawl] is a string list representation of words, specifing the direction
  * and row/column number with [i] *)

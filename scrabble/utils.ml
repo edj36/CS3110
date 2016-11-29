@@ -120,17 +120,20 @@ let get_tile coordinate board =
   |(x,y) -> get_nth (get_nth (board,y) , x)
 
 
-let subst lst n a =
+
+let rec subst lst n a =
   match lst with
   | [] -> []
-  | h::t -> if n = 0 then a::t else h::(sub t (n-1) a)
+  | h::t -> if n = 0 then a::t else h::(subst t (n-1) a)
 
 (* [fill_coodinate] is an updated game board after filling the specified
  * coordinates with element, [fill] *)
 let rec fill_coordinate coordinates fill board =
   match coordinates with
-  |[]-> ()
-  |(x,y)::t -> board.(y).(x)<- fill; fill_coordinate t fill board
+  |[]-> [[]]
+  |(x,y)::t ->
+    let temp = get_nth (board, y) in
+    fill_coordinate t fill (subst board y (subst temp x fill))
 
 (* [crawl] is a string list representation of words, specifing the direction
  * and row/column number with [i] *)
