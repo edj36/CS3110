@@ -122,7 +122,8 @@ let update_switch_all state =
 (* [update_switch_some] is a new type game_state after executing
  * switch some letters represented by char list *)
 let update_switch_some lst state =
-  let letters = List.map (fun x -> char_to_letter x state.letter_bag) lst in
+  let letters = List.map
+    (fun x -> char_to_letter (Char.uppercase_ascii x) state.letter_bag) lst in
   let player = current_player_rack state in
   add_letter letters state.letter_bag;
   let removed =
@@ -156,45 +157,47 @@ let update_scoreboard pt state =
   helper pt player state.score_board
 
 (* [collect_words_on_crd] *)
-let collect_words_on_crd crd state =
-  let init = get_tile crd state.board in
+let collect_words_on_crd crd board letter_bag=
+  let init = get_tile crd board in
   let init_pt = match init.letter with
   | None -> 0
-  | Some c -> let letter = char_to_letter c state.letter_bag in letter.pt in
-  let rec helper (x,y) state dir delta =
-    let tile = get_tile (x,y) state.board in
+  | Some c -> let letter = char_to_letter c letter_bag in letter.pt in
+  let rec helper (x,y) board dir delta =
+    let tile = get_tile (x,y) board in
     match tile.letter with
     | None -> 0
     | Some i -> let next = match dir with
       | Across -> (x, y + delta)
       | Down -> (x + delta, y) in
-      let l = char_to_letter i state.letter_bag in
+      let l = char_to_letter i letter_bag in
       if fst next > -1 && fst next < 15 && snd next > -1 && snd next < 15 then
-        l.pt + (helper next state dir delta)
+        l.pt + (helper next board dir delta)
       else l.pt in
-  (helper crd state Across 1) + (helper crd state Across (-1)) +
-  (helper crd state Down 1) + (helper crd state Down (-1)) - 3 * init_pt
+  (helper crd board Across 1) + (helper crd board Across (-1)) +
+  (helper crd board Down 1) + (helper crd board Down (-1)) - 3 * init_pt
 
 
 (* [bonus_score] is an int representation of all bonus points collected from
  * the list of coordinates *)
-let rec bonus_score crds state =
+let rec bonus_score crds board letter_bag=
   match crds with
   | [] -> 0
-  | h::t -> let tile = get_tile h state.board in
+  | h::t -> let tile = get_tile h board in
   match tile.bonus with
   | Double_letter -> (match tile.letter with
-    |Some c -> let l = (char_to_letter c state.letter_bag) in
-      2 * l.pt + bonus_score t state
+    |Some c -> let l = (char_to_letter c letter_bag) in
+      2 * l.pt + bonus_score t board letter_bag
     |None -> failwith "never happens")
-  | Double_word -> 2 * (collect_words_on_crd h state) + bonus_score t state
+  | Double_word -> 2 * (collect_words_on_crd h board letter_bag)
+    + bonus_score t board letter_bag
   | Triple_letter -> (match tile.letter with
-    |Some c -> let l = (char_to_letter c state.letter_bag) in
-      3 * l.pt + bonus_score t state
+    |Some c -> let l = (char_to_letter c letter_bag) in
+      3 * l.pt + bonus_score t board letter_bag
     |None -> failwith "never happens")
-  | Triple_word -> 3 * (collect_words_on_crd h state) + bonus_score t state
-  | Center -> bonus_score t state
-  | Normal -> bonus_score t state
+  | Triple_word -> 3 * (collect_words_on_crd h board letter_bag)
+    + bonus_score t board letter_bag
+  | Center -> bonus_score t board letter_bag
+  | Normal -> bonus_score t board letter_bag
 
 (********** UPDATE **********)
 
@@ -221,10 +224,10 @@ let update m s = match m with
         else helper (String.sub str 1 (String.length str - 1)) dir next update in
     let new_board = helper str dir (translate_coodinate crd) s.board in
     (*score*)
-    let new_words = get_newwords (collect new_board) s.words in
+    let new_words = get_newwords (collect new_board) prev_words in
     let new_crds = get_newcoordinates (collect_coordinates new_board) prev_crds in
     let basic_score = List.fold_left (fun a e -> a + (word_score e s)) 0 new_words in
-    let bonus_score = bonus_score new_crds s in
+    let bonus_score = bonus_score new_crds new_board s.letter_bag in
     let new_scoreboard = update_scoreboard (basic_score + bonus_score) s in
     let temp = update_switch_some (string_to_char_list str) s in
     let new_racks = temp.player_racks in
