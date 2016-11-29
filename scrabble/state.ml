@@ -192,3 +192,4 @@ let update m s = match m with
       turn = s.turn;
       words = s.words
     }
+  | _ -> failwith "never happens"
