@@ -15,12 +15,35 @@ let check_char lst player =
 
 (* [make_possible_string] is the list of letters/spaces that represents the 
  * column/row of characters on the tiles on [board] starting at [coord] and 
- * going in direction [dir], a space " " represents an empty tile
- *)
+ * going in direction [dir], a space " " represents an empty tile *)
 let make_possible_string dir coord board = failwith "Unimplemented"
 
+(* [iterate_brd_lst] goes over each tile in [brd_lst] checking to 
+ * see if the tile is equal to its corresponding letter in [str] (at the 
+ * same position) or inserts the letter in [str] at the position into the 
+ * spot in a brd_lst (if it is in [player]'s rack) true is each letter 
+ * fits and the letters that need to be are in the player's rack, 
+ * false otherwise, once its at the end of the string, if the next tile is 
+ * empty, return true, else check if the word created is valid, if it is, 
+ * continue checking tiles, else, return false *)
+let iterate_brd_lst str player brd_lst = match brd_lst with 
+| [] -> true 
+| h :: t -> failwith "Unimplemented"
+
+(* [dereference] is a new state object that is a copy of [state] but 
+ * because [state] is mutable, everything dereferenced so that updating 
+ * the new state doesn't ruin anything *)
+let dereference state = failwith "Unimplemented"
+
+(* [iterate_word_lst] iterates over [lst] and checks if each word 
+ * is in the scrabble dictionary, true if all in the dictionary, 
+ * false otherwise *)
+let rec iterate_word_lst lst = match lst with 
+  | [] -> true 
+  | h :: t -> (find_word (String.uppercase_ascii h)) && (iterate_word_lst t)
+
 (* [is_valid] is a boolean indicating the validity of [move] in [state] *)
-let is_valid move state = (*match move with
+let is_valid move state = match move with
   | Play
     {
       word = str;
@@ -28,19 +51,28 @@ let is_valid move state = (*match move with
       coordinate = crd
     } -> 
     (* step 1 *)
-    if not (find_word (String.uppercase_ascii str)) then false 
+    let up_str = String.uppercase_ascii str in 
+    if not (find_word up_str) then false 
     (* step 2 *)
     else let brd_lst = make_possible_string dir crd state.board in 
-    (* step 3 *)
-    if iterate_brd_lst player 
-    let player = current_player_rack state in
-    let chr_list = string_to_char_list str in
-    check_char chr_list player
+    let player = fst (current_player_rack state) in 
+    (* step 3 and 4 *)
+    if not (iterate_brd_lst up_str player brd_lst) then false 
+    (* step 5 *)
+    else let new_state = dereference state in 
+    let word_lst = collect new_state.board in 
+    if not (iterate_word_lst word_lst) then false 
+    (* step 6 *)
+    else let center = get_tile (7,7) new_state in 
+    begin match center.letter with 
+      | None -> false 
+      | Some _ -> true
+    end 
   | SwitchAll -> true 
   | SwitchSome c_list -> check_char c_list (current_player_rack state)
   | Pass -> true
   | Shuffle -> true
-  | _ -> false *) true
+  | _ -> false 
 
 (* Algorithm: 
   1. check if word is in scrabble dictionary
