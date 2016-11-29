@@ -77,6 +77,21 @@ module AI : (Player) =  struct
 
   (*type d = Data.direction*)
 
+
+  (*[check_tile_board] is the coordinate of first tile found on board  *)
+  let check_tile_board board x y = failwith "Unimplemented"
+
+  (**)
+  let space_check board coordinate direction = failwith "Unimplemented"
+
+
+  let get_rack_letters board coordinate rack length = failwith "Unimplemented"
+
+
+  let permutation letterlist = failwith "Unimplemented"
+
+
+
   let execute_move s_move c_state = failwith "Unimplemented"
 
 end
