@@ -71,8 +71,6 @@ let rec draw_letters num bag =
   | Some l -> add_or_draw_char l.character bag (-);
   l::draw_letters (num-1) bag)
 
-
-
 (* [add_letters] represents the letter list after adding the letters to the list *)
 let rec add_letter hands bag =
   match hands with

@@ -2,9 +2,10 @@
 
 (*******************  useful tools  *******************)
 
-(* [letter_to_char] represents chr list of input letter list*)
+(* [letter_to_char] represents chr list of input letter list *)
 val letter_to_char : Data.letter list -> char list
 
+(* [string_to_direction] is a type direction representation of input string *)
 val string_to_direction : string -> Data.direction
 
 (* [remove] represents 'a list after removing specified element from the
@@ -49,4 +50,3 @@ val collect : Data.tile array array -> string list
 (* [get_newwords] is a string list representation of all new words made in the
  * most recent turn *)
 val get_newwords : Data.game_state -> string list
-

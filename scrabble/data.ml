@@ -54,6 +54,3 @@ type game_state =
   turn : int;
   words : string list
 }
-
-
-(*type scrabble_dictionary = string two_three_tree*)

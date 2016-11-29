@@ -10,13 +10,13 @@ let print_board state =
     for i = 0 to 14 do
       let tile = get_tile (j,i) b in
       let (lst, str) = match tile.letter with
-      | None -> ( match tile.bonus with 
+      | None -> ( match tile.bonus with
         | Double_letter -> ([on_cyan; black], " DL ")
         | Double_word -> ([on_blue; black], " DW ")
         | Triple_letter -> ([on_blue; white], " TL ")
         | Triple_word -> ([on_red; black], " TW ")
         | Center -> ([on_magenta; white], " CE ")
-        | Normal -> ([on_white; black], " ** " ) )
+        | Normal -> ([on_white; black], "    " ) )
       | Some c -> ([on_yellow; black], " " ^ Char.escaped c ^ "  ") in
       print_string [] " "; print_string lst str; print_string [] " ";
     done;
