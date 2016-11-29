@@ -28,14 +28,14 @@ let text_read file =
   let channel = open_in file in
   read_loop channel empty
 
+(*[sd] is the tree initialized to the scrabble dictionary *)
+let sd = text_read "dictionary.txt"
+
 (*[find_word] is true if [str] is in tree [t] and false otherwise
 requires:
 *[str] to be a string in uppercase form
 * t]   to be a valid radix tree*)
-let find_word str t =
+let find_word str =
  try
-   find str t
+   find str sd
  with _-> false
-
-(*[sd] is the tree initialized to the scrabble dictionary *)
-let sd = text_read "dictionary.txt"
