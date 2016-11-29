@@ -6,82 +6,82 @@ open Yojson.Basic.Util
 
 (* [init_letter] is a letter list representation of intial letter bag *)
 let init_letter_bag src =
-let lb = src |> member "letter_bag" |> to_list in
-let chr = List.map (fun x -> x |> member "character" |> to_string) lb in
-let pt = List.map (fun x -> x |> member "pt" |> to_int) lb in
-let count = List.map (fun x -> x |> member "count" |> to_int) lb in
-let rec helper l1 l2 l3 =
-  match l1, l2, l3 with
-  | [],[],[] -> []
-  | h1::t1, h2::t2, h3::t3 ->
-    {
-      character = (String.get h1 0);
-      pt = h2; count = h3
-    } :: helper t1 t2 t3
-  | _ -> failwith "list unbalanced" in
+  let lb = src |> member "letter_bag" |> to_list in
+  let chr = List.map (fun x -> x |> member "character" |> to_string) lb in
+  let pt = List.map (fun x -> x |> member "pt" |> to_int) lb in
+  let count = List.map (fun x -> x |> member "count" |> to_int) lb in
+  let rec helper l1 l2 l3 =
+    match l1, l2, l3 with
+    | [],[],[] -> []
+    | h1::t1, h2::t2, h3::t3 ->
+      {
+        character = (String.get h1 0);
+        pt = h2; count = h3
+      } :: helper t1 t2 t3
+      | _ -> failwith "list unbalanced" in
     helper chr pt count
 
 (* [init_tile] is a (int*int) list representation of coordintes for the
  * specified bonus tile type*)
 let init_tile src name =
-let tile = src |> member name |> to_list in
-let x = List.map (fun x -> x |> member "x" |> to_int) tile in
-let y = List.map (fun x -> x |> member "y" |> to_int) tile in
-let rec helper l1 l2 =
-  match l1, l2 with
-  | [],[] -> []
-  | h1::t1, h2::t2 -> (h1,h2) :: helper t1 t2
-  | _ -> failwith "list unbalanced" in
-helper x y
+  let tile = src |> member name |> to_list in
+  let x = List.map (fun x -> x |> member "x" |> to_int) tile in
+  let y = List.map (fun x -> x |> member "y" |> to_int) tile in
+  let rec helper l1 l2 =
+    match l1, l2 with
+    | [],[] -> []
+    | h1::t1, h2::t2 -> (h1,h2) :: helper t1 t2
+    | _ -> failwith "list unbalanced" in
+  helper x y
 
 (********** INITIALIZE STATE **********)
 
 (* [initialize_score] represents the tuple list of each player and their scores *)
 let rec initialize_score (players : player list) =
-match players with
-| [] -> []
-| h::t -> (h, 0):: initialize_score t
+  match players with
+  | [] -> []
+  | h::t -> (h, 0):: initialize_score t
 
 (* [initilize_board] is a tile array array representation of game board *)
 let initilize_board () =
-let board = Array.make_matrix 15 15 { bonus = Normal ; letter = None } in
-let src = Yojson.Basic.from_file "info.json" in
-let () = fill_coordinate (init_tile src "Center")
-  { bonus= Center; letter = None }  board in
-let () = fill_coordinate (init_tile src "Triple_word")
-  { bonus= Triple_word; letter = None } board in
-let () = fill_coordinate (init_tile src "Triple_letter")
-  { bonus= Triple_letter; letter = None } board in
-let () = fill_coordinate (init_tile src "Double_word")
-  { bonus= Double_word; letter = None } board in
-let () = fill_coordinate (init_tile src "Double_letter")
-  { bonus= Double_letter; letter = None } board in
-board
+  let board = Array.make_matrix 15 15 { bonus = Normal ; letter = None } in
+  let src = Yojson.Basic.from_file "info.json" in
+  let () = fill_coordinate (init_tile src "Center")
+    { bonus= Center; letter = None }  board in
+  let () = fill_coordinate (init_tile src "Triple_word")
+    { bonus= Triple_word; letter = None } board in
+  let () = fill_coordinate (init_tile src "Triple_letter")
+    { bonus= Triple_letter; letter = None } board in
+  let () = fill_coordinate (init_tile src "Double_word")
+    { bonus= Double_word; letter = None } board in
+  let () = fill_coordinate (init_tile src "Double_letter")
+    { bonus= Double_letter; letter = None } board in
+  board
 
 (* [initialize_rack] is a (player * letter list) list, representating
 * each player's hands *)
 let rec initialize_rack (players: player list) bag =
-match players with
-| []-> []
-| h::t -> let hand = draw_letters 7 bag in (h, hand) :: initialize_rack t bag
+  match players with
+  | []-> []
+  | h::t -> let hand = draw_letters 7 bag in (h, hand) :: initialize_rack t bag
 
 (********** SETUP **********)
 
 (* [initialize_state] is a representation of intial game state *)
 let setup players =
-let src = Yojson.Basic.from_file "info.json" in
-let initial_score = initialize_score players in
-let initial_board = initilize_board () in
-let initial_bag = init_letter_bag src in
-let racks = initialize_rack players initial_bag in
-{
-  board = initial_board;
-  score_board = initial_score;
-  letter_bag = initial_bag;
-  player_racks = racks;
-  turn = 0;
-  words = []
-}
+  let src = Yojson.Basic.from_file "info.json" in
+  let initial_score = initialize_score players in
+  let initial_board = initilize_board () in
+  let initial_bag = init_letter_bag src in
+  let racks = initialize_rack players initial_bag in
+  {
+    board = initial_board;
+    score_board = initial_score;
+    letter_bag = initial_bag;
+    player_racks = racks;
+    turn = 0;
+    words = []
+  }
 
 
 (********** UPDATE STATE **********)
@@ -139,7 +139,6 @@ let update_switch_some lst state =
     words = state.words
   }
 
-
 (********** SCORING **********)
 
 (*[update_scoreboard] is an updated score_board after substituting the old
@@ -153,6 +152,42 @@ let update_scoreboard pt state =
     else (x,y) :: helper pt player t in
   helper pt player state.score_board
 
+let collect_words_on_crd crd state =
+  let rec helper (x,y) state dir delta =
+    let tile = get_tile (x,y) state.board in
+    match tile.letter with
+    | None -> 0
+    | Some i -> let next = match dir with
+      | Across -> (x, y + delta)
+      | Down -> (x + delta, y) in
+      let l = char_to_letter i state.letter_bag in
+      if fst next > -1 && fst next < 15 && snd next > -1 && snd next < 15 then
+        l.pt + (helper next state dir delta)
+      else l.pt in
+  (helper crd state Across 1) + (helper crd state Across (-1)) +
+  (helper crd state Down 1) + (helper crd state Down (-1))
+
+
+(* [bonus_score] is an int representation of all bonus points collected from
+ * the list of coordinates *)
+let rec bonus_score crds state =
+  match crds with
+  | [] -> 0
+  | h::t -> let tile = get_tile h state.board in
+  match tile.bonus with
+  | Double_letter -> (match tile.letter with
+    |Some c -> let l = (char_to_letter c state.letter_bag) in
+      2 * l.pt + bonus_score t state
+    |None -> failwith "never happens")
+  | Double_word -> 2 * (collect_words_on_crd h state) + bonus_score t state
+  | Triple_letter -> (match tile.letter with
+    |Some c -> let l = (char_to_letter c state.letter_bag) in
+      3 * l.pt + bonus_score t state
+    |None -> failwith "never happens")
+  | Triple_word -> 3 * (collect_words_on_crd h state) + bonus_score t state
+  | Center -> bonus_score t state
+  | Normal -> bonus_score t state
+
 (********** UPDATE **********)
 
 (* [submit_move] enters [move] to the game and is the [state] resulting from
@@ -160,6 +195,7 @@ let update_scoreboard pt state =
 let update m s = match m with
   | Play {word = str; direction = dir; coordinate = crd} ->
     let prev_words = collect s.board in
+    let prev_crds = collect_coordinates s in
     let rec helper str dir crd =
       match String.length str with
       | 0 -> ()
@@ -176,11 +212,12 @@ let update m s = match m with
         if next = (15,15) then ()
         else helper (String.sub str 1 (String.length str - 1)) dir next in
     helper str dir (translate_coodinate crd);
-
     (*score*)
     let new_words = get_newwords (collect s.board) s.words in
+    let new_crds = get_newcoordinates (collect_coordinates s) prev_crds in
     let basic_score = List.fold_left (fun a e -> a + (word_score e s)) 0 new_words in
-    let new_scoreboard = update_scoreboard basic_score s in
+    let bonus_score = bonus_score new_crds s in
+    let new_scoreboard = update_scoreboard (basic_score) s in
     let temp = update_switch_some (string_to_char_list str) s in
     let new_racks = temp.player_racks in
     {
@@ -204,10 +241,7 @@ let update m s = match m with
     }
   | Shuffle ->
     let player = current_player_rack s in
-    Random.self_init();
-    let indexed = List.map (fun x -> (Random.bits (), x)) (snd player) in
-    let helper_sort x y = Pervasives.compare (fst x) (fst y) in
-    let shuffled = List.map (fun x -> snd x) (List.sort helper_sort indexed) in
+    let shuffled = shuffle (snd player) in
     let new_racks = update_racks ((fst player), shuffled) s in
     {
       board = s.board;
