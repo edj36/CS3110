@@ -39,7 +39,7 @@ let rec string_to_char_list str =
 
 (* [shuffle] is an 'a list after shuffling elements *)
 let shuffle lst =
-  Random.self_init();
+  Random.self_init ();
   let indexed = List.map (fun x -> (Random.bits (), x)) lst in
   let helper_sort x y = Pervasives.compare (fst x) (fst y) in
   List.map (fun x -> snd x) (List.sort helper_sort indexed)
@@ -98,7 +98,7 @@ let rec add_letter hands bag =
 (* [current_player] represents a player who is playing on the current turn *)
 let current_player_rack state =
   let n = List.length state.player_racks in
-  try List.nth state.player_racks (state.turn mod n) with
+  try get_nth (state.player_racks, (state.turn mod n)) with
   | Failure _ -> failwith "Never happens"
 
 (* let rec current_player_rack state = match state.player_racks with
@@ -117,7 +117,13 @@ let get_nextcoordinate (x,y) dir =
 (* [get_tile] represents tile of specified coordinate *)
 let get_tile coordinate board =
   match coordinate with
-  |(x,y) -> board.(y).(x)
+  |(x,y) -> get_nth (get_nth (board,y) , x)
+
+
+let subst lst n a =
+  match lst with
+  | [] -> []
+  | h::t -> if n = 0 then a::t else h::(sub t (n-1) a)
 
 (* [fill_coodinate] is an updated game board after filling the specified
  * coordinates with element, [fill] *)

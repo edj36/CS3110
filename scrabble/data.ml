@@ -37,7 +37,7 @@ type player =
   | Human of string
   | AI of string
 
-type scrabble_board = tile array array
+type scrabble_board = tile list list
 
 type score_board = (player * int) list
 

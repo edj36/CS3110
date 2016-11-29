@@ -152,6 +152,7 @@ let update_scoreboard pt state =
     else (x,y) :: helper pt player t in
   helper pt player state.score_board
 
+(* [collect_words_on_crd] *)
 let collect_words_on_crd crd state =
   let init = get_tile crd state.board in
   let init_pt = match init.letter with
