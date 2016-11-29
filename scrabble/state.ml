@@ -179,11 +179,13 @@ let update m s = match m with
 
     (*score*)
     let new_words = get_newwords (collect s.board) s.words in
+    (* let basic_score = List.fold_left (fun a e -> a + word_score e) 0 new_words in
+    let new_scoreboard = update_scoreboard basic_score s in *)
     let temp = update_switch_some (string_to_char_list str) s in
     let new_racks = temp.player_racks in
     {
       board = s.board;
-      score_board = s.score_board;
+      score_board = new_scoreboard;
       letter_bag = s.letter_bag;
       player_racks = new_racks;
       turn = s.turn + 1;

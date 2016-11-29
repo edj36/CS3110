@@ -26,6 +26,13 @@ let rec string_to_char_list str =
   | s -> Char.uppercase_ascii (String.get s 0)
   ::string_to_char_list (String.sub s 1 ((String.length s)-1))
 
+(* [shuffle] is an 'a list after shuffling elements *)
+let shuffle lst =
+  Random.self_init();
+  let indexed = List.map (fun x -> (Random.bits (), x)) lst in
+  let helper_sort x y = Pervasives.compare (fst x) (fst y) in
+  List.map (fun x -> snd x) (List.sort helper_sort indexed)
+
 (* [char_to_letter] represents letter type of input char *)
 let char_to_letter c bag =
   let rec helper c bag =

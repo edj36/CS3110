@@ -15,6 +15,9 @@ val remove : 'a -> 'a list -> 'a list
 (* [string_to_char_list] is a char list representation of string *)
 val string_to_char_list : string -> char list
 
+(* [shuffle] is an 'a list after shuffling elements *)
+val shuffle : 'a list -> 'a list
+
 (*******************  update letter bag  *******************)
 
 (* [char_to_letter] represents letter type of input char *)
@@ -51,11 +54,15 @@ val collect : Data.tile array array -> string list
  * most recent turn *)
 val get_newwords : string list -> string list -> string list
 
+(*******************  SCORING  *******************)
+
 (* [collect_coordinates] is a (int*int) list representation of occupied
  * coordinates on the current board *)
 val collect_coordinates : Data.game_state -> (int*int) list
 
-(*******************  SCORING  *******************)
-
 (* [word_score] is a score of string type input word *)
 val word_score: string -> Data.game_state -> int
+
+(* [get_newcoordinates] is a (int*int) list representation of all new words
+ * made in the most recent turn *)
+val get_newcoordinates : (int*int) list -> (int*int) list -> (int*int) list
