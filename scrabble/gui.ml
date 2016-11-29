@@ -28,13 +28,13 @@ let update_gui state =
   print_string ("Turn: " ^ (string_of_int state.turn) ^ "\n");
   let player = current_player state in
   let name = match fst player with
-  | Human n1 -> n1
-  | AI n2 -> n2 in
+    | Human n1 -> n1
+    | AI n2 -> n2 in
   print_string (name ^ "\n");
   let lst = List.map (fun x -> Char.escaped x.character) (snd player) in
   let rec helper = function
-  | [] -> ""
-  | h::t -> h^ " " ^ helper t in
+    | [] -> ""
+    | h::t -> h^ " " ^ helper t in
   let hands = helper lst in
   let () = print_string ("Player's hand: " ^ hands ^ "\n") in
   let () = print_board state in

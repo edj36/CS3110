@@ -34,6 +34,7 @@ let rec helper l1 l2 =
   | _ -> failwith "list unbalanced" in
 helper x y
 
+
 (********** INITIALIZE STATE **********)
 
 (* [initialize_score] represents the tuple list of each player and their scores *)
@@ -65,6 +66,9 @@ match players with
 | []-> []
 | h::t -> let hand = draw_letters 7 bag in (h, hand) :: initialize_rack t bag
 
+
+(********** SETUP **********)
+
 (* [initialize_state] is a representation of intial game state *)
 let setup players =
 let src = Yojson.Basic.from_file "info.json" in
@@ -81,6 +85,7 @@ let racks = initialize_rack players initial_bag in
   words = []
 }
 
+
 (********** UPDATE STATE **********)
 
 (* [update_racks] is an updated player_rack list after substituting the old
@@ -95,7 +100,7 @@ let update_racks hands s =
 
 (* [translate_coodinate] is an int*int representation of char*int coordinate*)
 let translate_coodinate (x,y) =
-  (y-1, (Char.code (Char.lowercase_ascii x)  - Char.code 'a'))
+  (y-1, (Char.code (Char.lowercase_ascii x) - Char.code 'a'))
 
 (* [update_switch_all] is a new type game_state after executing
  * switch all letters *)
@@ -135,6 +140,32 @@ let update_switch_some lst state =
     turn = state.turn + 1;
     words = state.words
   }
+
+
+(********** SCORING **********)
+
+(*[update_scoreboard] is an updated score_board after substituting the old
+ * score_board with the current player's score *)
+let update_scoreboard pt state =
+  let player = fst (current_player state) in
+  let rec helper pt player score_board =
+    match score_board with
+    | [] -> []
+    | (x,y)::t -> if player = x then (x, pt) :: t
+    else (x,y) :: helper pt player t in
+  helper pt player state.score_board
+
+(* [word_score] is an int representation of raw score of word *)
+let rec word_score str state =
+  match str with
+  | "" -> 0
+  | _ ->
+  let letter = char_to_letter (String.get str 0) state.letter_bag in
+  letter.pt + word_score (String.sub str 1 ((String.length str)-1)) state
+
+
+(********** UPDATE **********)
+
 (* [submit_move] enters [move] to the game and is the [state] resulting from
  * [move]'s' execution *)
 let update m s = match m with
@@ -156,6 +187,10 @@ let update m s = match m with
         if next = (15,15) then ()
         else helper (String.sub str 1 (String.length str - 1)) dir next in
     helper str dir (translate_coodinate crd);
+
+    (*score*)
+    let new_words = get_newwords (collect state.board) state.words in
+    let
     let temp = update_switch_some (string_to_char_list str) s in
     let new_racks = temp.player_racks in
     {
