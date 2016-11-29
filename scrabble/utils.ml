@@ -140,3 +140,28 @@ let rec get_newwords new_w old_w = match new_w with
     | h::t ->
       if List.mem h old_w then get_newwords t (remove h old_w)
       else h :: get_newwords t old_w
+
+(* [collect_coordinates] is a (int*int) list representation of occupied
+ * coordinates on the current board *)
+let collect_coordinates state =
+  let rec help_a i1 board =
+    match i1 with
+    | -1 -> []
+    | _ ->
+    let rec help_d i1 i2 board =
+      match i2 with
+      | -1 -> []
+      | _ -> let tile = get_tile (i1,i2) board in
+        (match tile.letter with
+          | None -> help_d i1 (i2-1) board
+          | Some _ -> (i1,i2) :: help_d i1 (i2-1) board) in
+    help_d i1 14 board @ help_a (i1-1) board in
+  help_a 14 state.board
+
+(* [word_score] is an int representation of raw score of word *)
+let rec word_score str state =
+  match str with
+  | "" -> 0
+  | _ ->
+  let letter = char_to_letter (String.get str 0) state.letter_bag in
+  letter.pt + word_score (String.sub str 1 ((String.length str)-1)) state

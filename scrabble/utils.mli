@@ -50,3 +50,12 @@ val collect : Data.tile array array -> string list
 (* [get_newwords] is a string list representation of all new words made in the
  * most recent turn *)
 val get_newwords : string list -> string list -> string list
+
+(* [collect_coordinates] is a (int*int) list representation of occupied
+ * coordinates on the current board *)
+val collect_coordinates : Data.game_state -> (int*int) list
+
+(*******************  SCORING  *******************)
+
+(* [word_score] is a score of string type input word *)
+val word_score: string -> Data.game_state -> int

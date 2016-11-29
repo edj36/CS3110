@@ -153,15 +153,6 @@ let update_scoreboard pt state =
     else (x,y) :: helper pt player t in
   helper pt player state.score_board
 
-(* [word_score] is an int representation of raw score of word *)
-let rec word_score str state =
-  match str with
-  | "" -> 0
-  | _ ->
-  let letter = char_to_letter (String.get str 0) state.letter_bag in
-  letter.pt + word_score (String.sub str 1 ((String.length str)-1)) state
-
-
 (********** UPDATE **********)
 
 (* [submit_move] enters [move] to the game and is the [state] resulting from
