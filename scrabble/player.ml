@@ -36,6 +36,7 @@ module Human : (Player with type t = string) = struct
      && (Char.code lower_x >= Char.code 'a')
      && (Char.code 'p' >= Char.code lower_x)
 
+  (* [execute_move] submits string and returns updated state *)
   let execute_move s_move c_state =
     let split = Str.split (Str.regexp " +") (s_move ^ " ") in
     let move = get_nth (split, 0) in

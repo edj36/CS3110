@@ -16,10 +16,9 @@ let rec get_players input_string_list =
             |"AI"    -> AI(h2)    :: get_players t
             | _      -> failwith "Invalid Player Input"
 
-
-
 (*********** REPL ***********)
 
+(* [repl] main repl *)
 let rec repl c_state =
   let () = update_gui c_state in
   let () = print_endline "\nEnter Move" in
@@ -29,7 +28,7 @@ let rec repl c_state =
   let () = print_endline "" in
   repl new_state
 
-(*[init_repl] is the initial state created from the player list given by the
+(*[initialize] is the initial state created from the player list given by the
 user's input*)
 let initialize =
   let () = print_endline "Please Enter the Players and Names (i.e Human Eric)" in

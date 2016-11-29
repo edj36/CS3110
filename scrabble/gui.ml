@@ -48,7 +48,8 @@ let update_gui state =
   let () = print_string "\nold words \n" in
   let () = List.fold_left (fun acc elm -> print_string (elm ^ "\n")) () state.words in
   let () = print_string "\nnew words \n" in
-  let () = List.fold_left (fun acc elm -> print_string (elm ^ "\n")) () (get_newwords (collect state.board) state.words) in
+  let () = List.fold_left (fun acc elm -> print_string (elm ^ "\n")) ()
+    (get_newwords (collect state.board) state.words) in
   let () = print_string "\n" in
   let () = print_score state.score_board
   in ()
