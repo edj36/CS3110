@@ -34,7 +34,6 @@ let rec helper l1 l2 =
   | _ -> failwith "list unbalanced" in
 helper x y
 
-
 (********** INITIALIZE STATE **********)
 
 (* [initialize_score] represents the tuple list of each player and their scores *)
@@ -65,7 +64,6 @@ let rec initialize_rack (players: player list) bag =
 match players with
 | []-> []
 | h::t -> let hand = draw_letters 7 bag in (h, hand) :: initialize_rack t bag
-
 
 (********** SETUP **********)
 
@@ -189,8 +187,7 @@ let update m s = match m with
     helper str dir (translate_coodinate crd);
 
     (*score*)
-    let new_words = get_newwords (collect state.board) state.words in
-    let
+    let new_words = get_newwords (collect s.board) s.words in
     let temp = update_switch_some (string_to_char_list str) s in
     let new_racks = temp.player_racks in
     {
