@@ -41,14 +41,18 @@ val current_player_rack : Data.game_state -> Data.player_rack
 val get_nextcoordinate : (int * int) -> Data.direction -> (int * int)
 
 (* [get_tile] represents tile of specified coordinate *)
-val get_tile : (int * int) -> Data.tile array array -> Data.tile
+val get_tile : (int * int) -> Data.scrabble_board -> Data.tile
 
 (* [fill_coordinate] is a tile array array representation of game board.
  * after filling tile at specified coordinate *)
-val fill_coordinate : (int * int) list -> Data.tile -> Data.tile array array -> unit
+val fill_coordinate : (int * int) list -> Data.tile -> Data.scrabble_board -> unit
+
+(* [crawl] is a string list representation of words, specifing the direction
+ * and row/column number with [i] *)
+val crawl : Data.direction -> int -> Data.scrabble_board -> string list
 
 (* [collect] is a string list representation of all words on the scrabble board *)
-val collect : Data.tile array array -> string list
+val collect : Data.scrabble_board -> string list
 
 (* [get_newwords] is a string list representation of all new words made in the
  * most recent turn *)

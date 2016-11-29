@@ -29,6 +29,7 @@ let make_possible_string dir coord board = failwith "Unimplemented"
 let iterate_brd_lst str player brd_lst = match brd_lst with 
 | [] -> true 
 | h :: t -> failwith "Unimplemented"
+(* ^^ use get_nextcoordinate *)
 
 (* [dereference] is a new state object that is a copy of [state] but 
  * because [state] is mutable, everything dereferenced so that updating 
@@ -111,4 +112,5 @@ let is_valid move state = match move with
       so that adjacent letters also form complete words *)
 
 let validate move state =
-  if is_valid move state then update move state else state
+  (*if is_valid move state then update move state else state*)
+  update move state 
