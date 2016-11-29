@@ -23,6 +23,13 @@ let print_board state =
     print_string [Reset] "\n \n";
   done )
 
+let rec print_score = function
+  | []-> ()
+  | (x,y)::t -> let name = (match x with
+    |Human n1 -> n1
+    |AI n2 -> n2) in
+  print_string (name ^ ": " ^ (string_of_int y) ^ "| ");
+  print_score t
 
 let update_gui state =
   print_string ("Turn: " ^ (string_of_int state.turn) ^ "\n");
@@ -41,5 +48,6 @@ let update_gui state =
   let () = print_string "\nold words \n" in
   let () = List.fold_left (fun acc elm -> print_string (elm ^ "\n")) () state.words in
   let () = print_string "\nnew words \n" in
-  let () = List.fold_left (fun acc elm -> print_string (elm ^ "\n")) () (get_newwords (collect state.board) state.words)
+  let () = List.fold_left (fun acc elm -> print_string (elm ^ "\n")) () (get_newwords (collect state.board) state.words) in
+  let () = print_score state.score_board
   in ()

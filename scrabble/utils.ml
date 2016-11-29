@@ -85,7 +85,7 @@ let rec add_letter hands bag =
   | h :: t -> add_or_draw_char h.character bag (+); add_letter t bag
 
 (* [current_player] represents a player who is playing on the current turn *)
-let current_player state =
+let current_player_rack state =
   let n = List.length state.player_racks in
   List.nth state.player_racks (state.turn mod n)
 
@@ -172,3 +172,5 @@ let rec word_score str state =
   | _ ->
   let letter = char_to_letter (String.get str 0) state.letter_bag in
   letter.pt + word_score (String.sub str 1 ((String.length str)-1)) state
+
+let get_newcoordinates new_l old_l = failwith "Unimplemented"

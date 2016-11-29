@@ -33,8 +33,8 @@ val add_letter : Data.letter list -> Data.letter list -> unit
 
 (*******************  update state  *******************)
 
-(* [current_player] represents the player_rack of current player *)
-val current_player : Data.game_state -> Data.player_rack
+(* [current_player_rack] represents the player_rack of current player_rack*)
+val current_player_rack : Data.game_state -> Data.player_rack
 
 (* [get_nextcoodinate] is (int*int) representation of coordinate after moving
  * 1 step in the specified direction from speficied origin *)
