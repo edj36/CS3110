@@ -134,13 +134,8 @@ let collect board =
     | _ -> (crawl dir i board) @ helper dir (i-1) in
   (helper Across 14) @ (helper Down 14)
 
-let get_newwords state =
-  let new_words = collect state.board in
-  let old_words = state.words in
-  let rec helper new_w old_w =
-    match new_w with
+let rec get_newwords new_w old_w = match new_w with
     | []->[]
     | h::t ->
-      if List.mem h old_w then helper (remove h new_w) t
-      else h :: helper new_w t
-  in helper new_words old_words
+      if List.mem h old_w then get_newwords t (remove h old_w)
+      else h :: get_newwords t old_w

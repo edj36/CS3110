@@ -49,4 +49,4 @@ val collect : Data.tile array array -> string list
 
 (* [get_newwords] is a string list representation of all new words made in the
  * most recent turn *)
-val get_newwords : Data.game_state -> string list
+val get_newwords : string list -> string list -> string list
