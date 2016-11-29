@@ -1,15 +1,15 @@
 open Data
 
-(* [get_nth] is the nth element of [lst] but instead of raising 
+(* [get_nth] is the nth element of [lst] but instead of raising
  * exceptions (like List.nth) it raises failwith "error message"
- * This function was made with inspiration from this StackOverflow post: 
+ * This function was made with inspiration from this StackOverflow post:
  * http://stackoverflow.com/questions/9795504/return-the-nth-element-of-a-list-in-ocaml
  *)
-let rec get_nth tup = match tup with 
+let rec get_nth tup = match tup with
   | [], _ -> failwith "not in list"
   | _ , n when n < 0 -> failwith "out of bounds"
-  | h::_ , 0 -> h 
-  | h::t , n -> get_nth (t, n-1) 
+  | h::_ , 0 -> h
+  | h::t , n -> get_nth (t, n-1)
 
 (* [letter_to_char] represents chr list of input letter list*)
 let letter_to_char lst =

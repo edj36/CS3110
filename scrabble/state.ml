@@ -148,11 +148,15 @@ let update_scoreboard pt state =
   let rec helper pt player score_board =
     match score_board with
     | [] -> []
-    | (x,y)::t -> if player = x then (x, pt) :: t
+    | (x,y)::t -> if player = x then (x, y + pt) :: t
     else (x,y) :: helper pt player t in
   helper pt player state.score_board
 
 let collect_words_on_crd crd state =
+  let init = get_tile crd state.board in
+  let init_pt = match init.letter with
+  | None -> 0
+  | Some c -> let letter = char_to_letter c state.letter_bag in letter.pt in
   let rec helper (x,y) state dir delta =
     let tile = get_tile (x,y) state.board in
     match tile.letter with
@@ -165,7 +169,7 @@ let collect_words_on_crd crd state =
         l.pt + (helper next state dir delta)
       else l.pt in
   (helper crd state Across 1) + (helper crd state Across (-1)) +
-  (helper crd state Down 1) + (helper crd state Down (-1))
+  (helper crd state Down 1) + (helper crd state Down (-1)) - 3 * init_pt
 
 
 (* [bonus_score] is an int representation of all bonus points collected from
@@ -217,7 +221,7 @@ let update m s = match m with
     let new_crds = get_newcoordinates (collect_coordinates s) prev_crds in
     let basic_score = List.fold_left (fun a e -> a + (word_score e s)) 0 new_words in
     let bonus_score = bonus_score new_crds s in
-    let new_scoreboard = update_scoreboard (basic_score) s in
+    let new_scoreboard = update_scoreboard (basic_score + bonus_score) s in
     let temp = update_switch_some (string_to_char_list str) s in
     let new_racks = temp.player_racks in
     {
