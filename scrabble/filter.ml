@@ -5,15 +5,29 @@ open State
 (* [check_char] represents bool type, indicating if all elements in char List
  * is a member of [hands]. Also accounts for duplicates
  * ex) if you have 2 'A's, ['A';'A'] -> true but ['A';'A';'A'] -> false *)
-let check_char lst (rack : player_rack) =
+let check_char lst rack =
   let hands = letter_to_char (snd rack) in
-  let rec helper lst hands =
-  match lst with
-  | []-> true
-  | h::t -> List.mem h hands && helper t (remove h hands) in
-  helper lst hands
+  let rec helper lst hands = match lst with
+    | []-> true
+    | h::t -> List.mem h hands && helper t (remove h hands) in
+      helper lst hands
 
-(*let search str dict = failwith "Unimplemented"*)
+let is_valid move state = match move with
+  | Play
+    {
+      word = str;
+      direction = dir;
+      coordinate = crd
+    } ->
+    let player = current_player state in
+    let chr_list = string_to_char_list str in
+    check_char chr_list player
+  | SwitchAll -> true 
+  | SwitchSome c_list -> check_char c_list (current_player state)
+  | Pass -> true
+  | Shuffle -> true
+  | _ -> false 
+
 
 (* [validate] is a bool representation indicating if the move is valid or not
  * check following criteria
@@ -29,18 +43,4 @@ let check_char lst (rack : player_rack) =
       so that adjacent letters also form complete words *)
 
 let validate move state =
-  update move state
-  (* match move with
-  | Play
-    {
-      word = str;
-      direction = dir;
-      coordinate = crd
-    } ->
-    let player = current_player state in
-    let chr_list = string_to_char_list str in
-    check_char chr_list player
-  | _ ->  *)
-
-
-(* validate move, call state.update if it is valid else returns original state *)
+  if is_valid move state then update move state else state
