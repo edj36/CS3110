@@ -148,6 +148,7 @@ let update_switch_some lst state =
 
 (********** SCORING **********)
 
+
 (*[update_scoreboard] is an updated score_board after substituting the old
  * score_board with the current player's score *)
 let update_scoreboard pt state =
@@ -227,7 +228,7 @@ let update m s = match m with
         else helper (String.sub str 1 (String.length str - 1)) dir next update in
     remove_string str s.letter_bag;
     let new_board = helper str dir (translate_coodinate crd) s.board in
-    (*score*)
+    (** score **)
     let new_words = get_newwords (collect new_board) prev_words in
     let new_crds = get_newcoordinates (collect_coordinates new_board) prev_crds in
     let basic_score = List.fold_left (fun a e -> a + (word_score e s)) 0 new_words in

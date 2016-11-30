@@ -33,7 +33,6 @@ let print_board state =
     print_string [Reset] "\n \n";
   done )
 
-
 let rec concat_space num str =
   if num = 0 then str else concat_space (num-1) (" " ^ str)
 
@@ -52,29 +51,30 @@ let rec print_score = function
 
 (* [hpdate_gui] *)
 let update_gui state =
-  print_string ("Turn: " ^ (string_of_int state.turn) ^ "\n");
+  print_string ("\n\nTurn: " ^ (string_of_int (state.turn + 1)) ^ "\n");
   let player = current_player_rack state in
   let name = match fst player with
     | Human n1 -> n1
     | AI n2 -> n2 in
-  print_string (name ^ "\n");
+  print_string name;
   let lst = List.map (fun x -> Char.escaped x.character) (snd player) in
   let rec helper = function
     | [] -> ""
     | h::t -> h ^ " " ^ helper t in
   let hands = helper lst in
   let sum = List.fold_left (fun a x -> a + x.count) 0 state.letter_bag in
-  let () = print_string ("letter left: " ^ (string_of_int sum) ^"\n") in
-  let () = print_board state in
+  print_string (concat_space 72 ("letter left: " ^ (string_of_int sum) ^"\n"));
+  print_board state;
+  (**ONLY FOR TESTING **)
   let () = print_string "\nold words \n" in
   let () = List.fold_left (fun acc elm -> print_string (elm ^ "\n")) () state.words in
   let () = print_string "\nnew words \n" in
   let () = List.fold_left (fun acc elm -> print_string (elm ^ "\n")) ()
     (get_newwords (collect state.board) state.words) in
   let () = print_string "\n" in
-  let () = print_score state.score_board in
-  let () = print_string "\n" in
-  let () = print_string ("Player's hand: " ^ hands ^ "\n")
+  (*********************)
+  print_score state.score_board;
+  let () = print_string ("\nPlayer's hand: " ^ hands ^ "\n")
   in ()
 
 
@@ -86,7 +86,6 @@ let is_tie lst =
   match scores with
   | [] -> false
   | h::t -> List.mem h t
-
 
 (* [get_players] is a list of players gathered from the user's string input*)
 let rec get_players input_string_list =
@@ -154,7 +153,7 @@ let main_menu () =
   print_string "\n* New Game? --> [play]";
   print_string "\n* Quit Game? --> [quit]\n\n";
   let rec helper2 str =
-  match String.lowercase_ascii str with
+  match String.trim (String.lowercase_ascii str) with
     | "quit" -> print_string "Thank you for playing!\n\n";
     | "play" -> (fun x -> ()) (initialize_game ())
     | "help" -> print_string "message. Please type [play] or [quit]\n\n";
