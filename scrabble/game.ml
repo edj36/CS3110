@@ -21,12 +21,16 @@ let rec get_players input_string_list =
 (* [repl] main repl *)
 let rec repl c_state =
   let () = update_gui c_state in
-  let () = print_endline "\nEnter Move" in
-  let s_move = read_line() in
-  (* TODO AI vs Human input logic here *)
-  let new_state = Human.execute_move s_move c_state in
-  let () = print_endline "" in
-  repl new_state
+  let (player, player_rack) = current_player_rack c_state in
+  let () = print_endline "a" in
+  match player with
+  | AI _    -> let new_state = AI.execute_move c_state c_state in
+               repl new_state
+  | Human _ -> let () = print_endline "\nEnter Move" in
+               let s_move = read_line() in
+               let new_state = Human.execute_move s_move c_state in
+               let () = print_endline "" in
+               repl new_state
 
 (*[initialize] is the initial state created from the player list given by the
 user's input*)
