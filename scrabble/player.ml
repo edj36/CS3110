@@ -163,10 +163,10 @@ module AI : (Player with type t = Data.game_state) =  struct
 	let rec make_move w_lst dir st coord length : Data.move = 
 		let (n_dir, n_c) = 
 		 match dir with
-			| North -> (Down, ((fst coord) - length, snd coord))
-			| South -> (Down, coord)
-			| East -> (Across, coord)
-			| West -> (Across, (fst coord, (snd coord - length))) in
+			| North -> (Across, (fst coord - length, snd coord))
+			| South -> (Across, coord)
+			| East -> (Down, coord)
+			| West -> (Down, (fst coord, snd coord - length)) in
 		let helper v = 
 			let (x1,y1) = n_c in 
 			Play{word = v; direction = n_dir; coordinate = (int_to_char_brd x1, y1)} in 
