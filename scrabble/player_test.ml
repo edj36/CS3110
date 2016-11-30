@@ -17,7 +17,8 @@ let test_state =
   letter_bag = state.letter_bag;
   player_racks = [(Human "A",ahand);(Human "B", bhand)];
   turn = state.turn;
-  words = state.words
+  words = state.words;
+  counter = 0
 }
 let update1 = Human.execute_move "play abc a a 1" test_state
 let initialize = [

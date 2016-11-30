@@ -83,7 +83,8 @@ let setup players =
     letter_bag = initial_bag;
     player_racks = racks;
     turn = 0;
-    words = []
+    words = [];
+    counter = 0
   }
 
 
@@ -116,7 +117,8 @@ let update_switch_all state =
     letter_bag = state.letter_bag;
     player_racks = new_racks;
     turn = state.turn + 1;
-    words = state.words
+    words = state.words;
+    counter = 0
   }
 
 (* [update_switch_some] is a new type game_state after executing
@@ -140,7 +142,8 @@ let update_switch_some lst state =
     letter_bag = state.letter_bag;
     player_racks = new_racks;
     turn = state.turn + 1;
-    words = state.words
+    words = state.words;
+    counter = 0
   }
 
 (********** SCORING **********)
@@ -238,7 +241,8 @@ let update m s = match m with
       letter_bag = s.letter_bag;
       player_racks = new_racks;
       turn = s.turn + 1;
-      words = prev_words
+      words = prev_words;
+      counter = 0
     }
   | SwitchAll -> update_switch_all s
   | SwitchSome lst -> update_switch_some lst s
@@ -249,7 +253,8 @@ let update m s = match m with
       letter_bag = s.letter_bag;
       player_racks = s.player_racks;
       turn = s.turn + 1;
-      words = s.words
+      words = s.words;
+      counter = s.counter + 1
     }
   | Shuffle ->
     let player = current_player_rack s in
@@ -261,6 +266,7 @@ let update m s = match m with
       letter_bag = s.letter_bag;
       player_racks = new_racks;
       turn = s.turn;
-      words = s.words
+      words = s.words;
+      counter = s.counter
     }
   | _ -> failwith "never happens"
