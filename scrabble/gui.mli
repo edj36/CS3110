@@ -11,4 +11,4 @@
  * - displays current player's tiles
  * - displays current game board *)
 
-val update_gui : Data.game_state -> unit
+val main_menu : unit -> unit
