@@ -1,4 +1,4 @@
 
+val is_valid : Data.move -> Data.game_state -> bool
 
-(*val search : string -> d -> bool*)
 val validate : Data.move -> Data.game_state -> Data.game_state

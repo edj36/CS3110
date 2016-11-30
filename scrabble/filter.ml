@@ -13,10 +13,54 @@ let check_char lst player =
     | h::t -> List.mem h hands && helper t (remove h hands) in
       helper lst hands
 
-(* [make_possible_string] is the list of letters/spaces that represents the 
+let char_to_int_brd c = match c with 
+  | 'a' -> 0 | 'b' -> 1 | 'c' -> 2 | 'd' -> 3 | 'e' -> 4 | 'f' -> 5 | 'g' -> 6
+  | 'h' -> 7 | 'i' -> 8 | 'j' -> 9 | 'k' -> 10 | 'l' -> 11 | 'm' -> 12 
+  | 'n' -> 13 | 'o' -> 14 | _ -> failwith "out of bounds"
+
+let get_xy crd = match crd with 
+  | (y,x) -> (char_to_int_brd y, (x-1))
+
+(* [make_possible_str] is the list of letters/spaces that represents the 
  * column/row of characters on the tiles on [board] starting at [coord] and 
  * going in direction [dir], a space " " represents an empty tile *)
-let make_possible_string dir coord board = failwith "Unimplemented"
+(* TODO: need to fix get_nextcoordinate *)
+let rec make_possible_str dir coord board = 
+  let x = snd coord in 
+  let y = fst coord in 
+  match dir with 
+  | Across -> if y > 14 then [] else let ty = (get_tile coord board) in 
+    let stry = begin match ty.letter with 
+      | None -> " " 
+      | Some m -> Char.escaped m
+    end in 
+    let next_cy = begin try get_nextcoordinate (x,y) dir with 
+      | Failure _ -> (15,15) 
+    end in stry :: (make_possible_str dir next_cy board) 
+  | Down -> if x > 14 then [] else let tx = (get_tile coord board) in 
+    let stry = begin match tx.letter with 
+      | None -> " "
+      | Some n -> Char.escaped n 
+    end in 
+    let next_cx = begin try get_nextcoordinate (x,y) dir with 
+      | Failure _ -> (15,15) 
+    end in stry :: (make_possible_str dir next_cx board)
+
+(* [rack_contains] is a boolean indicating if [rack] contains [e] *)
+let rack_contains rack e = 
+  let c_rack = List.map (fun x -> (Char.uppercase_ascii (x.character))) rack in 
+  List.mem (Char.uppercase_ascii e) c_rack
+
+(* [rack_remove] is a new rack made from removing [e] from [rack] *)
+let rec rack_remove rack e = match rack with 
+  | [] -> [] 
+  | h :: t -> if (Char.uppercase_ascii h.character) = (Char.uppercase_ascii e)
+    then t
+    else h :: (rack_remove t e)
+
+let rec print_lst lst = match lst with 
+  | [] -> () 
+  | h::t -> let _ = print_endline h in print_lst t
 
 (* [iterate_brd_lst] goes over each tile in [brd_lst] checking to 
  * see if the tile is equal to its corresponding letter in [str] (at the 
@@ -26,15 +70,34 @@ let make_possible_string dir coord board = failwith "Unimplemented"
  * false otherwise, once its at the end of the string, if the next tile is 
  * empty, return true, else check if the word created is valid, if it is, 
  * continue checking tiles, else, return false *)
-let iterate_brd_lst str player brd_lst = match brd_lst with 
-| [] -> true 
-| h :: t -> failwith "Unimplemented"
-(* ^^ use get_nextcoordinate *)
-
-(* [dereference] is a new state object that is a copy of [state] but 
- * because [state] is mutable, everything dereferenced so that updating 
- * the new state doesn't ruin anything *)
-let dereference state = failwith "Unimplemented"
+let rec iterate_brd_lst str rack n brd_lst = match brd_lst with 
+  | [] -> true 
+  | h :: t when (n >= (String.length str)) -> (* add h to end of str, check if its in srabble dict *)
+   (* check if h is empty string*)
+    if h = " " then true else 
+    let n_str = String.trim (String.uppercase_ascii (str ^ h)) in 
+      if not (find_word n_str) then 
+      let _ = print_endline "error line 80" in false
+      (* if in scrabble dict, move on, increment n *)
+      else iterate_brd_lst n_str rack (n+1) t 
+  | h :: t when h = " " -> (* check if nth position is in rack *)
+    let nth_char = Char.uppercase_ascii str.[n] in 
+    (* if not in rack, return false*)
+    if not (rack_contains rack nth_char) then 
+    let _ = print_endline "error line 87" in false
+    (* if in rack, remove that element from rack, move on, increment n *)
+    else let new_rack = rack_remove rack nth_char in 
+      iterate_brd_lst str new_rack (n+1) t
+  | h :: t -> (* check h vs nth position in str *)
+    let nth = String.uppercase_ascii (Char.escaped str.[n]) in 
+      (* if h <> nth letter (and h <> " "), return false *)
+      if (String.uppercase_ascii h) <> (nth) then 
+      let _ = print_endline "error line 95" in false
+      (* if h = nth letter, move on, increment n *)
+      else iterate_brd_lst str rack (n+1) t 
+  
+  
+ 
 
 (* [iterate_word_lst] iterates over [lst] and checks if each word 
  * is in the scrabble dictionary, true if all in the dictionary, 
@@ -53,27 +116,32 @@ let is_valid move state = match move with
     } -> 
     (* step 1 *)
     let up_str = String.uppercase_ascii str in 
-    if not (find_word up_str) then false 
+    if not (find_word up_str) then 
+    let _ = print_endline "error line 117" in false
     (* step 2 *)
-    else let brd_lst = make_possible_string dir crd state.board in 
-    let player = fst (current_player_rack state) in 
+    else 
+    let xy = get_xy crd in 
+    let brd_lst = make_possible_str dir xy state.board in 
+    let rack = snd (current_player_rack state) in 
     (* step 3 and 4 *)
-    if not (iterate_brd_lst up_str player brd_lst) then false 
+    if not (iterate_brd_lst up_str rack 0 brd_lst) then 
+    let _ = print_endline "error line 128" in false
     (* step 5 *)
-    else let new_state = dereference state in 
-    let word_lst = collect new_state.board in 
-    if not (iterate_word_lst word_lst) then false 
+    else let word_lst = collect state.board in 
+    if not (iterate_word_lst word_lst) then 
+    let _ = print_endline "error line 129" in false
     (* step 6 *)
-    else let center = get_tile (7,7) new_state in 
+    else let temp_state = update move state in 
+    let center = (get_tile (7,7) temp_state.board) in 
     begin match center.letter with 
-      | None -> false 
+      | None -> let _ = print_endline "error line 134" in false
       | Some _ -> true
     end 
   | SwitchAll -> true 
   | SwitchSome c_list -> check_char c_list (current_player_rack state)
   | Pass -> true
   | Shuffle -> true
-  | _ -> false 
+  | _ -> let _ = print_endline "error line 141" in false
 
 (* Algorithm: 
   1. check if word is in scrabble dictionary
@@ -98,6 +166,11 @@ let is_valid move state = match move with
 *)
 
 
+(*let rec list_tl lst = match lst with 
+| [] -> failwith "this is bad"
+| h :: [] -> h 
+| h :: t -> list_tl t *)
+
 (* [validate] is a bool representation indicating if the move is valid or not
  * check following criteria
  * - the word is made only by the letters in the hands (Done)
@@ -112,5 +185,4 @@ let is_valid move state = match move with
       so that adjacent letters also form complete words *)
 
 let validate move state =
-  (*if is_valid move state then update move state else state*)
-  update move state 
+  if is_valid move state then update move state else state
