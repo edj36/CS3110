@@ -55,5 +55,7 @@ let update_gui state =
     (get_newwords (collect state.board) state.words) in
   let () = print_string "\n" in
   let () = print_score state.score_board in
-  let () = print_string "\n" 
+  let () = print_string "\n" in
+  let sum = List.fold_left (fun a x -> a + x.count) 0 state.letter_bag in
+  let () = print_string ("letter left: " ^ (string_of_int sum) ^"\n")
   in ()

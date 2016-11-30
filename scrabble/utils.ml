@@ -98,6 +98,15 @@ let rec add_letter hands bag =
   | [] -> ()
   | h :: t -> add_or_draw_char h.character bag (+); add_letter t bag
 
+(* [remove_letters] represents unit type produced after updating mutable field
+ * in letter bag *)
+let remove_string str bag =
+  let rec helper lst bag =
+    match lst with
+      | [] -> ()
+      | h::t -> add_or_draw_char h bag (-); helper t bag in
+  helper (string_to_char_list str) bag
+
 (* [current_player] represents a player who is playing on the current turn *)
 let current_player_rack state =
   let n = List.length state.player_racks in

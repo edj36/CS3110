@@ -222,6 +222,7 @@ let update m s = match m with
           | Failure _ -> (15,15) in
         if next = (15,15) then board
         else helper (String.sub str 1 (String.length str - 1)) dir next update in
+    remove_string str s.letter_bag;
     let new_board = helper str dir (translate_coodinate crd) s.board in
     (*score*)
     let new_words = get_newwords (collect new_board) prev_words in

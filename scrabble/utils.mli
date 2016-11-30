@@ -37,6 +37,8 @@ val draw_letters : int -> Data.letter list -> Data.letter list
  * after adding letter list to the letter bag *)
 val add_letter : Data.letter list -> Data.letter list -> unit
 
+
+val remove_string : string -> Data.letter list -> unit
 (*******************  update state  *******************)
 
 (* [current_player_rack] represents the player_rack of current player_rack*)
