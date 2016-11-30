@@ -80,7 +80,6 @@ module AI : (Player with type t = Data.game_state) =  struct
   (* [check_tile_board] is the coordinate of first tile found on board from the
    * right to left and then from top to bottom *)
   let rec check_tile_board board (x, y) =
-    let () = print_endline "e" in
     match (get_tile (x,y) board).letter with
       | None -> if x = 14 && y = 14 then failwith "Unimplemented" else
         if x = 14 then check_tile_board board (0, (y+1))
@@ -191,11 +190,9 @@ module AI : (Player with type t = Data.game_state) =  struct
       | hd::tl -> hd
 
   and check_moves board sta (x,y) =
-    let () = print_endline "b" in
+
     let (ch, co) = check_tile_board board (x, y) in
-    let () = print_endline "c" in
     let (no, so, ea, we) = space_value co board in
-      let () = print_endline "d" in
     if ((no = 0 || so = 0) && (ea = 0 || we = 0)) then
       (check_moves board sta (fst co + 1, snd co))
     else
