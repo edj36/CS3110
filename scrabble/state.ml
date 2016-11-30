@@ -18,8 +18,8 @@ let init_letter_bag src =
         character = (String.get h1 0);
         pt = h2; count = h3
       } :: helper t1 t2 t3
-      | _ -> failwith "list unbalanced" in
-    helper chr pt count
+    | _ -> failwith "list unbalanced" in
+  helper chr pt count
 
 (* [init_tile] is a (int*int) list representation of coordintes for the
  * specified bonus tile type*)
@@ -73,20 +73,16 @@ let rec initialize_rack (players: player list) bag =
 (* [initialize_state] is a representation of intial game state *)
 let setup players =
   let src = Yojson.Basic.from_file "info.json" in
-  let initial_score = initialize_score players in
-  let initial_board = initilize_board () in
   let initial_bag = init_letter_bag src in
-  let racks = initialize_rack players initial_bag in
   {
-    board = initial_board;
-    score_board = initial_score;
+    board = initilize_board ();
+    score_board = initialize_score players;
     letter_bag = initial_bag;
-    player_racks = racks;
+    player_racks = initialize_rack players initial_bag;
     turn = 0;
     words = [];
     counter = 0
   }
-
 
 (********** UPDATE STATE **********)
 
@@ -95,9 +91,9 @@ let setup players =
 let update_racks hands s =
   let racks = s.player_racks in
   let rec helper hands racks =
-  match racks with
-  | [] -> []
-  | h::t -> if fst h = fst hands then hands::t else h::(helper hands t) in
+    match racks with
+    | [] -> []
+    | h::t -> if fst h = fst hands then hands::t else h::(helper hands t) in
   helper hands racks
 
 (* [translate_coodinate] is an int*int representation of char*int coordinate*)
@@ -110,12 +106,11 @@ let update_switch_all state =
   let player = current_player_rack state in
   add_letter (snd player) state.letter_bag;
   let new_hand = (fst player, draw_letters 7 state.letter_bag) in
-  let new_racks = update_racks new_hand state in
   {
     board = state.board;
     score_board = state.score_board;
     letter_bag = state.letter_bag;
-    player_racks = new_racks;
+    player_racks = update_racks new_hand state;
     turn = state.turn + 1;
     words = state.words;
     counter = 0
@@ -135,19 +130,17 @@ let update_switch_some lst state =
     in helper letters (snd player) in
   let new_hand =
   (fst player, removed @ (draw_letters (List.length letters) state.letter_bag)) in
-  let new_racks = update_racks new_hand state in
   {
     board = state.board;
     score_board = state.score_board;
     letter_bag = state.letter_bag;
-    player_racks = new_racks;
+    player_racks = update_racks new_hand state;
     turn = state.turn + 1;
     words = state.words;
     counter = 0
   }
 
 (********** SCORING **********)
-
 
 (*[update_scoreboard] is an updated score_board after substituting the old
  * score_board with the current player's score *)
@@ -160,7 +153,7 @@ let update_scoreboard pt state =
     else (x,y) :: helper pt player t in
   helper pt player state.score_board
 
-(* [collect_words_on_crd] *)
+(* [collect_words_on_crd] is an int representation of scire *)
 let collect_words_on_crd crd board letter_bag=
   let init = get_tile crd board in
   let init_pt = match init.letter with
@@ -203,14 +196,34 @@ let rec bonus_score crds board letter_bag=
   | Center -> bonus_score t board letter_bag
   | Normal -> bonus_score t board letter_bag
 
+let update_score old_w old_c new_board state =
+  let new_w = get_newwords (collect new_board) old_w in
+  let new_c = get_newcoordinates (collect_coordinates new_board) old_c in
+  let basic = List.fold_left (fun a e -> a + (word_score e state)) 0 new_w in
+  let bonus = bonus_score new_c new_board state.letter_bag in
+  bonus + basic
+
+let rec letter_played str dir crd board =
+  match String.length str with
+  | 0 -> ""
+  | n -> let chr = Char.uppercase_ascii (String.get str 0) in
+  if crd = (15,15) then str
+  else let tile = get_tile crd board in
+  let next_c = try get_nextcoordinate crd dir with
+    |Failure _ -> (15,15) in
+  match tile.letter with
+    | Some c -> if c = chr then
+    letter_played (String.sub str 1 (String.length str - 1)) dir next_c board
+    else failwith "Never Happens"
+    | None -> (Char.escaped chr) ^
+    letter_played (String.sub str 1 (String.length str - 1)) dir next_c board
+
 (********** UPDATE **********)
 
 (* [submit_move] enters [move] to the game and is the [state] resulting from
  * [move]'s' execution *)
 let update m s = match m with
   | Play {word = str; direction = dir; coordinate = crd} ->
-    let prev_words = collect s.board in
-    let prev_crds = collect_coordinates s.board in
     let rec helper str dir crd board =
       match String.length str with
       | 0 -> board
@@ -221,20 +234,20 @@ let update m s = match m with
           | Some c -> if c = chr then {bonus = tile.bonus; letter = Some chr}
             else failwith "You Cannot Override exsiting character"
           | None -> {bonus = tile.bonus; letter = Some chr} in
-            let update = fill_coordinate [crd] new_tile board in
+        let update = fill_coordinate [crd] new_tile board in
         let next = try get_nextcoordinate crd dir with
           | Failure _ -> (15,15) in
         if next = (15,15) then board
         else helper (String.sub str 1 (String.length str - 1)) dir next update in
-    remove_string str s.letter_bag;
     let new_board = helper str dir (translate_coodinate crd) s.board in
+    let l_played = letter_played str dir (translate_coodinate crd) s.board in
+    remove_string l_played s.letter_bag;
     (** score **)
-    let new_words = get_newwords (collect new_board) prev_words in
-    let new_crds = get_newcoordinates (collect_coordinates new_board) prev_crds in
-    let basic_score = List.fold_left (fun a e -> a + (word_score e s)) 0 new_words in
-    let bonus_score = bonus_score new_crds new_board s.letter_bag in
-    let new_scoreboard = update_scoreboard (basic_score + bonus_score) s in
-    let temp = update_switch_some (string_to_char_list str) s in
+    let prev_words = collect s.board in
+    let prev_crds = collect_coordinates s.board in
+    let score = update_score prev_words prev_crds new_board s in
+    let new_scoreboard = update_scoreboard score s in
+    let temp = update_switch_some (string_to_char_list l_played) s in
     let new_racks = temp.player_racks in
     {
       board = new_board;
