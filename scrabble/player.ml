@@ -163,17 +163,21 @@ module AI : (Player with type t = Data.game_state) =  struct
 	let rec make_move w_lst dir st coord length : Data.move = 
 		let (n_dir, n_c) = 
 		 match dir with
-			| North -> (Across, (fst coord - length, snd coord))
-			| South -> (Across, coord)
-			| East -> (Down, coord)
-			| West -> (Down, (fst coord, snd coord - length)) in
+			| North -> (Down, (fst coord, snd coord - length))
+			| South -> (Down, coord)
+			| East -> (Across, (fst coord, snd coord))
+			| West -> (Across, coord) in
 		let helper v = 
 			let (x1,y1) = n_c in 
-			Play{word = v; direction = n_dir; coordinate = (int_to_char_brd x1, y1)} in 
+			Play{word = v; 
+			direction = n_dir; coordinate = (int_to_char_brd x1, y1)} in 
 		let n_lst = List.filter (fun x -> is_valid (helper x) st) w_lst in
 		match List.map helper n_lst with 
 			| [] -> check_moves st.board st (fst coord + 1, snd coord)
-			| hd::tl -> hd
+			| hd::tl -> 
+				(* let () = print_endline (hd.word) in *)
+				(* let () = print_int (fst hd.coordinate); print_string " * "; print_int (snd hd.coord); print_endline ""; in *)
+				hd
 
 	and check_moves board sta (x,y) = 
 		let (ch, co) = check_tile_board board (x, y) in
@@ -185,8 +189,8 @@ module AI : (Player with type t = Data.game_state) =  struct
 			let (wo_lst, dire, lth) = match (no,so) with
 				| (0,0) -> if (ea >= we) then ((prepend ch ea rack), East, ea) 
 					else ((append ch we rack), West, we) 
-				| _     -> if (no >= so) then ((append ch no rack), North, no) 
-					else ((prepend ch so rack), South, so) in 
+				| _     -> if (no >= so) then ((prepend ch no rack), North, no) 
+					else ((append ch so rack), South, so) in 
 			make_move wo_lst dire sta co lth
 
 	let execute_move s_state c_state = 
