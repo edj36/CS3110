@@ -127,7 +127,12 @@ let is_valid move state = match move with
       coordinate = crd
     } ->
     let old_board = state.board in
-    let new_board = place_string str dir (translate_coodinate crd) old_board in
+    let new_board = try place_string str dir (translate_coodinate crd) old_board with
+    | Failure _ -> old_board in
+
+    if old_board = new_board then
+      let _ = print_endline "Cannot override exsiting letter" in false
+    else
 
     (* step 0 : DOES IT FIT ON THE BOARD *)
     if not (is_fit (translate_coodinate crd) str dir) then

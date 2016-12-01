@@ -108,7 +108,8 @@ let rec repl c_state : Data.game_state =
     | Human n ->
       let () = print_endline "\nEnter Move" in
       let s_move = read_line() in
-      Human.execute_move s_move c_state in
+      try Human.execute_move s_move c_state with
+      |Failure _ -> let () = print_endline "Invalid command" in c_state in
   let () = print_endline "" in
   repl new_state
 

@@ -96,9 +96,7 @@ let update_racks hands s =
     | h::t -> if fst h = fst hands then hands::t else h::(helper hands t) in
   helper hands racks
 
-(* [translate_coodinate] is an int*int representation of char*int coordinate*)
-let translate_coodinate (x,y) =
-  (y-1, (Char.code (Char.lowercase_ascii x) - Char.code 'a'))
+
 
 (* [update_switch_all] is a new type game_state after executing
  * switch all letters *)
@@ -218,7 +216,6 @@ let update m s = match m with
     let l_played = List.fold_left (fun a e -> a ^ Char.escaped e) "" chrlst in
     remove_string l_played s.letter_bag;
     (** score **)
-
     let score = update_score prev_words prev_crds new_board s in
     let new_scoreboard = update_scoreboard score s in
     let temp = update_switch_some (string_to_char_list l_played) s in
