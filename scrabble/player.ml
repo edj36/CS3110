@@ -84,7 +84,9 @@ module AI : (Player with type t = Data.game_state) =  struct
 			| None -> if x = 14 && y = 14 then failwith "Unimplemented" else 
 				if x = 14 then check_tile_board board (0, (y+1)) 
 					else check_tile_board board ((x+1), y)
-			| Some c -> (c, (x,y)) 
+			| Some c -> 
+				let () = print_int x; print_string " * "; print_int (y); print_endline "= coordinate found" in
+				(c, (x,y)) 
 
 	(*[space_check] is the number of empty tiles in a given [direction]
 	on the tile with coordinate [coordinate] and scrabble board [board]*)
@@ -101,7 +103,7 @@ module AI : (Player with type t = Data.game_state) =  struct
 
 	(**)
 	let space_value coordinate board =
-		let helper v = if v > 5 then 5 else v in
+		let helper v = if v > 4 then 4 else v in
 		let north = helper (space_check coordinate board North)  in
 		let south = helper (space_check coordinate board South)  in
 		let east  = helper (space_check coordinate board East)  in
@@ -112,7 +114,7 @@ module AI : (Player with type t = Data.game_state) =  struct
 	let rec sublist the_list length =
 		match the_list with
 		| []   -> []
-		| h::t -> if length > 0 then h :: sublist t (length - 1) else []
+		| h::t -> if length >= 0 then h :: sublist t (length - 1) else []
 
 	(*[get_rack_letters] is a letter list with coordinate and (length - 1)
 		 letters from the players rack*)
@@ -141,12 +143,12 @@ module AI : (Player with type t = Data.game_state) =  struct
 	let prepend ch length rack = 
 		let letters = get_rack_letters rack length in
 		let prems = str_permute letters in
-		List.map (fun v -> (String.make 1 ch) ^ v) prems
+		List.map (fun v -> v ^ (String.make 1 ch)) prems
 
 	let append ch length rack = 
 		let letters = get_rack_letters rack length in
 		let prems = str_permute letters in
-		List.map (fun v -> v ^ (String.make 1 ch)) prems
+		List.map (fun v -> (String.make 1 ch) ^ v) prems
 
 	let is_valid m s = true
 
@@ -163,9 +165,9 @@ module AI : (Player with type t = Data.game_state) =  struct
 	let rec make_move w_lst dir st coord length : Data.move = 
 		let (n_dir, n_c) = 
 		 match dir with
-			| North -> (Down, (fst coord, snd coord - length))
+			| North -> (Down, (fst coord, snd coord - (length)) )
 			| South -> (Down, coord)
-			| East -> (Across, (fst coord, snd coord))
+			| East -> (Across, (fst coord - (length), snd coord))
 			| West -> (Across, coord) in
 		let helper v = 
 			let (x1,y1) = n_c in 
