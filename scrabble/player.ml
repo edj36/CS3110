@@ -81,7 +81,7 @@ module AI : (Player with type t = Data.game_state) =  struct
 	 * right to left and then from top to bottom *)
 	let rec check_tile_board board (x, y) = 
 		match (get_tile (x,y) board).letter with 
-			| None -> if x = 14 && y = 14 then failwith "Unimplemented" else 
+			| None -> if x = 14 && y = 14 then failwith "draw" else 
 				if x = 14 then check_tile_board board (0, (y+1)) 
 					else check_tile_board board ((x+1), y)
 			| Some c -> 
@@ -92,11 +92,11 @@ module AI : (Player with type t = Data.game_state) =  struct
 	on the tile with coordinate [coordinate] and scrabble board [board]*)
 	let rec space_check (x, y) board direction =
 		let (n_x, n_y) = match direction with
-			| North -> (x, y - 1)
-			| South -> (x, y + 1)
-			| East  -> (x + 1, y)
-			| West  -> (x - 1, y) in
-		if (n_x < 0 || n_y < 0 || n_x >= 15 || n_y >= 15) then 0 else
+			| North -> (x - 1, y)
+			| South -> (x + 1, y)
+			| East  -> (x, y + 1)
+			| West  -> (x, y - 1) in
+		if (n_x < 0 || n_y < 0 || n_x >= 14 || n_y >= 14) then 0 else
 			let tile = get_tile (n_x, n_y) board in
 			if (tile.letter = None) then 
 			1 + space_check (n_x, n_y) board direction else 0
@@ -150,7 +150,7 @@ module AI : (Player with type t = Data.game_state) =  struct
 		let prems = str_permute letters in
 		List.map (fun v -> (String.make 1 ch) ^ v) prems
 
-	let is_valid m s = true
+	(* let is_valid m s = true *)
 
 	let char_to_int_brd c = match c with 
 	| 'a' -> 0 | 'b' -> 1 | 'c' -> 2 | 'd' -> 3 | 'e' -> 4 | 'f' -> 5 | 'g' -> 6
@@ -162,24 +162,31 @@ module AI : (Player with type t = Data.game_state) =  struct
 	| 7 -> 'h' | 8 -> 'i' | 9 -> 'j' | 10 -> 'k' | 11 -> 'l' | 12 -> 'm' 
 	| 13 -> 'n' | 14 -> 'o' | _ -> failwith "out of bounds"
 
+	let print_play p = match p with 
+	  | Play {
+	      word = str;
+	      direction = dir;
+	      coordinate = crd } -> 
+	        let () = print_string (str ^ " was played by AI at ") in
+	        let () = print_char (fst crd); print_string " * "; print_int (snd crd); in
+	        if dir = Across then print_endline " across" else print_endline " down"
+	  | _ -> failwith "something bad" 
+
 	let rec make_move w_lst dir st coord length : Data.move = 
 		let (n_dir, n_c) = 
 		 match dir with
-			| North -> (Down, (fst coord, snd coord - (length)) )
+			| North -> (Down, (fst coord - length, snd coord) )
 			| South -> (Down, coord)
-			| East -> (Across, (fst coord - (length), snd coord))
-			| West -> (Across, coord) in
+			| East -> (Across, coord)
+			| West -> (Across, (fst coord, snd coord - length)) in
 		let helper v = 
 			let (x1,y1) = n_c in 
 			Play{word = v; 
-			direction = n_dir; coordinate = (int_to_char_brd x1, y1)} in 
-		let n_lst = List.filter (fun x -> is_valid (helper x) st) w_lst in
-		match List.map helper n_lst with 
+			direction = n_dir; coordinate = (int_to_char_brd y1, (x1+1))} in 
+		let n_lst = List.map helper w_lst in
+		match List.filter (fun x -> print_play x; is_valid x st) n_lst with 
 			| [] -> check_moves st.board st (fst coord + 1, snd coord)
-			| hd::tl -> 
-				(* let () = print_endline (hd.word) in *)
-				(* let () = print_int (fst hd.coordinate); print_string " * "; print_int (snd hd.coord); print_endline ""; in *)
-				hd
+			| hd::tl -> hd
 
 	and check_moves board sta (x,y) = 
 		let (ch, co) = check_tile_board board (x, y) in
@@ -188,16 +195,17 @@ module AI : (Player with type t = Data.game_state) =  struct
 			(check_moves board sta (fst co + 1, snd co))
 		else 
 			let rack = current_player_rack sta in 
-			let (wo_lst, dire, lth) = match (no,so) with
-				| (0,0) -> if (ea >= we) then ((prepend ch ea rack), East, ea) 
-					else ((append ch we rack), West, we) 
-				| _     -> if (no >= so) then ((prepend ch no rack), North, no) 
-					else ((append ch so rack), South, so) in 
+			let (wo_lst, dire, lth) = if no = 0 || so = 0 then
+					(if (ea >= we) then ((append ch ea rack), East, ea) 
+					else ((prepend ch we rack), West, we) )
+				else
+					(if (no >= so) then ((prepend ch no rack), North, no) 
+					else ((append ch so rack), South, so) )in 
 			make_move wo_lst dire sta co lth
 
 	let execute_move s_state c_state = 
 		let board = c_state.board in
-		let move = check_moves board c_state (0,0) in
+		let move = try check_moves board c_state (0,0) with | _ -> SwitchAll in
 		validate move s_state
 
 end

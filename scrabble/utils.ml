@@ -135,8 +135,6 @@ let get_tile coordinate board =
   match coordinate with
   |(x,y) -> get_nth (get_nth (board,y) , x)
 
-
-
 let rec subst lst n a =
   match lst with
   | [] -> []
