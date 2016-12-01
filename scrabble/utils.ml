@@ -44,6 +44,10 @@ let shuffle lst =
   let helper_sort x y = Pervasives.compare (fst x) (fst y) in
   List.map (fun x -> snd x) (List.sort helper_sort indexed)
 
+(* [translate_coodinate] is an int*int representation of char*int coordinate*)
+let translate_coodinate (x,y) =
+  (y-1, (Char.code (Char.lowercase_ascii x) - Char.code 'a'))
+
 (* [char_to_letter] represents letter type of input char *)
 let char_to_letter c bag =
   let rec helper c bag =
@@ -187,6 +191,30 @@ let rec list_compare new_l old_l = match new_l with
 
 (* [get_newwords] represents string list of new words created in a recent turn*)
 let rec get_newwords new_w old_w = list_compare new_w old_w
+
+let rec get_newletters crds new_board =
+  match crds with
+  | [] -> []
+  | h::t -> let tile = get_tile h new_board in
+    match tile.letter with
+    |Some c -> c :: (get_newletters t new_board)
+    |None -> get_newletters t new_board
+
+let rec place_string str dir crd board =
+  match String.length str with
+  | 0 -> board
+  | n ->
+    if crd = (15,15) then board else
+    let chr = Char.uppercase_ascii (String.get str 0) in
+    let tile = get_tile crd board in
+    let new_tile = match tile.letter with
+      | Some c -> if c = chr then {bonus = tile.bonus; letter = Some chr}
+        else failwith "You Cannot Override exsiting character"
+      | None -> {bonus = tile.bonus; letter = Some chr} in
+    let update = fill_coordinate [crd] new_tile board in
+    let next = try get_nextcoordinate crd dir with
+      | Failure _ -> (15,15) in
+    place_string (String.sub str 1 (String.length str - 1)) dir next update
 
 (* [collect_coordinates] is a (int*int) list representation of occupied
  * coordinates on the current board *)

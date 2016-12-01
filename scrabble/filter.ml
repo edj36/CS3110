@@ -13,19 +13,19 @@ let check_char lst player =
     | h::t -> List.mem h hands && helper t (remove h hands) in
       helper lst hands
 
-let char_to_int_brd c = match c with
+(* let char_to_int_brd c = match c with
   | 'a' -> 0 | 'b' -> 1 | 'c' -> 2 | 'd' -> 3 | 'e' -> 4 | 'f' -> 5 | 'g' -> 6
   | 'h' -> 7 | 'i' -> 8 | 'j' -> 9 | 'k' -> 10 | 'l' -> 11 | 'm' -> 12
-  | 'n' -> 13 | 'o' -> 14 | _ -> failwith "out of bounds"
+  | 'n' -> 13 | 'o' -> 14 | _ -> failwith "out of bounds" *)
 
-let get_xy crd = match crd with
-  | (y,x) -> (char_to_int_brd y, (x-1))
+(* let get_xy crd = match crd with
+  | (y,x) -> (char_to_int_brd y, (x-1)) *)
 
 (* [make_possible_str] is the list of letters/spaces that represents the
  * column/row of characters on the tiles on [board] starting at [coord] and
  * going in direction [dir], a space " " represents an empty tile *)
 (* TODO: need to fix get_nextcoordinate *)
-let rec make_possible_str dir coord board =
+(* let rec make_possible_str dir coord board =
   let x = snd coord in
   let y = fst coord in
   match dir with
@@ -44,23 +44,23 @@ let rec make_possible_str dir coord board =
     end in
     let next_cx = begin try get_nextcoordinate (x,y) dir with
       | Failure _ -> (15,15)
-    end in stry :: (make_possible_str dir next_cx board)
+    end in stry :: (make_possible_str dir next_cx board) *)
 
 (* [rack_contains] is a boolean indicating if [rack] contains [e] *)
-let rack_contains rack e =
+(* let rack_contains rack e =
   let c_rack = List.map (fun x -> (Char.uppercase_ascii (x.character))) rack in
-  List.mem (Char.uppercase_ascii e) c_rack
+  List.mem (Char.uppercase_ascii e) c_rack *)
 
 (* [rack_remove] is a new rack made from removing [e] from [rack] *)
-let rec rack_remove rack e = match rack with
+(* let rec rack_remove rack e = match rack with
   | [] -> []
   | h :: t -> if (Char.uppercase_ascii h.character) = (Char.uppercase_ascii e)
     then t
-    else h :: (rack_remove t e)
+    else h :: (rack_remove t e) *)
 
-let rec print_lst lst = match lst with
+(* let rec print_lst lst = match lst with
   | [] -> ()
-  | h::t -> let _ = print_endline h in print_lst t
+  | h::t -> let _ = print_endline h in print_lst t *)
 
 (* [iterate_brd_lst] goes over each tile in [brd_lst] checking to
  * see if the tile is equal to its corresponding letter in [str] (at the
@@ -70,7 +70,7 @@ let rec print_lst lst = match lst with
  * false otherwise, once its at the end of the string, if the next tile is
  * empty, return true, else check if the word created is valid, if it is,
  * continue checking tiles, else, return false *)
-let rec iterate_brd_lst str rack n brd_lst = match brd_lst with
+(* let rec iterate_brd_lst str rack n brd_lst = match brd_lst with
   | [] -> true
   | h :: t when (n >= (String.length str)) -> (* add h to end of str, check if its in srabble dict *)
    (* check if h is empty string*)
@@ -94,10 +94,22 @@ let rec iterate_brd_lst str rack n brd_lst = match brd_lst with
       if (String.uppercase_ascii h) <> (nth) then
       let _ = print_endline "error line 95" in false
       (* if h = nth letter, move on, increment n *)
-      else iterate_brd_lst str rack (n+1) t
+      else iterate_brd_lst str rack (n+1) t *)
 
+let is_not_srounded (x,y) board =
+  let check (x,y) =
+    if x = 15 || x = -1 then true
+    else if y = 15 || y = -1 then true
+    else let tile = get_tile (x, y) board in
+    match tile.letter with
+    | None -> true | Some _ -> false in
+  (check (x+1, y)) && (check (x-1, y)) && (check (x, y+1)) && (check (x, y-1))
 
-
+let is_fit (x,y) str dir =
+  let n = String.length str in
+  match dir with
+  | Across -> y+n <= 15
+  | Down -> x+n <= 15
 
 (* [iterate_word_lst] iterates over [lst] and checks if each word
  * is in the scrabble dictionary, true if all in the dictionary,
@@ -114,8 +126,48 @@ let is_valid move state = match move with
       direction = dir;
       coordinate = crd
     } ->
+    let old_board = state.board in
+    let new_board = place_string str dir (translate_coodinate crd) old_board in
+
+    (* step 0 : DOES IT FIT ON THE BOARD *)
+    if not (is_fit (translate_coodinate crd) str dir) then
+      let _ = print_endline "word doesnt fit!" in false
+    else
+
+    (* step 1 : IS CENTER COVERED ? *)
+    let tile = get_tile (7,7) new_board in
+    let case1 = (match (tile.letter) with
+    | None -> false
+    | Some _ -> true) in if not case1
+    then let _ = print_endline "you have to play across center!" in false
+    else
+
+    (* step 2 : ARE NEWLY FORMED WORDS ALL VALID ?*)
+    let new_words = get_newwords (collect new_board) (collect old_board) in
+    if not (iterate_word_lst new_words)
+    then let _ = print_endline "not a valid word!" in false
+    else
+
+    (* step 3 : make sure you didnt play letters that are not in hands *)
+    let new_crds =
+      get_newcoordinates (collect_coordinates new_board) (collect_coordinates old_board) in
+    let new_letters = get_newletters new_crds new_board in
+    if not (check_char new_letters (current_player_rack state))
+    then let _ = print_endline "you can't use a letter you don't have!" in false
+    else
+
+    (*step 4 : make sure at least one letter is played next to existing letter *)
+    let case4 =
+    not (List.fold_left (fun a e -> a && is_not_srounded e old_board) true new_crds) in
+    if state.turn <> 0 then
+      if not case4 then
+      let _ = print_endline "new word has to be adjacent to the existing word!" in
+      false
+      else true
+    else true
+
     (* step 1 *)
-    let up_str = String.uppercase_ascii str in
+    (* let up_str = String.uppercase_ascii str in
     if not (find_word up_str) then
     let _ = print_endline "error line 117" in false
     (* step 2 *)
@@ -136,7 +188,7 @@ let is_valid move state = match move with
     begin match center.letter with
       | None -> let _ = print_endline "error line 134" in false
       | Some _ -> true
-    end
+    end *)
   | SwitchAll -> true
   | SwitchSome c_list -> check_char (List.map (fun x -> Char.uppercase_ascii x) c_list)
    (current_player_rack state)

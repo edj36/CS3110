@@ -203,48 +203,22 @@ let update_score old_w old_c new_board state =
   let bonus = bonus_score new_c new_board state.letter_bag in
   bonus + basic
 
-let rec letter_played str dir crd board =
-  match String.length str with
-  | 0 -> ""
-  | n -> let chr = Char.uppercase_ascii (String.get str 0) in
-  if crd = (15,15) then str
-  else let tile = get_tile crd board in
-  let next_c = try get_nextcoordinate crd dir with
-    |Failure _ -> (15,15) in
-  match tile.letter with
-    | Some c -> if c = chr then
-    letter_played (String.sub str 1 (String.length str - 1)) dir next_c board
-    else failwith "Never Happens"
-    | None -> (Char.escaped chr) ^
-    letter_played (String.sub str 1 (String.length str - 1)) dir next_c board
-
 (********** UPDATE **********)
 
 (* [submit_move] enters [move] to the game and is the [state] resulting from
  * [move]'s' execution *)
 let update m s = match m with
   | Play {word = str; direction = dir; coordinate = crd} ->
-    let rec helper str dir crd board =
-      match String.length str with
-      | 0 -> board
-      | n ->
-        let chr = Char.uppercase_ascii (String.get str 0) in
-        let tile = get_tile crd board in
-        let new_tile = match tile.letter with
-          | Some c -> if c = chr then {bonus = tile.bonus; letter = Some chr}
-            else failwith "You Cannot Override exsiting character"
-          | None -> {bonus = tile.bonus; letter = Some chr} in
-        let update = fill_coordinate [crd] new_tile board in
-        let next = try get_nextcoordinate crd dir with
-          | Failure _ -> (15,15) in
-        if next = (15,15) then board
-        else helper (String.sub str 1 (String.length str - 1)) dir next update in
-    let new_board = helper str dir (translate_coodinate crd) s.board in
-    let l_played = letter_played str dir (translate_coodinate crd) s.board in
-    remove_string l_played s.letter_bag;
-    (** score **)
     let prev_words = collect s.board in
     let prev_crds = collect_coordinates s.board in
+    let new_board = place_string str dir (translate_coodinate crd) s.board in
+    let chrlst =
+      get_newletters (get_newcoordinates
+        (collect_coordinates new_board) prev_crds) new_board in
+    let l_played = List.fold_left (fun a e -> a ^ Char.escaped e) "" chrlst in
+    remove_string l_played s.letter_bag;
+    (** score **)
+
     let score = update_score prev_words prev_crds new_board s in
     let new_scoreboard = update_scoreboard score s in
     let temp = update_switch_some (string_to_char_list l_played) s in

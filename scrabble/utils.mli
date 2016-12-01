@@ -24,6 +24,7 @@ val string_to_char_list : string -> char list
 (* [shuffle] is an 'a list after shuffling elements *)
 val shuffle : 'a list -> 'a list
 
+val translate_coodinate : (char * int) -> (int * int)
 (*******************  update letter bag  *******************)
 
 (* [char_to_letter] represents letter type of input char *)
@@ -37,7 +38,7 @@ val draw_letters : int -> Data.letter list -> Data.letter list
  * after adding letter list to the letter bag *)
 val add_letter : Data.letter list -> Data.letter list -> unit
 
-
+(* [remove_string] updates the letter bag so that it removes specified string *)
 val remove_string : string -> Data.letter list -> unit
 (*******************  update state  *******************)
 
@@ -66,6 +67,13 @@ val collect : Data.scrabble_board -> string list
  * most recent turn *)
 val get_newwords : string list -> string list -> string list
 
+(* [get_newletters] comapares old board with new board and returns the list of
+ * new characters *)
+val get_newletters : (int*int) list -> Data.scrabble_board -> char list
+
+(* [place_string] returns updated board after placing specified string on the board
+ * with specified initial coordinate and direction *)
+val place_string : string -> Data.direction -> (int*int) -> Data.scrabble_board -> Data.scrabble_board
 (*******************  SCORING  *******************)
 
 (* [collect_coordinates] is a (int*int) list representation of occupied
