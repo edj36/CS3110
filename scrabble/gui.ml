@@ -99,7 +99,8 @@ let rec get_players input_string_list =
 
 (* [repl] main repl *)
 let rec repl c_state : Data.game_state =
-  if List.length (c_state.score_board) = c_state.counter
+  (* if List.length (c_state.score_board) = c_state.counter *)
+  if c_state.counter = 10
   then end_game c_state
   else let pl = fst (current_player_rack c_state) in
   let () = update_gui c_state in

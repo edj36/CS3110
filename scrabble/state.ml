@@ -111,7 +111,7 @@ let update_switch_all state =
     player_racks = update_racks new_hand state;
     turn = state.turn + 1;
     words = state.words;
-    counter = 0
+    counter = state.counter + 1
   }
 
 (* [update_switch_some] is a new type game_state after executing
