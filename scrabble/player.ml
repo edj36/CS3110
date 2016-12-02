@@ -40,7 +40,7 @@ module Human : (Player with type t = string) = struct
 
 	let execute_move s_move c_state =
 		let split = Str.split (Str.regexp " +") (s_move ^ " ") in
-		let move = List.nth split 0 in
+		let move = String.lowercase_ascii (List.nth split 0) in
 		let n = List.length split in
 		let command = match move with
 		| "Play" | "play" | "p" ->
