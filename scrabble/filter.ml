@@ -3,6 +3,13 @@ open Utils
 open State
 open Tree
 
+exception Error_existing_letter
+exception Error_not_fit
+exception Error_not_center
+exception Error_not_in_dictionary
+exception Error_not_have
+exception Error_not_touching
+
 (* [check_char] represents bool type, indicating if all elements in char List
  * is a member of [hands]. Also accounts for duplicates
  * ex) if you have 2 'A's, ['A';'A'] -> true but ['A';'A';'A'] -> false *)
@@ -47,27 +54,23 @@ let is_valid move state = match move with
     let new_board = try place_string str dir (translate_coodinate crd) old_board with
     | Failure _ -> old_board in
 
-    if old_board = new_board then
-      let _ = print_endline "Cannot override exsiting letter" in false
+    if old_board = new_board then false
     else
 
     (* step 0 : DOES IT FIT ON THE BOARD *)
-    if not (is_fit (translate_coodinate crd) str dir) then
-      let _ = print_endline "word doesnt fit!" in false
+    if not (is_fit (translate_coodinate crd) str dir) then raise Error_not_fit
     else
 
     (* step 1 : IS CENTER COVERED ? *)
     let tile = get_tile (7,7) new_board in
     let case1 = (match (tile.letter) with
     | None -> false
-    | Some _ -> true) in if not case1
-    then let _ = print_endline "you have to play across center!" in false
+    | Some _ -> true) in if not case1 then raise Error_not_center
     else
 
     (* step 2 : ARE NEWLY FORMED WORDS ALL VALID ?*)
     let new_words = collect new_board in
-    if not (iterate_word_lst new_words)
-    then let _ = print_endline "not a valid word!" in false
+    if not (iterate_word_lst new_words) then raise Error_not_in_dictionary
     else
 
     (* step 3 : make sure you didnt play letters that are not in hands *)
@@ -75,7 +78,7 @@ let is_valid move state = match move with
       get_newcoordinates (collect_coordinates new_board) (collect_coordinates old_board) in
     let new_letters = get_newletters new_crds new_board in
     if not (check_char new_letters (current_player_rack state))
-    then let _ = print_endline "you can't use a letter you don't have!" in false
+    then raise Error_not_have
     else
 
     (*step 4 : make sure at least one letter is played next to existing letter *)
@@ -83,19 +86,14 @@ let is_valid move state = match move with
     not (List.fold_left (fun a e -> a && is_not_srounded e old_board) true new_crds) in
     (match collect old_board with
     | [] -> true
-    | _ ->
-    if not case4 then
-      let _ = print_endline "new word has to be adjacent to the existing word!" in
-      false
-    else true)
-
+    | _ -> if not case4 then raise Error_not_touching else true)
 
   | SwitchAll -> true
   | SwitchSome c_list -> check_char (List.map (fun x -> Char.uppercase_ascii x) c_list)
    (current_player_rack state)
   | Pass -> true
   | Shuffle -> true
-  | _ -> let _ = print_endline "error line 141" in false
+  | End -> true
 
 (* [validate] is a bool representation indicating if the move is valid or not
  * check following criteria

@@ -19,8 +19,8 @@ let letter_to_char lst =
  * of string type input [s] *)
 let string_to_direction s =
   match s with
-  | "Across" | "a" | "across"-> Across
-  | "Down" | "d" | "down" -> Down
+  | "across"-> Across
+  | "down" -> Down
   | _ -> failwith "Invaild direction"
 
 (* [remove] is a 'a list after removing specified element from the
