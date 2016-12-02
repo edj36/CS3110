@@ -106,7 +106,7 @@ module AI : (Player with type t = Data.game_state) =  struct
 
 	(**)
 	let space_value coordinate board =
-		let helper v = if v > 7 then v else v in
+		let helper v = if v > 7 then 7 else v in
 		let north = helper (space_check coordinate board North)  in
 		let south = helper (space_check coordinate board South)  in
 		let east  = helper (space_check coordinate board East)  in
