@@ -2,8 +2,8 @@ open Utils
 open Data
 open Filter
 open State
-exception End
 exception No_Tile_Found
+exception Invalid
 
 module type Player = sig
 
@@ -43,29 +43,30 @@ module Human : (Player with type t = string) = struct
 		let move = String.lowercase_ascii (List.nth split 0) in
 		let n = List.length split in
 		let command = match move with
-		| "Play" | "play" | "p" ->
+		| "play" | "p" ->
 			let coordinate = (String.get (List.nth split 3) 0,
 			(int_of_string (List.nth split 4))) in
 			if n = 5 && (check_coordinate coordinate) then
 			Play
 			{
 				word = List.nth split 1;
-				direction = string_to_direction (List.nth split 2);
+				direction = string_to_direction (String.lowercase_ascii (List.nth split 2));
 				coordinate = coordinate
 			}
-			else failwith "Invalid coordinate"
-		| "SwitchAll" | "Switch_All" | "sa" | "s_a" ->
-			if n = 1 then SwitchAll
-			else failwith "Invalid command"
-		| "SwitchSome" | "switchsome" | "s" | "s_s"->
+			else raise Invalid
+		| "swapall" | "sa" ->
+			if n = 1 then SwitchAll else raise Invalid
+		| "swapsome" | "ss"->
 			if n >= 2 then
-				let char_lst = List.map (fun x -> String.get x 0) (List.tl split) in
+				let char_lst = List.map
+				(fun x -> if String.length x = 1 then String.get x 0 else raise Invalid)
+				(List.tl split) in
 				SwitchSome char_lst
-			else failwith "Invalid command"
-		| "Pass" | "pass" -> if n = 1 then Pass else failwith "Invalid command"
-		| "Shuffle" | "shuffle" -> if n = 1 then Shuffle else failwith "Invalid command"
-		| "End" | "end" -> if n = 1 then raise End else failwith "Invalid command"
-		| _ -> failwith "Invalid command" in
+			else raise Invalid
+		| "pass" -> if n = 1 then Pass else raise Invalid
+		| "shuffle" | "s" -> if n = 1 then Shuffle else raise Invalid
+		| "quit" | "q" -> if n = 1 then End else raise Invalid
+		| _ -> raise Invalid in
 		validate command c_state
 
 end
@@ -87,7 +88,7 @@ module AI : (Player with type t = Data.game_state) =  struct
 				if x = 14 then check_tile_board board (0, (y+1))
 					else check_tile_board board ((x+1), y)
 			| Some c ->
-				let () = print_int x; print_string " * "; print_int (y); print_endline "= coordinate found" in
+				(* let () = print_int x; print_string " * "; print_int (y); print_endline "= coordinate found" in *)
 				(c, (x,y))
 
 	(*[space_check] is the number of empty tiles in a given [direction]
@@ -190,7 +191,8 @@ module AI : (Player with type t = Data.game_state) =  struct
 			Play{word = v;
 			direction = n_dir; coordinate = (int_to_char_brd y1, (x1+1))} in
 		let n_lst = List.map helper w_lst in
-		match List.filter (fun x -> print_play x; is_valid x st) n_lst with
+		(* match List.filter (fun x -> print_play x; is_valid x st) n_lst with *)
+		match List.filter (fun x -> try is_valid x st with _ -> false) n_lst with
 			| [] -> check_moves st.board st (fst coord + 1, snd coord)
 			| hd::tl -> hd
 
@@ -210,7 +212,7 @@ module AI : (Player with type t = Data.game_state) =  struct
 			make_move wo_lst dire sta co lth
 
   let empty_move c_state =
-    let board = c_state.board in
+    (* let board = c_state.board in *)
     let rack = current_player_rack c_state in
     let rack_letters = get_rack_letters rack 4 in
     let perm_list = str_permute rack_letters in
@@ -221,7 +223,8 @@ module AI : (Player with type t = Data.game_state) =  struct
             coordinate = (x1,y1) }
      in let move_list = List.map helper perm_list in
      let valid_list = List.filter
-      (fun x -> print_play x; is_valid x c_state) move_list in
+      (* (fun x -> print_play x; is_valid x c_state) move_list in *)
+			(fun x -> try is_valid x c_state with _ -> false ) move_list in
        try List.hd valid_list with |_ -> SwitchAll
 
 	let execute_move s_state c_state =

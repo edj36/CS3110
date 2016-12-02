@@ -80,7 +80,8 @@ let setup players =
     letter_bag = initial_bag;
     player_racks = initialize_rack players initial_bag;
     turn = 0;
-    counter = 0
+    counter = 0;
+    quit = false
   }
 
 (********** UPDATE STATE **********)
@@ -109,7 +110,8 @@ let update_switch_all state =
     letter_bag = state.letter_bag;
     player_racks = update_racks new_hand state;
     turn = state.turn + 1;
-    counter = state.counter + 1
+    counter = state.counter + 1;
+    quit = false
   }
 
 (* [update_switch_some] is a new type game_state after executing
@@ -132,7 +134,8 @@ let update_switch_some lst state =
     letter_bag = state.letter_bag;
     player_racks = update_racks new_hand state;
     turn = state.turn + 1;
-    counter = 0
+    counter = 0;
+    quit = false
   }
 
 (********** SCORING **********)
@@ -223,7 +226,8 @@ let update m s = match m with
       letter_bag = s.letter_bag;
       player_racks = new_racks;
       turn = s.turn + 1;
-      counter = 0
+      counter = 0;
+      quit = false
     }
   | SwitchAll -> update_switch_all s
   | SwitchSome lst -> update_switch_some lst s
@@ -234,7 +238,8 @@ let update m s = match m with
       letter_bag = s.letter_bag;
       player_racks = s.player_racks;
       turn = s.turn + 1;
-      counter = s.counter + 1
+      counter = s.counter;
+      quit = false
     }
   | Shuffle ->
     let player = current_player_rack s in
@@ -246,6 +251,15 @@ let update m s = match m with
       letter_bag = s.letter_bag;
       player_racks = new_racks;
       turn = s.turn;
-      counter = s.counter
+      counter = s.counter;
+      quit = false
     }
-  | _ -> failwith "never happens"
+  | End ->   {
+      board = s.board;
+      score_board = s.score_board;
+      letter_bag = s.letter_bag;
+      player_racks = s.player_racks;
+      turn = s.turn;
+      counter = s.counter;
+      quit = true
+    }
