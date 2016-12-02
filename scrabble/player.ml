@@ -222,7 +222,7 @@ module AI : (Player with type t = Data.game_state) =  struct
      in let move_list = List.map helper perm_list in
      let valid_list = List.filter
       (fun x -> print_play x; is_valid x c_state) move_list in
-      List.hd valid_list
+       try List.hd valid_list with |_ -> SwitchAll
 
 	let execute_move s_state c_state =
 		let board = c_state.board in
