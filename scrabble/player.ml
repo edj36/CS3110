@@ -106,7 +106,7 @@ module AI : (Player with type t = Data.game_state) =  struct
 
 	(**)
 	let space_value coordinate board =
-		let helper v = if v > 7 then 7 else v in
+		let helper v = if v > 7 then v else v in
 		let north = helper (space_check coordinate board North)  in
 		let south = helper (space_check coordinate board South)  in
 		let east  = helper (space_check coordinate board East)  in
@@ -179,6 +179,8 @@ module AI : (Player with type t = Data.game_state) =  struct
 	        if dir = Across then print_endline " across" else print_endline " down"
 	  | _ -> failwith "something bad"
 
+	let ai_valid v state = try is_valid v state with _ -> false
+
 	let rec make_move w_lst dir st coord length rack c: Data.move =
 		let (n_dir, n_c) =
 		 match dir with
@@ -191,10 +193,8 @@ module AI : (Player with type t = Data.game_state) =  struct
 			Play{word = v;
 			direction = n_dir; coordinate = (int_to_char_brd y1, (x1+1))} in
 		let n_lst = List.map helper w_lst in
-
-		match List.filter (fun x -> print_play x; is_valid x st) n_lst with
+		match List.filter (fun x -> ai_valid x st) n_lst with
 			| [] -> if length = 1 then 
-				let () =  ANSITerminal.(print_string [on_white; black] "HERE                                           \n") in
 				check_moves st.board st (fst coord + 1, snd coord) else
 				let l = length - 1 in
 				let (w_l, d) = 
@@ -204,7 +204,7 @@ module AI : (Player with type t = Data.game_state) =  struct
 					| East -> ((append c l rack), East)
 					| West -> ((prepend c l rack), West) ) in
 				make_move w_l d st coord l rack c
-			| hd::tl -> hd
+			| hd::tl -> print_play hd; hd
 
 	and check_moves board sta (x,y) =
 		let (ch, co) = check_tile_board board (x, y) in
@@ -241,9 +241,9 @@ module AI : (Player with type t = Data.game_state) =  struct
 		let board = c_state.board in
     let move = if ((check_tile_board board (0,0)) = ('z',(15,15))) then
       empty_move c_state
-    else check_moves board c_state (0,0) in 
-    (* try check_moves board c_state (0,0) with
-    | _ -> SwitchAll in *)
+    else 
+	    try check_moves board c_state (0,0) with
+	    | _ -> SwitchAll in
 		validate move s_state
 
 end
