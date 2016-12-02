@@ -105,7 +105,7 @@ module AI : (Player with type t = Data.game_state) =  struct
 
 	(**)
 	let space_value coordinate board =
-		let helper v = if v > 3 then 3 else v in
+		let helper v = if v > 7 then 7 else v in
 		let north = helper (space_check coordinate board North)  in
 		let south = helper (space_check coordinate board South)  in
 		let east  = helper (space_check coordinate board East)  in
@@ -178,7 +178,7 @@ module AI : (Player with type t = Data.game_state) =  struct
 	        if dir = Across then print_endline " across" else print_endline " down"
 	  | _ -> failwith "something bad"
 
-	let rec make_move w_lst dir st coord length : Data.move =
+	let rec make_move w_lst dir st coord length rack c: Data.move =
 		let (n_dir, n_c) =
 		 match dir with
 			| North -> (Down, (fst coord - length, snd coord) )
@@ -191,7 +191,17 @@ module AI : (Player with type t = Data.game_state) =  struct
 			direction = n_dir; coordinate = (int_to_char_brd y1, (x1+1))} in
 		let n_lst = List.map helper w_lst in
 		match List.filter (fun x -> print_play x; is_valid x st) n_lst with
-			| [] -> check_moves st.board st (fst coord + 1, snd coord)
+			| [] -> if length = 1 then 
+				let () =  ANSITerminal.(print_string [on_white; black] "HERE                                           \n") in
+				check_moves st.board st (fst coord + 1, snd coord) else
+				let l = length - 1 in
+				let (w_l, d) = 
+					(match dir with
+					| North -> ((prepend c l rack), North)
+					| South -> ((append c l rack), South)
+					| East -> ((append c l rack), East)
+					| West -> ((prepend c l rack), West) ) in
+				make_move w_l d st coord l rack c
 			| hd::tl -> hd
 
 	and check_moves board sta (x,y) =
@@ -207,7 +217,7 @@ module AI : (Player with type t = Data.game_state) =  struct
 				else
 					(if (no >= so) then ((prepend ch no rack), North, no)
 					else ((append ch so rack), South, so) )in
-			make_move wo_lst dire sta co lth
+			make_move wo_lst dire sta co lth rack ch
 
   let empty_move c_state =
     let board = c_state.board in
@@ -228,9 +238,9 @@ module AI : (Player with type t = Data.game_state) =  struct
 		let board = c_state.board in
     let move = if ((check_tile_board board (0,0)) = ('z',(15,15))) then
       empty_move c_state
-    else
-    try check_moves board c_state (0,0) with
-    | _ -> SwitchAll in
+    else check_moves board c_state (0,0) in 
+    (* try check_moves board c_state (0,0) with
+    | _ -> SwitchAll in *)
 		validate move s_state
 
 end
