@@ -3,6 +3,7 @@ open Data
 open Filter
 open State
 exception End
+exception No_Tile_Found
 
 module type Player = sig
 
@@ -82,7 +83,7 @@ module AI : (Player with type t = Data.game_state) =  struct
 	 * right to left and then from top to bottom *)
 	let rec check_tile_board board (x, y) =
 		match (get_tile (x,y) board).letter with
-			| None -> if x = 14 && y = 14 then failwith "draw" else
+			| None -> if x = 14 && y = 14 then ('z',(15,15)) else
 				if x = 14 then check_tile_board board (0, (y+1))
 					else check_tile_board board ((x+1), y)
 			| Some c ->
@@ -208,9 +209,28 @@ module AI : (Player with type t = Data.game_state) =  struct
 					else ((append ch so rack), South, so) )in
 			make_move wo_lst dire sta co lth
 
+  let empty_move c_state =
+    let board = c_state.board in
+    let rack = current_player_rack c_state in
+    let rack_letters = get_rack_letters rack 4 in
+    let perm_list = str_permute rack_letters in
+    let helper v =
+    let (x1,y1) = ('h' , 8) in
+      Play { word   = v;
+             direction  = Across;
+            coordinate = (x1,y1) }
+     in let move_list = List.map helper perm_list in
+     let valid_list = List.filter
+      (fun x -> print_play x; is_valid x c_state) move_list in
+      List.hd valid_list
+
 	let execute_move s_state c_state =
 		let board = c_state.board in
-		let move = try check_moves board c_state (0,0) with | _ -> SwitchAll in
+    let move = if ((check_tile_board board (0,0)) = ('z',(15,15))) then
+      empty_move c_state
+    else
+    try check_moves board c_state (0,0) with
+    | _ -> SwitchAll in
 		validate move s_state
 
 end
