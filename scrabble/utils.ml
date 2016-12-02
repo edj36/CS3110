@@ -159,7 +159,7 @@ let crawl dir i board =
     | Failure _ -> (15,15) in
     if n = (15,15) then
       match tile.letter with
-      | None -> []
+      | None -> acc :: []
       | Some l ->
         if acc = "" then [] else (acc ^ (Char.escaped l)) :: []
     else
@@ -169,7 +169,7 @@ let crawl dir i board =
       | Some l ->
         if acc = "" then helper dir n (Char.escaped l) board
         else helper dir n (acc ^ (Char.escaped l)) board in
-  List.filter (fun x -> String.length x <> 1 ) (helper dir init "" board)
+  List.filter (fun x -> String.length x > 1 ) (helper dir init "" board)
 
 (* [collect] is a string list representation of all words on the scrabble board *)
 (* let collect board = *)

@@ -80,7 +80,6 @@ let setup players =
     letter_bag = initial_bag;
     player_racks = initialize_rack players initial_bag;
     turn = 0;
-    words = [];
     counter = 0
   }
 
@@ -110,7 +109,6 @@ let update_switch_all state =
     letter_bag = state.letter_bag;
     player_racks = update_racks new_hand state;
     turn = state.turn + 1;
-    words = state.words;
     counter = state.counter + 1
   }
 
@@ -134,7 +132,6 @@ let update_switch_some lst state =
     letter_bag = state.letter_bag;
     player_racks = update_racks new_hand state;
     turn = state.turn + 1;
-    words = state.words;
     counter = 0
   }
 
@@ -226,7 +223,6 @@ let update m s = match m with
       letter_bag = s.letter_bag;
       player_racks = new_racks;
       turn = s.turn + 1;
-      words = prev_words;
       counter = 0
     }
   | SwitchAll -> update_switch_all s
@@ -238,7 +234,6 @@ let update m s = match m with
       letter_bag = s.letter_bag;
       player_racks = s.player_racks;
       turn = s.turn + 1;
-      words = s.words;
       counter = s.counter + 1
     }
   | Shuffle ->
@@ -251,7 +246,6 @@ let update m s = match m with
       letter_bag = s.letter_bag;
       player_racks = new_racks;
       turn = s.turn;
-      words = s.words;
       counter = s.counter
     }
   | _ -> failwith "never happens"

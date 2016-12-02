@@ -65,7 +65,7 @@ let is_valid move state = match move with
     else
 
     (* step 2 : ARE NEWLY FORMED WORDS ALL VALID ?*)
-    let new_words = get_newwords (collect new_board) (collect old_board) in
+    let new_words = collect new_board in
     if not (iterate_word_lst new_words)
     then let _ = print_endline "not a valid word!" in false
     else

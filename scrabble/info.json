@@ -78,10 +78,7 @@
       "count": 2},
     { "character": "Z",
       "pt": 10,
-      "count": 1},
-    { "character": " ",
-      "pt": 0,
-      "count": 2}
+      "count": 1}
   ],
   "Center": [
     {"x" : 7, "y":7}

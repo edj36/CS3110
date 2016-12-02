@@ -66,11 +66,9 @@ let update_gui state =
   print_string (concat_space 72 ("letter left: " ^ (string_of_int sum) ^"\n"));
   print_board state;
   (**ONLY FOR TESTING **)
-  let () = print_string "\nold words \n" in
-  let () = List.fold_left (fun acc elm -> print_string (elm ^ "\n")) () state.words in
   let () = print_string "\nnew words \n" in
   let () = List.fold_left (fun acc elm -> print_string (elm ^ "\n")) ()
-    (get_newwords (collect state.board) state.words) in
+    (collect state.board) in
   let () = print_string "\n" in
   (*********************)
   print_score state.score_board;
