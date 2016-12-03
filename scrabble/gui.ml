@@ -61,7 +61,7 @@ let rec print_score = function
   | []-> ()
   | (x,y)::t -> let name = (match x with
     |Human n1 -> n1
-    |AI n2 -> n2) in
+    |AI (n2,i) -> n2) in
   print_string (name ^ ": " ^ (string_of_int y) ^ " \n");
   print_score t
 
@@ -90,7 +90,7 @@ let update_gui state =
   let player = current_player_rack state in
   let name = match fst player with
     | Human n1 -> n1
-    | AI n2 -> n2 in
+    | AI (n2,i) -> n2 in
   print_string name;
   (* 3 TOTAL NUMBER OF LETTERS *)
   let lst = List.map (fun x -> Char.escaped x.character) (snd player) in
@@ -130,16 +130,17 @@ let is_tie lst =
 (* [get_players] is a list of players gathered from the user's string input*)
 let rec get_players input_string_list =
   match input_string_list with
-  |[]   -> []
-  |h::[] -> failwith "Invalid Player Input"
-  |h1::h2::t -> match String.lowercase_ascii h1 with
-            | "human" | "h" -> Human(h2) :: get_players t
-            | "ai" | "a"    -> AI(h2)    :: get_players t
-            | _      -> failwith "Invalid Player Input"
+  | []   -> []
+  | h::[] -> failwith "Invalid Player Input"
+  | h1::h2::h3::t -> (match String.lowercase_ascii h1 with
+            | "human" | "h" -> Human (h2) :: get_players (h3::t)
+            | "ai" | "a"    -> AI (h2, (int_of_string h3)) :: get_players (t)
+            | _      -> failwith "Invalid Player Input")
+  | _ -> failwith "Invalid Player Input"
 
 (* [repl] main repl *)
 let rec repl c_state : Data.game_state =
-  if 10 = c_state.counter || c_state.quit
+  if 15 = c_state.counter || c_state.quit
   then end_game c_state
   else let pl = fst (current_player_rack c_state) in
   let () = update_gui c_state in
@@ -155,7 +156,7 @@ let rec repl c_state : Data.game_state =
       | Error_not_touching -> print_message "error_not_touching"; c_state
       | Error_not_in_dictionary -> print_message "error_not_in_dictionary"; c_state
       | Error_existing_letter -> print_message "Error_existing_letter"; c_state
-      | _ -> let () = print_endline "Invalid command"in c_state in
+      | _ -> let () = print_endline "Invalid command" in c_state in
 
   let () = print_endline "" in
   repl new_state
@@ -165,7 +166,7 @@ and end_game state =
   let winner_list = List.rev (List.sort help_sort state.score_board) in
   let winner = match winner_list with
    | [] -> failwith "No Player"
-   | h::t -> (match fst h with Human n1 -> n1 | AI n2 -> n2) in
+   | h::t -> (match fst h with Human n1 -> n1 | AI (n2,i) -> n2) in
   let () = if is_tie winner_list then
   ANSITerminal.print_string [ANSITerminal.magenta] ("TIE GAME!\n")
   else ANSITerminal.print_string [ANSITerminal.magenta]
@@ -174,7 +175,7 @@ and end_game state =
   print_string "\n* New Game? --> [play]";
   print_string "\n* Quit Game? --> [quit]\n";
   let rec helper str =
-  match String.lowercase_ascii str with
+  match String.trim (String.lowercase_ascii str) with
   | "play" -> print_string "Please type [play] or [quit]\n\n";
     initialize_game ()
   | "quit" -> print_string "Thank you for playing!\n\n"; state

@@ -248,5 +248,5 @@ let rec get_score state name =
   match state.score_board with
   | [] -> 0
   | (p, score) :: t ->
-    let n = (match p with Human n1 -> n1 |AI n2 -> n2) in
+    let n = (match p with Human n1 -> n1 |AI (n2,i) -> n2) in
     if n = name then score else get_score state name

@@ -105,8 +105,8 @@ module AI : (Player with type t = Data.game_state) =  struct
 			1 + space_check (n_x, n_y) board direction else 0
 
 	(**)
-	let space_value coordinate board =
-		let helper v = if v > 7 then 7 else v in
+	let space_value level coordinate board =
+		let helper v = if v > level then level else v in
 		let north = helper (space_check coordinate board North)  in
 		let south = helper (space_check coordinate board South)  in
 		let east  = helper (space_check coordinate board East)  in
@@ -194,10 +194,10 @@ module AI : (Player with type t = Data.game_state) =  struct
 			direction = n_dir; coordinate = (int_to_char_brd y1, (x1+1))} in
 		let n_lst = List.map helper w_lst in
 		match List.filter (fun x -> ai_valid x st) n_lst with
-			| [] -> if length = 1 then 
+			| [] -> if length = 1 then
 				check_moves st.board st (fst coord + 1, snd coord) else
 				let l = length - 1 in
-				let (w_l, d) = 
+				let (w_l, d) =
 					(match dir with
 					| North -> ((prepend c l rack), North)
 					| South -> ((append c l rack), South)
@@ -207,8 +207,13 @@ module AI : (Player with type t = Data.game_state) =  struct
 			| hd::tl -> print_play hd; hd
 
 	and check_moves board sta (x,y) =
+		let rack = current_player_rack sta in
+		let level =
+			match fst rack with
+			| AI (name, l) -> l
+			| _ -> failwith "never happens" in
 		let (ch, co) = check_tile_board board (x, y) in
-		let (no, so, ea, we) = space_value co board in
+		let (no, so, ea, we) = space_value level co board in
 		if ((no = 0 || so = 0) && (ea = 0 || we = 0)) then
 			(check_moves board sta (fst co + 1, snd co))
 		else
@@ -241,7 +246,7 @@ module AI : (Player with type t = Data.game_state) =  struct
 		let board = c_state.board in
     let move = if ((check_tile_board board (0,0)) = ('z',(15,15))) then
       empty_move c_state
-    else 
+    else
 	    try check_moves board c_state (0,0) with
 	    | _ -> SwitchAll in
 		validate move s_state

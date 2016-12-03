@@ -111,7 +111,7 @@ let update_switch_all state =
     player_racks = update_racks new_hand state;
     turn = state.turn + 1;
     counter = state.counter + 1;
-    quit = false
+    quit = ((List.fold_left (fun acc e -> acc + e.count) 0 state.letter_bag) = 0)
   }
 
 (* [update_switch_some] is a new type game_state after executing

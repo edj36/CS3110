@@ -30,12 +30,12 @@ type move =
 type tile =
   {
     bonus : bonus_status;
-    letter: char option;
+    letter : char option;
   }
 
 type player =
   | Human of string
-  | AI of string
+  | AI of (string * int)
 
 type scrabble_board = tile list list
 
@@ -53,5 +53,5 @@ type game_state =
   player_racks : player_rack list;
   turn : int;
   counter : int;
-  quit: bool
+  quit : bool
 }

@@ -17,20 +17,13 @@ let test_state =
   letter_bag = state.letter_bag;
   player_racks = [(Human "A", a_hand)];
   turn = state.turn;
-  words = state.words;
-  counter = 0
+  counter = 0;
+  quit = false
 }
 
 let update1 = Human.execute_move "play abc a a 1" test_state
 
-let init = 
-[
-  "check init"  >:: (fun _ -> assert_equal []  test_state.words);
-]
-
-let filter = 
-[
-  "check init"  >:: (fun _ -> assert_equal []  test_state.words);
-]
+let init =[ ]
+let filter = [  ]
 
 let tests = filter
