@@ -13,10 +13,10 @@ let server =
     let meth = req |> Request.meth |> Code.string_of_method in
     match req |> Request.meth with 
     | `GET -> body |> Cohttp_lwt_body.to_string >|= (fun body ->
-        ("GET REQUEST RECEIVED\n" ^ body ^ "\n"))
+        ("GET REQUEST RECEIVED: \n" ^ body ^ "\n"))
       >>= (fun body -> (Server.respond_string ~status:`OK ~body ()))
     | `POST -> body |> Cohttp_lwt_body.to_string >|= (fun body ->
-        ("POST REQUEST RECEIVED\n" ^ body ^ "\n"))
+        ("POST REQUEST RECEIVED: \n" ^ body ^ "\n")) 
       >>= (fun body -> (Server.respond_string ~status:`OK ~body ()))
     | _ -> body |> Cohttp_lwt_body.to_string >|= (fun body ->
         ("ERROR\n"))
