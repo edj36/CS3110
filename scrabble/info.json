@@ -177,5 +177,4 @@
 "error_too_many_players" : "Too many players! you can play with up to 4 players",
 "error_duplicate_names" : "Please do not select same name for multiple players!",
 "error_ai_level" : "Please select 1 ~ 7 for AI level"
-
 }

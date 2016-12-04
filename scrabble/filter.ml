@@ -11,7 +11,7 @@ let check_char lst player =
   let rec helper lst hands = match lst with
     | []-> true
     | h::t -> List.mem h hands && helper t (remove h hands) in
-      helper lst hands
+  helper lst hands
 
 (* [is_not_srounded] represents bool type, indicating if the input coordicate
  * is not sourounded by letters
@@ -30,7 +30,7 @@ let is_not_srounded (x,y) board =
  * board given starting coordinate and string and direction*)
 let is_fit (x,y) str dir =
   let n = String.length str in
-  match dir with | Across -> y+n <= 1 | Down -> x+n <= 15
+  match dir with | Across -> y+n <= 15 | Down -> x+n <= 15
 
 (* [iterate_word_lst] iterates over [lst] and checks if each word
  * is in the scrabble dictionary, true if all in the dictionary,
@@ -56,26 +56,21 @@ let is_valid move state = match move with
     let old_board = state.board in
     let new_board = try place_string str dir (translate_coodinate crd) old_board with
     | Failure _ -> old_board in
-
     if old_board = new_board then false
     else
-
     (* step 0 : DOES IT FIT ON THE BOARD *)
     if not (is_fit (translate_coodinate crd) str dir) then raise Error_not_fit
     else
-
     (* step 1 : IS CENTER COVERED *)
     let tile = get_tile (7,7) new_board in
     let case1 = (match (tile.letter) with
     | None -> false
     | Some _ -> true) in if not case1 then raise Error_not_center
     else
-
     (* step 2 : ARE NEWLY FORMED WORDS ALL VALID *)
     let new_words = collect new_board in
     if not (iterate_word_lst new_words) then raise Error_not_in_dictionary
     else
-
     (* step 3 : ARE NEW WORDS MADE ONLY BY THE LETTERS IN HAND *)
     let new_crds =
       get_newcoordinates (collect_coordinates new_board) (collect_coordinates old_board) in
@@ -83,14 +78,12 @@ let is_valid move state = match move with
     if not (check_char new_letters (current_player_rack state))
     then raise Error_not_have
     else
-
     (*step 4 : IS THE NEW WORD ADJACENT TO THE EXISITING LETTER ON THE BOARD*)
     let case4 =
     not (List.fold_left (fun a e -> a && is_not_srounded e old_board) true new_crds) in
     (match collect old_board with
     | [] -> true
     | _ -> if not case4 then raise Error_not_touching else true)
-
   | SwitchAll -> true
   | SwitchSome c_list -> check_char (List.map (fun x -> Char.uppercase_ascii x) c_list)
    (current_player_rack state)
@@ -110,6 +103,5 @@ let is_valid move state = match move with
  *   2, Placing a word at right angles to a word already on the board
  *   3, Placing a complete word parallel to a word already played
       so that adjacent letters also form complete words *)
-
 let validate move state =
   if is_valid move state then update move state else state

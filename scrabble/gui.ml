@@ -169,10 +169,10 @@ let rec repl c_state : Data.game_state =
       try Human.execute_move s_move c_state with
       | Error_not_center -> print_message "error_not_center"; c_state
       | Error_not_have -> print_message "error_not_have"; c_state
-      | Error_not_fit -> print_message "error_not_fit"; c_state
+      | Error_not_fit -> print_message "error_word_not_fit"; c_state
       | Error_not_touching -> print_message "error_not_touching"; c_state
       | Error_not_in_dictionary -> print_message "error_not_in_dictionary"; c_state
-      | Error_existing_letter -> print_message "Error_existing_letter"; c_state
+      | Error_existing_letter -> print_message "error_existing_letter"; c_state
       | _ -> let () = print_endline "Invalid command" in c_state in
   let _ = print_endline "" in
   repl new_state
