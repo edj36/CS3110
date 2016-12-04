@@ -21,9 +21,6 @@ let test_state =
   quit = false
 }
 
-let update1 = Human.execute_move "play abc a a 1" test_state
+let update1 = Human.execute_move "play abc across a 1" test_state
 
-let init =[ ]
-let filter = [  ]
-
-let tests = filter
+let tests = []

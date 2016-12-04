@@ -3,13 +3,6 @@ open Utils
 open State
 open Tree
 
-exception Error_existing_letter
-exception Error_not_fit
-exception Error_not_center
-exception Error_not_in_dictionary
-exception Error_not_have
-exception Error_not_touching
-
 (* [check_char] represents bool type, indicating if all elements in char List
  * is a member of [hands]. Also accounts for duplicates
  * ex) if you have 2 'A's, ['A';'A'] -> true but ['A';'A';'A'] -> false *)

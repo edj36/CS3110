@@ -204,7 +204,9 @@ module AI : (Player with type t = Data.game_state) =  struct
 					| East -> ((append c l rack), East)
 					| West -> ((prepend c l rack), West) ) in
 				make_move w_l d st coord l rack c
-			| hd::tl -> print_play hd; hd
+			(* | hd::tl -> print_play hd; hd *)
+			| hd::tl -> hd
+
 
 	and check_moves board sta (x,y) =
 		let rack = current_player_rack sta in

@@ -4,14 +4,6 @@ open Player
 open State
 open Yojson.Basic.Util
 
-exception Error_existing_letter
-exception Error_not_fit
-exception Error_not_center
-exception Error_not_in_dictionary
-exception Error_not_have
-exception Error_not_touching
-exception Invalid
-
 (*********** GUI ***********)
 
 (* [y_axis] is a string type representation of y_axis labeling of the scrabble
@@ -90,31 +82,30 @@ let update_gui state =
   let player = current_player_rack state in
   let name = match fst player with
     | Human n1 -> n1
-    | AI (n2,i) -> n2 in
-  print_string name;
+    | AI (n2,i) -> n2 in print_string name;
   (* 3 TOTAL NUMBER OF LETTERS *)
-  let lst = List.map (fun x -> Char.escaped x.character) (snd player) in
-  let rec helper = function
-    | [] -> ""
-    | h::t -> h ^ " " ^ helper t in
-  let hands = helper lst in
   let sum = List.fold_left (fun a x -> a + x.count) 0 state.letter_bag in
   print_string (concat_space 72 ("letter left: " ^ (string_of_int sum) ^"\n"));
   (* 4 GAME BOARD *)
   print_board state;
-  (**ONLY FOR TESTING **)
-  (* let () = print_string "\nnew words \n" in
-  let () = List.fold_left (fun acc elm -> print_string (elm ^ "\n")) ()
-    (collect state.board) in
-  let () = print_string "\n" in *)
-  (*********************)
   (* 5 COMMANDS *)
   print_message "commands";
   (* 6 SCORE BOARD *)
   print_score state.score_board;
   (* 7 PRINT PLAYER'S HAND *)
-  let () = print_string ("\nPlayer's hand: " ^ hands ^ "\n") in ()
-
+  let rec color_print_hand lst f =
+    let open ANSITerminal in
+    match lst with
+    | [] -> print_string [on_black] "\n"
+    | h::t -> print_string [on_yellow; black] (f h);
+    print_string [on_black] " "; color_print_hand t f in
+  let () = print_string ("\nPlayer's hand  ") in
+  let () = color_print_hand (snd player)
+    (fun x -> " " ^(Char.escaped x.character)^ " ") in
+  let () = print_string ("Letter points  ") in
+  let () = color_print_hand (snd player)
+    (fun x -> if x.pt > 9 then " " ^ string_of_int x.pt
+      else " " ^ string_of_int x.pt ^ " ") in ()
 
 (********** REPL **********)
 
@@ -127,16 +118,36 @@ let is_tie lst =
   | [] -> false
   | h::t -> List.mem h t
 
-(* [get_players] is a list of players gathered from the user's string input*)
+(* [get_players] : string -> player list
+ * waits for a string input and create a list of players
+ * the string must satisfy some rules:
+ * 1, [Human name] for human player
+ * 2, [AI name level] for AI
+ * 3, cannot have duplicate names
+ * 4, number of player must be less than 5 (4 max)
+ * 5, Ai's level must be 1 ~ 7 *)
 let rec get_players input_string_list =
-  match input_string_list with
+  let rec helper_get_players = function
   | []   -> []
   | h::[] -> failwith "Invalid Player Input"
   | h1::h2::h3::t -> (match String.lowercase_ascii h1 with
-            | "human" | "h" -> Human (h2) :: get_players (h3::t)
-            | "ai" | "a"    -> AI (h2, (int_of_string h3)) :: get_players (t)
-            | _      -> failwith "Invalid Player Input")
-  | _ -> failwith "Invalid Player Input"
+    | "human" | "h" -> Human (h2) :: helper_get_players (h3::t)
+    | "ai" | "a"    -> let level = int_of_string h3 in
+    if level < 1 || level > 7 then raise Error_ai_level else
+      AI (h2, level) :: helper_get_players (t)
+    | _      -> failwith "Invalid Player Input")
+  | h1 :: h2 :: t -> (match String.lowercase_ascii h1 with
+    | "human" | "h" -> Human (h2) :: helper_get_players t
+    | _      -> failwith "Invalid Player Input") in
+  let lst = match List.length (helper_get_players input_string_list) with
+    | 1 | 2 | 3 | 4 -> helper_get_players input_string_list
+    | _ -> raise Error_too_many_players in
+  let names = List.map (fun x -> match x with Human n1->n1 | AI (n2,i)->n2) lst in
+  let rec check_duplicate = function
+    | [] -> true
+    | h :: t -> (not (List.mem h t)) && (check_duplicate t) in
+  if check_duplicate names then lst else raise Error_duplicate_names
+
 
 (* [repl] main repl *)
 let rec repl c_state : Data.game_state =
@@ -147,7 +158,7 @@ let rec repl c_state : Data.game_state =
   let new_state = match pl with
     | AI n -> AI.execute_move c_state c_state
     | Human n ->
-      let () = print_endline "\nEnter Move" in
+      let () = print_string "Enter Move\n> " in
       let s_move = read_line() in
       try Human.execute_move s_move c_state with
       | Error_not_center -> print_message "error_not_center"; c_state
@@ -157,8 +168,7 @@ let rec repl c_state : Data.game_state =
       | Error_not_in_dictionary -> print_message "error_not_in_dictionary"; c_state
       | Error_existing_letter -> print_message "Error_existing_letter"; c_state
       | _ -> let () = print_endline "Invalid command" in c_state in
-
-  let () = print_endline "" in
+  let _ = print_endline "" in
   repl new_state
 
 and end_game state =
@@ -172,40 +182,55 @@ and end_game state =
   else ANSITerminal.print_string [ANSITerminal.magenta]
     ("COGRATULATIONS " ^ String.uppercase_ascii winner ^ "!\n\n") in
   print_score winner_list;
-  print_string "\n* New Game? --> [play]";
-  print_string "\n* Quit Game? --> [quit]\n";
+  print_string "\n* New Game?  --> [play]";
+  print_string "\n* Quit Game? --> [quit]\n\n> ";
   let rec helper str =
   match String.trim (String.lowercase_ascii str) with
-  | "play" -> print_string "Please type [play] or [quit]\n\n";
+  | "play" -> print_string "Please type [play] or [quit]\n\n> ";
     initialize_game ()
   | "quit" -> print_string "Thank you for playing!\n\n"; state
-  | _ -> print_string "Please type [play] or [quit]\n\n"; helper (read_line ()) in
+  | _ -> print_string "Please type [play] or [quit]\n\n> "; helper (read_line ()) in
   helper (read_line())
 
+(* [initialize_game] : unit -> unit
+ * [initialize_game] waits for valid inputs and enters main REPL *)
 and initialize_game () =
    ANSITerminal.print_string [ANSITerminal.green]
-   "\n\nPlease Enter the Players and Names\n";
-   print_endline "\n* Type [Human Eric] or [H Eric] for human player";
-   print_endline "* Type [AI Kenta] or [A Kenta] for AI player\n";
+   "\n\nPlease Enter the Players and Names (4 Players Max)\n\n";
+   print_endline "* Type [Human Eric] or [H Eric] for human player";
+   print_endline
+   "* Type [AI Kenta 5] or [A Kenta 5] for level 5 AI player (level: 1 ~ 7)";
+   let () = print_string
+   "(Please do not choose same name for multiple players)\n\n> " in
    let rec helper str =
       let split = Str.split (Str.regexp " +") (str ^ " ") in
-      let player_list = try get_players split with Failure _ -> [] in
+      let player_list = try get_players split with
+       | Error_duplicate_names -> print_message "error_duplicate_names"; []
+       | Error_too_many_players -> print_message "error_too_many_players"; []
+       | Error_ai_level -> print_message "error_ai_level"; []
+       | Failure _ -> print_string "Invalid players"; [] in
         match player_list with
-        | [] -> print_string "Invalid players\n\n"; helper (read_line ())
+        | [] -> print_string "\n\n> "; helper (read_line ())
         | _ -> repl (setup player_list) in
     helper (read_line ())
 
+(* [main_manu] : unit -> unit
+ * [main_manu] displays a main manu of the game. Waits for the string input
+ * and moves on to next window based on the input
+ * [play] -> call initialize_game
+ * [help] -> displays tutorial and waits for the next string
+ * [quit] -> quit the game *)
 let main_menu () =
   ANSITerminal.print_string [ANSITerminal.magenta]
     ("\n=== WELCOME TO MULTIPLAYER SCRABBLE! ===\n\n");
-  print_string "\n* Tutorial? --> [help]";
-  print_string "\n* New Game? --> [play]";
-  print_string "\n* Quit Game? --> [quit]\n\n";
+  print_string "\n* Tutorial?  --> [help / h]";
+  print_string "\n* New Game?  --> [play / p]";
+  print_string "\n* Quit Game? --> [quit / q]\n\n> ";
   let rec helper2 str =
   match String.trim (String.lowercase_ascii str) with
-    | "quit" -> print_string "Thank you for playing!\n\n";
-    | "play" -> (fun x -> ()) (initialize_game ())
-    | "help" -> print_string "message. Please type [play] or [quit]\n\n";
+    | "quit" | "q"-> print_string "Thank you for playing!\n\n";
+    | "play" | "p"-> (fun x -> ()) (initialize_game ())
+    | "help" | "h"-> print_string "message. Please type [play] or [quit]\n\n> ";
       helper2 (read_line ())
-    | _ -> print_string "Please type [play] or [quit]\n\n"; helper2 (read_line ()) in
+    | _ -> print_string "Please type correct command\n\n> "; helper2 (read_line ()) in
   helper2 (read_line())

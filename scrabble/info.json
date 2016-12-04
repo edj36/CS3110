@@ -151,22 +151,24 @@
     {"x" : 8, "y":8},
     {"x" : 6, "y":8}
   ],
-  "y_index": "    A     B     C     D     E     F     G     H     I     J     K     L     M     N     O\n",
-  "commands": "* [play / p] --> Place a word on the scrabble board.
+  "y_index" : "    A     B     C     D     E     F     G     H     I     J     K     L     M     N     O\n",
+  "commands" : "* [play / p] --> Place a word on the scrabble board.
     ex. [play apple across h 8] or [p banana down h 8]
 * [swapall / sa] --> Swap all letters in your hand.
 * [swapsome / ss] --> Swap some of letters from your hand
     ex. [swapsome a a a] or [ss a a a]
 * [pass] --> Pass your turn. If all players pass consecutively, game ends.
 * [shuffle / s] --> Shuffle your hand. DOES NOT consume a turn.
-* [quit / q] --> Quit the game.\n
+* [quit / q] --> Quit the game.
 All commands are case insensitive.\n\n",
-"error_existing_letter": "Cannot override exsiting letter",
-"error_word_not_fit": "Word doesnt fit!",
-"error_not_center": "you have to play across center!",
-"error_not_in_dictionary": "not a valid word!",
-"error_not_have": "you can't use a letter you don't have!",
-"error_not_touching":"new word has to be adjacent to the existing word!"
-
+"error_existing_letter" : "Cannot override exsiting letter",
+"error_word_not_fit" : "Word doesnt fit!",
+"error_not_center" : "You have to play across center!",
+"error_not_in_dictionary" : "Not a valid word!",
+"error_not_have": "You can't use a letter you don't have!",
+"error_not_touching" : "New word has to be adjacent to the existing word!",
+"error_too_many_players" : "Too many players! you can play with up to 4 players",
+"error_duplicate_names" : "Please do not select same name for multiple players!",
+"error_ai_level" : "Please select 1 ~ 7 for AI level"
 
 }

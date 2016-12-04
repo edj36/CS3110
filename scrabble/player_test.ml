@@ -2,7 +2,14 @@ open OUnit2
 open Data
 open Utils
 open Player
+open Filter
 open State
+exception Error_existing_letter
+exception Error_not_fit
+exception Error_not_center
+exception Error_not_in_dictionary
+exception Error_not_have
+exception Error_not_touching
 
 let players = [Human "A"; Human "B"]
 let state = setup players
@@ -28,7 +35,7 @@ let score = [
   "score 1" >:: (fun _ -> assert_equal 0 (get_score test_state "A"));
 ]
 let illegals = [
-  "illegal1" >:: (fun _ -> assert_equal test_state
+  "illegal1" >:: (fun _ -> assert_failure Error_not_center
     (Human.execute_move "" test_state));
 ]
 let tests = initialize @ score

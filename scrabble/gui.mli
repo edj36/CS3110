@@ -2,13 +2,10 @@
  * move, [GUI] needs to reflect changes in player's score, who's turn it
  * is, changes in the player's tiles, and changes on the game board. *)
 
-
-(* [update] is the unit value resulting from updating the interface
- * to display the new [state]
- * Requires:
- * - displays current player's score
- * - displays who's turn it is
- * - displays current player's tiles
- * - displays current game board *)
-
+(* [main_manu] : unit -> unit
+ * [main_manu] displays a main manu of the game. Waits for the string input
+ * and moves on to next window based on the input
+ * [play] -> call initialize_game
+ * [help] -> displays tutorial and waits for the next string
+ * [quit] -> quit the game *)
 val main_menu : unit -> unit
