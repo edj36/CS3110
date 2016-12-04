@@ -6,9 +6,9 @@ open Yojson.Basic.Util
 
 (*********** GUI ***********)
 
-(* [y_axis] is a string type representation of y_axis labeling of the scrabble
+(* [x_axis] is a string type representation of y_axis label of the scrabble
  * board *)
-let y_axis num =
+let x_axis num =
   if (num+1) > 9 then string_of_int (num+1) else " " ^ (string_of_int (num+1))
 
 (* [print_board] is a unit type, side effect of print_stirng functions.
@@ -22,7 +22,7 @@ let print_board state =
   let b = state.board in
   print_string [white] y_index;
   for j = 0 to 14 do
-  print_string [white] (y_axis j);
+  print_string [white] (x_axis j);
     for i = 0 to 14 do
       let tile = get_tile (j,i) b in
       let (lst, str) = match tile.letter with
@@ -149,7 +149,13 @@ let rec get_players input_string_list =
     | h :: t -> (not (List.mem h t)) && (check_duplicate t) in
   if check_duplicate names then lst else raise Error_duplicate_names
 
-(* [repl] main repl *)
+(* [repl] : state -> state
+ * [repl] is a main repl of the game. First evaluate if the game is ended.
+ * When swapall is used 15 times consecutively, or quit command is used, or
+ * swapall or swapsome is used when bag is empty, game will end.
+ * If game ends,
+ Evaluate the currrent player and call
+ * function in Player module. *)
 let rec repl c_state : Data.game_state =
   if 15 = c_state.counter || c_state.quit
   then end_game c_state
@@ -171,7 +177,11 @@ let rec repl c_state : Data.game_state =
   let _ = print_endline "" in
   repl new_state
 
-(* [end_game] *)
+(* [end_game] : state -> state
+ * Displays a window when game is ended. Waits for the next command. Player can
+ * either start the new game, or quit the game.
+ * The window will evaluate the game and check if there is a winner or tie game.
+ * Sort the player by the decending order of their score, and display them *)
 and end_game state =
   let help_sort elm1 elm2= Pervasives.compare (snd (elm1)) (snd (elm2)) in
   let winner_list = List.rev (List.sort help_sort state.score_board) in
@@ -186,15 +196,19 @@ and end_game state =
   print_string "\n* New Game?  --> [play / p]";
   print_string "\n* Quit Game? --> [quit / q]\n\n> ";
   let rec helper str =
-  match String.trim (String.lowercase_ascii str) with
-  | "play" | "p" -> print_string "Please type [play] or [quit]\n\n> ";
-    initialize_game ()
-  | "quit" | "q" -> print_string "Thank you for playing!\n\n"; state
-  | _ -> print_string "Please type [play] or [quit]\n\n> "; helper (read_line ()) in
+    match String.trim (String.lowercase_ascii str) with
+    | "play" | "p" -> print_string "Please type [play / p] or [quit / q]\n\n> ";
+      initialize_game ()
+    | "quit" | "q" -> print_string "Thank you for playing!\n\n"; state
+    | _ -> print_string "Please type [play / p] or [quit / q]\n\n> ";
+      helper (read_line ()) in
   helper (read_line())
 
 (* [initialize_game] : unit -> unit
- * [initialize_game] waits for valid inputs and enters main REPL *)
+ * [initialize_game] waits for valid inputs and enters main REPL.
+ * Waits for the input to create a player list, catches exceptions
+ * if there are invalid inputs from users.
+ * Initializes state and enter main repl *)
 and initialize_game () =
    ANSITerminal.print_string [ANSITerminal.green]
    "\n\nPlease Enter the Players and Names (4 Players Max)\n\n";
@@ -231,7 +245,7 @@ let main_menu () =
   match String.trim (String.lowercase_ascii str) with
     | "quit" | "q"-> print_string "Thank you for playing!\n\n";
     | "play" | "p"-> (fun x -> ()) (initialize_game ())
-    | "help" | "h"-> print_string "message. Please type [play] or [quit]\n\n> ";
+    | "help" | "h"-> print_string "message. Please type [play / p] or [quit /q]\n\n> ";
       helper2 (read_line ())
     | _ -> print_string "Please type correct command\n\n> "; helper2 (read_line ()) in
   helper2 (read_line())

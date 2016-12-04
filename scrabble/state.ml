@@ -135,7 +135,7 @@ let update_switch_some lst state =
     player_racks = update_racks new_hand state;
     turn = state.turn + 1;
     counter = 0;
-    quit = false
+    quit = ((List.fold_left (fun acc e -> acc + e.count) 0 state.letter_bag) = 0)
   }
 
 (********** SCORING **********)

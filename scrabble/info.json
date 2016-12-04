@@ -152,19 +152,22 @@
     {"x" : 6, "y":8}
   ],
   "y_index" : "    A     B     C     D     E     F     G     H     I     J     K     L     M     N     O\n",
-  "commands" : "*    [play / p]   --> Place a word on the board.
-                      ex. [play apple across h 8] or [p banana down h 8]
+  "commands" : "\n*    [play / p]   -->  Place a word on the board.
+                       ex. [play apple across h 8] or [p banana down h 8]
 
-*  [shuffle / s]  --> Shuffle your hand. DOES NOT consume a turn.
+*  [shuffle / s]  -->  Shuffle your hand. DOES NOT consume a turn.
 
-*  [swapall / sa] --> Swap all letters in your hand. Consume 1 turn.
+*  [swapall / sa] -->  Swap all letters in your hand. Consume 1 turn.
+                       If players [swapall] when there is 0 letter left, game ends.
+                       If all players [swapall] 15 times consecutively, game ends.
 
-* [swapsome / ss] --> Swap some of letters from your hand. Consume 1 turn.
-                      ex. [swapsome e i a] or [ss e i a]
+* [swapsome / ss] -->  Swap some of letters from your hand. Consume 1 turn.
+                       If players [swapsome] when there is 0 letter left, game ends.
+                       ex. [swapsome a b c] or [ss a b c] or [ss abc]
 
-*      [pass]     --> Pass your turn. If all players pass consecutively, game ends.
+*      [pass]     -->  Pass your turn.
 
-*    [quit / q]   --> Quit the game.\n\n",
+*    [quit / q]   -->  Quit the game.\n\n",
 "error_existing_letter" : "Cannot override exsiting letter",
 "error_word_not_fit" : "Word doesnt fit!",
 "error_not_center" : "You have to play across center!",

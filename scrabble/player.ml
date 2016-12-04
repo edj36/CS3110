@@ -2,42 +2,46 @@ open Utils
 open Data
 open Filter
 open State
-exception No_Tile_Found
-exception Invalid
 
 module type Player = sig
-
-	(* type for game state *)
+	(* type for input type *)
 	type t
 
-	(* [make_move] is the [move] based on user input and the [move] in
+	(* [execute_move] is the new state based on user input and the move in
 	 * in progress:
-	 * first [int] is x coordinate of [letter]
-	 * second [int] is y coordinate of [letter]
-	 * [letter] is letter being put on the board at the above coordinates
-	 * [make_move] adds the coordinate-letter combination to the list of
-	 * existing coordinate-letter combinations already inside of the
-	 * argument [move]
-	 * Requires:
-	 * [m] is of type Move within the move variant *)
+	 * [t] : input type. It varies by the type of player *)
 	val execute_move : t -> Data.game_state -> Data.game_state
 
 end
 
 module Human : (Player with type t = string) = struct
-
-	(* type for game state *)
+	(* type for input type *)
 	type t = string
 
 	(* [check_coordinate] is a bool indicating the validity of input coordinate
-	 * false means the invalid input for the coodinate, true mweans the coodinate
+	 * false means the invalid input for the coordinate, true means the coordinate
 	 * is valid *)
 	let check_coordinate (x,y) =
 		let lower_x = Char.lowercase_ascii x in
-		 (1 <= y) && (y <= 15)
-		 && (Char.code lower_x >= Char.code 'a')
-		 && (Char.code 'o' >= Char.code lower_x)
+		 (1 <= y) && (y <= 15) &&
+		 (Char.code lower_x >= Char.code 'a') &&
+		 (Char.code 'o' >= Char.code lower_x)
 
+	(* [execute_move] is the updated state based on string type user input.
+	 * parse the string input and varify the move, send the move type to
+	 * filter module to check the validy of the move. only checks the
+	 * input commands are invlaid, does not check the validy of the move in terms
+	 * of game rules.
+	 * [play] -> place a word on the board
+	 * require: info for command, word, direction, and coordinate
+	 * [swapall] -> swap all letters in the hand.
+	 * [swapsome] -> swap some of letters in the hand.
+	 * [pass] -> pass turn
+	 * [shuffle] -> shuffle rack
+	 * [quit] -> quit game
+	 * raise excpetion Invalid if there is any ivlaid command
+	 * Invalid command will not be sent to Filter but caught by GUI and displays
+	 * current state, and error message "Invalid command" *)
 	let execute_move s_move c_state =
 		let split = Str.split (Str.regexp " +") (s_move ^ " ") in
 		let move = String.lowercase_ascii (List.nth split 0) in
@@ -58,8 +62,8 @@ module Human : (Player with type t = string) = struct
 			if n = 1 then SwitchAll else raise Invalid
 		| "swapsome" | "ss"->
 			if n >= 2 then
-				let char_lst = List.map
-				(fun x -> if String.length x = 1 then String.get x 0 else raise Invalid)
+				let char_lst = List.fold_left
+				(fun acc x -> acc @ (string_to_char_list x)) []
 				(List.tl split) in
 				SwitchSome char_lst
 			else raise Invalid
