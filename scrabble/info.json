@@ -152,15 +152,19 @@
     {"x" : 6, "y":8}
   ],
   "y_index" : "    A     B     C     D     E     F     G     H     I     J     K     L     M     N     O\n",
-  "commands" : "* [play / p] --> Place a word on the scrabble board.
-    ex. [play apple across h 8] or [p banana down h 8]
-* [swapall / sa] --> Swap all letters in your hand.
-* [swapsome / ss] --> Swap some of letters from your hand
-    ex. [swapsome a a a] or [ss a a a]
-* [pass] --> Pass your turn. If all players pass consecutively, game ends.
-* [shuffle / s] --> Shuffle your hand. DOES NOT consume a turn.
-* [quit / q] --> Quit the game.
-All commands are case insensitive.\n\n",
+  "commands" : "*    [play / p]   --> Place a word on the board.
+                      ex. [play apple across h 8] or [p banana down h 8]
+
+*  [shuffle / s]  --> Shuffle your hand. DOES NOT consume a turn.
+
+*  [swapall / sa] --> Swap all letters in your hand. Consume 1 turn.
+
+* [swapsome / ss] --> Swap some of letters from your hand. Consume 1 turn.
+                      ex. [swapsome e i a] or [ss e i a]
+
+*      [pass]     --> Pass your turn. If all players pass consecutively, game ends.
+
+*    [quit / q]   --> Quit the game.\n\n",
 "error_existing_letter" : "Cannot override exsiting letter",
 "error_word_not_fit" : "Word doesnt fit!",
 "error_not_center" : "You have to play across center!",

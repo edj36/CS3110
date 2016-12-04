@@ -125,7 +125,8 @@ let is_tie lst =
  * 2, [AI name level] for AI
  * 3, cannot have duplicate names
  * 4, number of player must be less than 5 (4 max)
- * 5, Ai's level must be 1 ~ 7 *)
+ * 5, Ai's level must be 1 ~ 7
+ * raise exception if these rules are not satisified *)
 let rec get_players input_string_list =
   let rec helper_get_players = function
   | []   -> []
@@ -148,7 +149,6 @@ let rec get_players input_string_list =
     | h :: t -> (not (List.mem h t)) && (check_duplicate t) in
   if check_duplicate names then lst else raise Error_duplicate_names
 
-
 (* [repl] main repl *)
 let rec repl c_state : Data.game_state =
   if 15 = c_state.counter || c_state.quit
@@ -158,7 +158,7 @@ let rec repl c_state : Data.game_state =
   let new_state = match pl with
     | AI n -> AI.execute_move c_state c_state
     | Human n ->
-      let () = print_string "Enter Move\n> " in
+      let () = print_string "\nEnter Move\n> " in
       let s_move = read_line() in
       try Human.execute_move s_move c_state with
       | Error_not_center -> print_message "error_not_center"; c_state
@@ -171,6 +171,7 @@ let rec repl c_state : Data.game_state =
   let _ = print_endline "" in
   repl new_state
 
+(* [end_game] *)
 and end_game state =
   let help_sort elm1 elm2= Pervasives.compare (snd (elm1)) (snd (elm2)) in
   let winner_list = List.rev (List.sort help_sort state.score_board) in
@@ -182,13 +183,13 @@ and end_game state =
   else ANSITerminal.print_string [ANSITerminal.magenta]
     ("COGRATULATIONS " ^ String.uppercase_ascii winner ^ "!\n\n") in
   print_score winner_list;
-  print_string "\n* New Game?  --> [play]";
-  print_string "\n* Quit Game? --> [quit]\n\n> ";
+  print_string "\n* New Game?  --> [play / p]";
+  print_string "\n* Quit Game? --> [quit / q]\n\n> ";
   let rec helper str =
   match String.trim (String.lowercase_ascii str) with
-  | "play" -> print_string "Please type [play] or [quit]\n\n> ";
+  | "play" | "p" -> print_string "Please type [play] or [quit]\n\n> ";
     initialize_game ()
-  | "quit" -> print_string "Thank you for playing!\n\n"; state
+  | "quit" | "q" -> print_string "Thank you for playing!\n\n"; state
   | _ -> print_string "Please type [play] or [quit]\n\n> "; helper (read_line ()) in
   helper (read_line())
 
