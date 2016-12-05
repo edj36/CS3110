@@ -85,7 +85,7 @@ let is_valid move state = match move with
     | [] -> true
     | _ -> if not case4 then raise Error_not_touching else true)
   | SwitchAll -> true
-  | SwitchSome c_list -> check_char (List.map (fun x -> Char.uppercase_ascii x) c_list)
+  | SwitchSome c_list -> check_char (List.map (fun x -> String.uppercase_ascii x) c_list)
    (current_player_rack state)
   | Pass -> true
   | Shuffle -> true

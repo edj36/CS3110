@@ -22,10 +22,10 @@ module Human : (Player with type t = string) = struct
 	 * false means the invalid input for the coordinate, true means the coordinate
 	 * is valid *)
 	let check_coordinate (x,y) =
-		let lower_x = Char.lowercase_ascii x in
+		let lower_x = String.lowercase_ascii x in
 		 (1 <= y) && (y <= 15) &&
-		 (Char.code lower_x >= Char.code 'a') &&
-		 (Char.code 'o' >= Char.code lower_x)
+		 (Char.code lower_x.[0] >= Char.code 'a') &&
+		 (Char.code 'o' >= (Char.code lower_x.[0]))
 
 	(* [string_to_direction] is a type direction representation
 	 * of string type input [s] *)
@@ -56,14 +56,14 @@ module Human : (Player with type t = string) = struct
 		let n = List.length split in
 		let command = match move with
 		| "play" | "p" ->
-			let coordinate = (String.get (get_nth (split, 3)) 0,
+			let coordinate = ((get_nth (split, 3)),
 			(int_of_string (get_nth (split, 4)))) in
 			if n = 5 && (check_coordinate coordinate) then
 			Play
 			{
 				word = get_nth (split, 1);
 				direction = string_to_direction (String.lowercase_ascii
-          (get_nth (split, 2)));
+					(get_nth (split, 2)));
 				coordinate = coordinate
 			}
 			else raise Invalid
@@ -72,8 +72,8 @@ module Human : (Player with type t = string) = struct
 		| "swapsome" | "ss"->
 			if n >= 2 then
 				let char_lst = List.fold_left
-				(fun acc x -> acc @ (string_to_char_list x)) []
-				(List.tl split) in
+					(fun acc x -> acc @ (string_to_char_list x)) []
+					(List.tl split) in
 				SwitchSome char_lst
 			else raise Invalid
 		| "pass" -> if n = 1 then Pass else raise Invalid
@@ -97,13 +97,10 @@ module AI : (Player with type t = Data.game_state) =  struct
 	 * right to left and then from top to bottom *)
 	let rec check_tile_board board (x, y) =
 		match (get_tile (x,y) board).letter with
-			| None -> if x = 14 && y = 14 then ('z',(15,15)) else
+			| None -> if x = 14 && y = 14 then ("z",(15,15)) else
 				if x = 14 then check_tile_board board (0, (y+1))
 					else check_tile_board board ((x+1), y)
-			| Some c ->
-				(* let () = print_int x; print_string " * "; print_int (y);
-        print_endline "= coordinate found" in *)
-				(c, (x,y))
+			| Some c -> (c, (x,y))
 
 	(*[space_check] is the number of empty tiles in a given [direction]
 	on the tile with coordinate [coordinate] and scrabble board [board]*)
@@ -144,13 +141,7 @@ module AI : (Player with type t = Data.game_state) =  struct
 	(* [make_str] is a string list of single characters from a list of letters*)
 	let rec make_str letterlst = match letterlst with
 		| [] -> ""
-		| hd::tl -> (String.make 1 hd.character) ^ (make_str tl)
-
- (*[remove] is a list [lst] without the first instance of [v]*)
-  let rec remove v lst =
-  match lst with
-  | [] -> []
-  | h::t -> if v = h then t else h :: remove v t
+		| hd::tl -> (hd.character) ^ (make_str tl)
 
 	(*[permute] is a list of all the permutations of the chracters in
   [letterlst]*)
@@ -165,7 +156,7 @@ module AI : (Player with type t = Data.game_state) =  struct
 
 	(*[str_permute] is a string list of all the permutations of [letterlst] sorted
   and without any duplicates *)
-  let str_permute letterlst =List.sort_uniq (compare)
+  let str_permute letterlst = List.sort_uniq (compare)
   (List.map make_str (permute letterlst))
 
 	(*[prepend] is a string list with a length [length] string prepended onto
@@ -173,14 +164,14 @@ module AI : (Player with type t = Data.game_state) =  struct
 	let prepend ch length rack =
 		let letters = get_rack_letters rack length in
 		let prems = str_permute letters in
-		List.map (fun v -> v ^ (String.make 1 ch)) prems
+		List.map (fun v -> v ^ ch) prems
 
   (*[append] is a string list with a length [length] string appended onto
   character [ch] from a player's [rack] *)
 	let append ch length rack =
 		let letters = get_rack_letters rack length in
 		let prems = str_permute letters in
-		List.map (fun v -> (String.make 1 ch) ^ v) prems
+		List.map (fun v -> ch ^ v) prems
 
 	(* let is_valid m s = true *)
 
@@ -188,27 +179,16 @@ module AI : (Player with type t = Data.game_state) =  struct
   (*[char_to_int_brd] is the int corresponding to char [c] in a zero-indexed
   board*)
 	let char_to_int_brd c = match c with
-	| 'a' -> 0 | 'b' -> 1 | 'c' -> 2 | 'd' -> 3 | 'e' -> 4 | 'f' -> 5 | 'g' -> 6
-	| 'h' -> 7 | 'i' -> 8 | 'j' -> 9 | 'k' -> 10 | 'l' -> 11 | 'm' -> 12
-	| 'n' -> 13 | 'o' -> 14 | _ -> failwith "out of bounds"
+	| "a" -> 0 | "b" -> 1 | "c" -> 2 | "d" -> 3 | "e" -> 4 | "f" -> 5 | "g" -> 6
+	| "h" -> 7 | "i" -> 8 | "j" -> 9 | "k" -> 10 | "l" -> 11 | "m" -> 12
+	| "n" -> 13 | "o" -> 14 | _ -> failwith "out of bounds"
 
   (*[int_to_char_brd] is the char corresponding to int [c] in a zero-indexed
   board*)
 	let int_to_char_brd c = match c with
-	| 0 -> 'a' | 1 -> 'b' | 2 -> 'c' | 3 -> 'd' | 4 -> 'e' | 5 -> 'f' | 6 -> 'g'
-	| 7 -> 'h' | 8 -> 'i' | 9 -> 'j' | 10 -> 'k' | 11 -> 'l' | 12 -> 'm'
-	| 13 -> 'n' | 14 -> 'o' | _ -> failwith "out of bounds"
-
-	(*[print_play] prints the move [p] on the terminal*)
-  let print_play p = match p with
-	  | Play {
-	      word = str;
-	      direction = dir;
-	      coordinate = crd } ->
-	   let () = print_string (str ^ " was played by AI at ") in
-	   let () = print_char (fst crd); print_string " * "; print_int (snd crd); in
-	     if dir = Across then print_endline " across" else print_endline " down"
-	  | _ -> failwith "invalid"
+	| 0 -> "a" | 1 -> "b" | 2 -> "c" | 3 -> "d" | 4 -> "e" | 5 -> "f" | 6 -> "g"
+	| 7 -> "h" | 8 -> "i" | 9 -> "j" | 10 -> "k" | 11 -> "l" | 12 -> "m"
+	| 13 -> "n" | 14 -> "o" | _ -> failwith "out of bounds"
 
 	(*[ai_valid] is a boolean of the validity of move [v] in state [state]*)
   let ai_valid v state = try is_valid v state with _ -> false
@@ -268,7 +248,7 @@ module AI : (Player with type t = Data.game_state) =  struct
     let rack_letters = get_rack_letters rack 4 in
     let perm_list = str_permute rack_letters in
     let helper v =
-    let (x1,y1) = ('h' , 8) in
+    let (x1,y1) = ("h" , 8) in
       Play { word   = v;
              direction  = Across;
             coordinate = (x1,y1) }
@@ -282,7 +262,7 @@ module AI : (Player with type t = Data.game_state) =  struct
   given an initial state [s_state]*)
   let execute_move s_state c_state =
 		let board = c_state.board in
-    let move = if ((check_tile_board board (0,0)) = ('z',(15,15))) then
+    let move = if ((check_tile_board board (0,0)) = ("z",(15,15))) then
       empty_move c_state
     else
 	    try check_moves board c_state (0,0) with
@@ -290,7 +270,7 @@ module AI : (Player with type t = Data.game_state) =  struct
 			let n = List.length hand in
 			let sorted_hand = List.rev
 			(List.sort (fun x y -> Pervasives.compare x.pt y.pt) hand) in
-			let ones = List.filter (fun x -> x.character <> 'E' || x.character <> 'A')
+			let ones = List.filter (fun x -> x.character <> "E" || x.character <> "A")
 			sorted_hand in
 			let rec split n lst =
 				if n = 0 then []

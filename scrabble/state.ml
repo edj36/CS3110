@@ -16,7 +16,7 @@ let init_letter_bag src =
     | [],[],[] -> []
     | h1::t1, h2::t2, h3::t3 ->
       {
-        character = (String.get h1 0);
+        character = String.make 1 (String.get h1 0);
         pt = h2; count = h3
       } :: helper t1 t2 t3
     | _ -> failwith "list unbalanced" in
@@ -174,7 +174,7 @@ let update_switch_all state =
  * switch some letters represented by char list *)
 let update_switch_some lst state =
   let letters = List.map
-    (fun x -> char_to_letter (Char.uppercase_ascii x) state.letter_bag) lst in
+    (fun x -> char_to_letter (String.uppercase_ascii x) state.letter_bag) lst in
   let player = current_player_rack state in
   add_letter letters state.letter_bag;
   let removed =
@@ -269,7 +269,7 @@ let update m s = match m with
     let chrlst =
       get_newletters (get_newcoordinates
         (collect_coordinates new_board) prev_crds) new_board in
-    let l_played = List.fold_left (fun a e -> a ^ Char.escaped e) "" chrlst in
+    let l_played = List.fold_left (fun a e -> a ^ e) "" chrlst in
     remove_string l_played s.letter_bag;
     (** score **)
     let score = update_score prev_words prev_crds new_board s in

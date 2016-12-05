@@ -25,8 +25,8 @@ let rec remove a lst =
 let rec string_to_char_list str =
   match str with
   | "" -> []
-  | s -> Char.uppercase_ascii (String.get s 0)
-  ::string_to_char_list (String.sub s 1 ((String.length s)-1))
+  | s -> (String.make 1 (String.get (String.uppercase_ascii s) 0))
+  :: string_to_char_list (String.sub s 1 ((String.length s)-1))
 
 (* [shuffle] is an 'a list after shuffling elements *)
 let shuffle lst =
@@ -37,7 +37,7 @@ let shuffle lst =
 
 (* [translate_coodinate] is an int*int representation of char*int coordinate*)
 let translate_coodinate (x,y) =
-  (y-1, (Char.code (Char.lowercase_ascii x) - Char.code 'a'))
+  (y-1, (Char.code (String.get (String.lowercase_ascii x) 0) - Char.code 'a'))
 
 (* [char_to_letter] represents letter type of input char *)
 let char_to_letter c bag =
@@ -81,14 +81,14 @@ let crawl dir i board =
       match tile.letter with
       | None -> acc :: []
       | Some l ->
-        if acc = "" then [] else (acc ^ (Char.escaped l)) :: []
+        if acc = "" then [] else (acc ^ l) :: []
     else
       match tile.letter with
       | None ->
         if acc = "" then helper dir n "" board else acc::(helper dir n "" board)
       | Some l ->
-        if acc = "" then helper dir n (Char.escaped l) board
-        else helper dir n (acc ^ (Char.escaped l)) board in
+        if acc = "" then helper dir n l board
+        else helper dir n (acc ^ l) board in
   List.filter (fun x -> String.length x > 1 ) (helper dir init "" board)
 
 (* [collect] is a string list representation of all words on the scrabble board *)
@@ -125,7 +125,7 @@ let rec subst lst n a =
   match lst with
   | [] -> []
   | h::t -> if n = 0 then a::t else h::(subst t (n-1) a)
-  
+
 (* [fill_coodinate] is an updated game board after filling the specified
  * coordinates with element, [fill] *)
 let rec fill_coordinate coordinates fill board =
@@ -142,7 +142,7 @@ let rec place_string str dir crd board =
   | 0 -> board
   | n ->
     if crd = (15,15) then board else
-    let chr = Char.uppercase_ascii (String.get str 0) in
+    let chr = String.make 1 (String.get (String.uppercase_ascii str) 0) in
     let tile = get_tile crd board in
     let new_tile = match tile.letter with
       | Some c -> if c = chr then {bonus = tile.bonus; letter = Some chr}
@@ -175,7 +175,7 @@ let rec word_score str state =
   match str with
   | "" -> 0
   | _ ->
-  let letter = char_to_letter (String.get str 0) state.letter_bag in
+  let letter = char_to_letter (String.make 1 (String.get str 0)) state.letter_bag in
   letter.pt + word_score (String.sub str 1 ((String.length str)-1)) state
 
 (* [get_newcoordinates] is a (int*int) list representation of all new words

@@ -9,23 +9,23 @@
 val get_nth: 'a list * int -> 'a
 
 (* [letter_to_char] represents chr list of input letter list *)
-val letter_to_char : Data.letter list -> char list
+val letter_to_char : Data.letter list -> string list
 
 (* [remove] represents 'a list after removing specified element from the
  * input list *)
 val remove : 'a -> 'a list -> 'a list
 
 (* [string_to_char_list] is a char list representation of string *)
-val string_to_char_list : string -> char list
+val string_to_char_list : string -> string list
 
 (* [shuffle] is an 'a list after shuffling elements *)
 val shuffle : 'a list -> 'a list
 
 (* [translate_coodinate] is an int*int representation of char*int coordinate*)
-val translate_coodinate : (char * int) -> (int * int)
+val translate_coodinate : (string * int) -> (int * int)
 
 (* [char_to_letter] represents letter type of input char *)
-val char_to_letter : char -> Data.letter list -> Data.letter
+val char_to_letter : string -> Data.letter list -> Data.letter
 
 (*******************  update state  *******************)
 
@@ -56,7 +56,7 @@ val get_newwords : string list -> string list -> string list
 
 (* [get_newletters] comapares old board with new board and returns the list of
  * new characters *)
-val get_newletters : (int*int) list -> Data.scrabble_board -> char list
+val get_newletters : (int*int) list -> Data.scrabble_board -> string list
 
 (* [place_string] returns updated board after placing specified string on the board
  * with specified initial coordinate and direction *)

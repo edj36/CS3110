@@ -33,7 +33,7 @@ let print_board state =
         | Triple_word -> ([on_red; black], " TW ")
         | Center -> ([on_magenta; white], " CE ")
         | Normal -> ([on_white; black], "    " ) )
-      | Some c -> ([on_yellow; black], " " ^ Char.escaped c ^ "  ") in
+      | Some c -> ([on_yellow; black], " " ^ c ^ "  ") in
       print_string [] " "; print_string lst str; print_string [] " ";
     done;
     print_string [Reset] "\n \n";
@@ -101,7 +101,7 @@ let update_gui state =
     print_string [on_black] " "; color_print_hand t f in
   let () = print_string ("\nPlayer's hand  ") in
   let () = color_print_hand (snd player)
-    (fun x -> " " ^(Char.escaped x.character)^ " ") in
+    (fun x -> " " ^ x.character ^ " ") in
   let () = print_string ("Letter points  ") in
   let () = color_print_hand (snd player)
     (fun x -> if x.pt > 9 then " " ^ string_of_int x.pt

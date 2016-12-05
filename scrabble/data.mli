@@ -12,9 +12,9 @@ exception Error_duplicate_names
 exception Error_ai_level
 exception Invalid
 
-type letter = { character : char; pt : int; mutable count : int }
+type letter = { character : string; pt : int; mutable count : int }
 
-type coordinate = char * int
+type coordinate = string * int
 
 type direction = | Across | Down
 
@@ -34,7 +34,7 @@ type move =
       coordinate : coordinate
     }
   | SwitchAll
-  | SwitchSome of char list
+  | SwitchSome of string list
   | Pass
   | Shuffle
   | End
@@ -42,7 +42,7 @@ type move =
 type tile =
   {
     bonus : bonus_status;
-    letter: char option;
+    letter: string option;
   }
 
 type player =
@@ -67,7 +67,3 @@ type game_state =
   counter : int;
   quit : bool
 }
-
-
-
-(*type scrabble_dictionary = string two_three_tree*)
