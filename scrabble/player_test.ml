@@ -21,13 +21,14 @@ let test_state =
   counter = 0;
   quit = false
 }
-let update1 = Human.execute_move "play abc a a 1" test_state
+
 let initialize = [
   "Initialize 1"  >:: (fun _ -> assert_equal 0  test_state.turn);
 ]
 let score = [
   "score 1" >:: (fun _ -> assert_equal 0 (get_score test_state "A"));
 ]
+
 let illegals = [
   "illegal1" >:: (fun _ -> assert_raises (Data.Error_not_center)
     (fun _ -> Human.execute_move "play apple across g 7" test_state));
