@@ -1,4 +1,5 @@
 open Data
+open Yojson.Basic.Util
 
 (* [get_nth] is the nth element of [lst] but instead of raising
  * exceptions (like List.nth) it raises failwith "error message"
@@ -181,6 +182,25 @@ let rec word_score str state =
 (* [get_newcoordinates] is a (int*int) list representation of all new words
  * made in the most recent turn *)
 let get_newcoordinates new_l old_l = list_compare new_l old_l
+
+(* [print_message] will parse json file and print message stoared in a json
+ * file.
+ * [name] : string, name of json member *)
+let print_message name =
+  let src = Yojson.Basic.from_file "info.json" in
+  let message = src |> member name |> to_string in
+  print_string message
+
+(* [print_score] is a string type of score board. Take a current score_board
+ * and prints player's name followed by the score
+ * input: game.score_board *)
+let rec print_score = function
+  | []-> ()
+  | (x,y)::t -> let name = (match x with
+    |Human n1 -> n1
+    |AI (n2,i) -> n2) in
+  print_string (name ^ ": " ^ (string_of_int y) ^ " \n");
+  print_score t
 
 (********** TESTING TOOLS **********)
 let rec get_score state name =

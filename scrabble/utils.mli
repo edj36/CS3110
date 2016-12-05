@@ -74,6 +74,12 @@ val word_score : string -> Data.game_state -> int
  * made in the most recent turn *)
 val get_newcoordinates : (int*int) list -> (int*int) list -> (int*int) list
 
+(* [print_message] will read a Json file and print on terminal *)
+val print_message : string -> unit
+
+(* [print_sore] will print the current score board on terminal *)
+val print_score : Data.score_board -> unit
+
 (********** TESTING TOOLS **********)
 
 (* [get_score] is an int type representation of the score of specified player *)

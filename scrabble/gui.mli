@@ -2,10 +2,14 @@
  * move, [GUI] needs to reflect changes in player's score, who's turn it
  * is, changes in the player's tiles, and changes on the game board. *)
 
-(* [main_manu] : unit -> unit
- * [main_manu] displays a main manu of the game. Waits for the string input
- * and moves on to next window based on the input
- * [play] -> call initialize_game
- * [help] -> displays tutorial and waits for the next string
- * [quit] -> quit the game *)
-val main_menu : unit -> unit
+ (* [update_gui] Data.game_state -> unit
+  * prints current state on terminal. take current game state and check following
+  * information.
+  * 1, Current turn (adds 1 before printing because turn starts from 0 )
+  * 2, Current player's name
+  * 3, Total number of letters left in the bag
+  * 4, Print current game board
+  * 5, Print command rule
+  * 6, print score board
+  * 7, player's hand *)
+val update_gui: Data.game_state -> unit

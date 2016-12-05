@@ -125,6 +125,15 @@ let rec initialize_rack (players: player list) bag =
   | h::t -> let hand = draw_letters 7 bag in (h, hand) :: initialize_rack t bag
 
 (********** SETUP **********)
+let empty_state = {
+  board = initilize_board ();
+  score_board = [];
+  letter_bag = [];
+  player_racks = [];
+  turn = 0;
+  counter = 0;
+  quit = false
+}
 
 (* [initialize_state] is a type game_state representation of intial game state *)
 let setup players =

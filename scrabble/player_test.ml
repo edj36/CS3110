@@ -23,7 +23,7 @@ let test_state =
 }
 
 let initialize = [
-  "Initialize 1"  >:: (fun _ -> assert_equal 0  test_state.turn);
+  "Initialize 1"  >:: (fun _ -> assert_equal 0 test_state.turn);
 ]
 let score = [
   "score 1" >:: (fun _ -> assert_equal 0 (get_score test_state "A"));
