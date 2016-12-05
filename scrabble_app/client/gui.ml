@@ -183,29 +183,30 @@ and initialize_game () =
   let temp_state = Scrabble_client.get_state () in
   match temp_state.player_racks with
   | [] ->
-        ANSITerminal.print_string [ANSITerminal.green]
-        "\n\nPlease Enter the Players and Names (4 Players Max)\n\n";
-        print_endline "* Type [Human Eric] or [H Eric] for human player";
-        print_endline
-        "* Type [AI Kenta 5] or [A Kenta 5] for level 5 AI player (level: 1 ~ 7)";
-        let () = print_string
-        "(Please do not choose same name for multiple players)\n\n> " in
-        let rec helper str =
-          let st = Scrabble_client.setup str in
-          let state_str  = Data_j.string_of_game_state st in
-          let store = begin match state_str with
-          | "error" -> print_string "Invalid players"; helper (read_line ())
-          | x -> x end in
-            ANSITerminal.print_string [ANSITerminal.green]
-            "\n\nPlease Enter your name \n\n> ";
-            let name = read_line () in
-            let new_state = Data_j.game_state_of_string store in
-            repl new_state name end
-      | _ ->
-        let _ = ANSITerminal.print_string [ANSITerminal.green]
-        "\n\nPlease Enter your name \n\n> " in
-        let name = read_line () in
-        repl temp_state name
+    ANSITerminal.print_string [ANSITerminal.green]
+    "\n\nPlease Enter the Players and Names (4 Players Max)\n\n";
+    print_endline "* Type [Human Eric] or [H Eric] for human player";
+    print_endline
+    "* Type [AI Kenta 5] or [A Kenta 5] for level 5 AI player (level: 1 ~ 7)";
+    let () = print_string
+    "(Please do not choose same name for multiple players)\n\n> " in
+    let rec helper str =
+      let st = Scrabble_client.setup str in
+      let state_str  = Data_j.string_of_game_state st in
+      let store = begin match state_str with
+        | "error" -> let _ = print_string "Invalid players" in helper (read_line ())
+        | x -> x end in
+      ANSITerminal.print_string [ANSITerminal.green]
+      "\n\nPlease Enter your name \n\n> ";
+      let name = (read_line ()) in
+      let new_state = Data_j.game_state_of_string store in
+      (repl new_state name) in 
+    helper (read_line ())
+  | _ ->
+    let _ = ANSITerminal.print_string [ANSITerminal.green]
+    "\n\nPlease Enter your name \n\n> " in
+    let name = read_line () in
+      (repl temp_state name)
 
 (* [main_manu] : unit -> unit
  * [main_manu] displays a main manu of the game. Waits for the string input

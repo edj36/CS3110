@@ -25,12 +25,11 @@ let server =
     let meth = req |> Request.meth |> Code.string_of_method in
     match req |> Request.meth with 
     | `GET -> body |> Cohttp_lwt_body.to_string >|= (fun body ->
-        (*("GET REQUEST RECEIVED: \n" ^ (string_of_int (!count)) ^ "\n")) *)
+        (print_endline "GET REQUEST RECEIVED");
         (Data_j.string_of_game_state (!current_state)))
       >>= (fun body -> (Server.respond_string ~status:`OK ~body ()))
     | `POST -> body |> Cohttp_lwt_body.to_string >|= (fun body ->
-        (*count := (!count) + 1; 
-        ("POST REQUEST RECEIVED: \n" ^ (string_of_int (!count)) ^ "\n")) *)
+        (print_endline "POST REQUEST RECEIVED");
         if (body.[0] = '{') then
           let r = Str.regexp "\|" in 
           let o = (Str.split r body) in 
