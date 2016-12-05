@@ -1,3 +1,2037 @@
+commit 72be568b7e554d3e731131b485adc9b6673ddebc
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Dec 5 06:16:41 2016 -0500
+
+    hi
+
+ scrabble_app/client/gui.ml | 25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
+
+commit 93c6e1c25084542d7cf71a02c717ee8f1af9a8d7
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Dec 5 05:46:20 2016 -0500
+
+    client
+
+ scrabble_app/client/filter.ml           |  2 +-
+ scrabble_app/client/gui.ml              | 62 ++++++++++++++++++---------------
+ scrabble_app/client/player.ml           |  1 -
+ scrabble_app/client/scrabble_client.ml  | 60 ++++++++++++++++---------------
+ scrabble_app/client/scrabble_client.mli | 17 ++++-----
+ 5 files changed, 74 insertions(+), 68 deletions(-)
+
+commit 63d33b09ec589cad7a6eef237b80b8e4fb557bb0
+Author: edj36 <edj36@cornell.edu>
+Date:   Mon Dec 5 05:46:06 2016 -0500
+
+    server stuff
+
+ scrabble/README.txt                                |   37 +-
+ scrabble_app/server/_build/_digests                |   31 -
+ scrabble_app/server/_build/_log                    |   58 -
+ scrabble_app/server/_build/data_j.cmi              |  Bin 7936 -> 0 bytes
+ scrabble_app/server/_build/data_j.cmx              |  Bin 4498 -> 0 bytes
+ scrabble_app/server/_build/data_j.ml               | 2310 --------------------
+ scrabble_app/server/_build/data_j.ml.depends       |    1 -
+ scrabble_app/server/_build/data_j.mli              |  305 ---
+ scrabble_app/server/_build/data_j.mli.depends      |    1 -
+ scrabble_app/server/_build/data_j.o                |  Bin 105332 -> 0 bytes
+ scrabble_app/server/_build/data_t.cmi              |  Bin 2222 -> 0 bytes
+ scrabble_app/server/_build/data_t.cmx              |  Bin 637 -> 0 bytes
+ scrabble_app/server/_build/data_t.ml               |   57 -
+ scrabble_app/server/_build/data_t.ml.depends       |    1 -
+ scrabble_app/server/_build/data_t.mli              |   57 -
+ scrabble_app/server/_build/data_t.mli.depends      |    1 -
+ scrabble_app/server/_build/data_t.o                |  Bin 3024 -> 0 bytes
+ scrabble_app/server/_build/ocamlc.where            |    1 -
+ scrabble_app/server/_build/scrabble_server.cmi     |  Bin 204 -> 0 bytes
+ scrabble_app/server/_build/scrabble_server.cmx     |  Bin 2017 -> 0 bytes
+ scrabble_app/server/_build/scrabble_server.ml      |   46 -
+ .../server/_build/scrabble_server.ml.depends       |    1 -
+ scrabble_app/server/_build/scrabble_server.mli     |    0
+ .../server/_build/scrabble_server.mli.depends      |    1 -
+ scrabble_app/server/_build/scrabble_server.native  |  Bin 3919708 -> 0 bytes
+ scrabble_app/server/_build/scrabble_server.o       |  Bin 5548 -> 0 bytes
+ scrabble_app/server/_build/state.cmi               |  Bin 613 -> 0 bytes
+ scrabble_app/server/_build/state.cmx               |  Bin 1522 -> 0 bytes
+ scrabble_app/server/_build/state.ml                |  321 ---
+ scrabble_app/server/_build/state.ml.depends        |    1 -
+ scrabble_app/server/_build/state.mli               |   12 -
+ scrabble_app/server/_build/state.mli.depends       |    1 -
+ scrabble_app/server/_build/state.o                 |  Bin 26392 -> 0 bytes
+ scrabble_app/server/_build/utils.cmi               |  Bin 3087 -> 0 bytes
+ scrabble_app/server/_build/utils.cmx               |  Bin 1393 -> 0 bytes
+ scrabble_app/server/_build/utils.ml                |  191 --
+ scrabble_app/server/_build/utils.ml.depends        |    1 -
+ scrabble_app/server/_build/utils.mli               |   80 -
+ scrabble_app/server/_build/utils.mli.depends       |    1 -
+ scrabble_app/server/_build/utils.o                 |  Bin 18228 -> 0 bytes
+ scrabble_app/server/scrabble_server.ml             |   25 +-
+ scrabble_app/server/scrabble_server.native         |    1 -
+ scrabble_app/server/state.ml                       |    7 +-
+ 43 files changed, 45 insertions(+), 3504 deletions(-)
+
+commit 950bb56186ff49d90d18cf61b1d688fdceb1b8b9
+Author: edj36 <edj36@cornell.edu>
+Date:   Mon Dec 5 04:23:09 2016 -0500
+
+    beginning server implementation
+
+ scrabble/data.atd                                  |     67 +
+ scrabble/data.ml                                   |     13 +-
+ scrabble/data.mli                                  |     13 +-
+ scrabble/scrabble_client.ml                        |      5 +-
+ scrabble/scrabble_server.ml                        |      7 +-
+ scrabble_app/README.txt                            |     17 +
+ scrabble_app/client/Makefile                       |     14 +
+ scrabble_app/client/VERSION                        |      1 +
+ scrabble_app/client/_tags                          |      0
+ scrabble_app/client/checkenv.sh                    |     49 +
+ scrabble_app/client/data.atd                       |     67 +
+ scrabble_app/client/data_j.ml                      |   2310 +
+ scrabble_app/client/data_j.mli                     |    305 +
+ scrabble_app/client/data_t.ml                      |     57 +
+ scrabble_app/client/data_t.mli                     |     57 +
+ scrabble_app/client/dictionary.txt                 | 178691 ++++++++++++++++++
+ scrabble_app/client/filter.ml                      |    107 +
+ scrabble_app/client/game.ml                        |      3 +
+ scrabble_app/client/gui.ml                         |    229 +
+ scrabble_app/client/gui.mli                        |     11 +
+ scrabble_app/client/info.json                      |    206 +
+ scrabble_app/client/player.ml                      |    286 +
+ scrabble_app/client/scrabble_client.ml             |     45 +
+ scrabble_app/client/scrabble_client.mli            |     24 +
+ scrabble_app/client/tree.ml                        |     41 +
+ scrabble_app/client/tree.mli                       |      6 +
+ scrabble_app/client/utils.ml                       |    191 +
+ scrabble_app/client/utils.mli                      |     80 +
+ scrabble_app/data.ml                               |     70 +
+ scrabble_app/data.mli                              |     70 +
+ scrabble_app/filter_test.ml                        |     25 +
+ scrabble_app/player_test.ml                        |     36 +
+ scrabble_app/scrabble_test.ml                      |     16 +
+ scrabble_app/server.ml                             |      0
+ scrabble_app/server.mli                            |     21 +
+ scrabble_app/server/Makefile                       |     11 +
+ scrabble_app/server/VERSION                        |      1 +
+ scrabble_app/server/_build/_digests                |     31 +
+ scrabble_app/server/_build/_log                    |     58 +
+ scrabble_app/server/_build/data_j.cmi              |    Bin 0 -> 7936 bytes
+ scrabble_app/server/_build/data_j.cmx              |    Bin 0 -> 4498 bytes
+ scrabble_app/server/_build/data_j.ml               |   2310 +
+ scrabble_app/server/_build/data_j.ml.depends       |      1 +
+ scrabble_app/server/_build/data_j.mli              |    305 +
+ scrabble_app/server/_build/data_j.mli.depends      |      1 +
+ scrabble_app/server/_build/data_j.o                |    Bin 0 -> 105332 bytes
+ scrabble_app/server/_build/data_t.cmi              |    Bin 0 -> 2222 bytes
+ scrabble_app/server/_build/data_t.cmx              |    Bin 0 -> 637 bytes
+ scrabble_app/server/_build/data_t.ml               |     57 +
+ scrabble_app/server/_build/data_t.ml.depends       |      1 +
+ scrabble_app/server/_build/data_t.mli              |     57 +
+ scrabble_app/server/_build/data_t.mli.depends      |      1 +
+ scrabble_app/server/_build/data_t.o                |    Bin 0 -> 3024 bytes
+ scrabble_app/server/_build/ocamlc.where            |      1 +
+ scrabble_app/server/_build/scrabble_server.cmi     |    Bin 0 -> 204 bytes
+ scrabble_app/server/_build/scrabble_server.cmx     |    Bin 0 -> 2017 bytes
+ scrabble_app/server/_build/scrabble_server.ml      |     46 +
+ .../server/_build/scrabble_server.ml.depends       |      1 +
+ scrabble_app/server/_build/scrabble_server.mli     |      0
+ .../server/_build/scrabble_server.mli.depends      |      1 +
+ scrabble_app/server/_build/scrabble_server.native  |    Bin 0 -> 3919708 bytes
+ scrabble_app/server/_build/scrabble_server.o       |    Bin 0 -> 5548 bytes
+ scrabble_app/server/_build/state.cmi               |    Bin 0 -> 613 bytes
+ scrabble_app/server/_build/state.cmx               |    Bin 0 -> 1522 bytes
+ scrabble_app/server/_build/state.ml                |    321 +
+ scrabble_app/server/_build/state.ml.depends        |      1 +
+ scrabble_app/server/_build/state.mli               |     12 +
+ scrabble_app/server/_build/state.mli.depends       |      1 +
+ scrabble_app/server/_build/state.o                 |    Bin 0 -> 26392 bytes
+ scrabble_app/server/_build/utils.cmi               |    Bin 0 -> 3087 bytes
+ scrabble_app/server/_build/utils.cmx               |    Bin 0 -> 1393 bytes
+ scrabble_app/server/_build/utils.ml                |    191 +
+ scrabble_app/server/_build/utils.ml.depends        |      1 +
+ scrabble_app/server/_build/utils.mli               |     80 +
+ scrabble_app/server/_build/utils.mli.depends       |      1 +
+ scrabble_app/server/_build/utils.o                 |    Bin 0 -> 18228 bytes
+ scrabble_app/server/_tags                          |      0
+ scrabble_app/server/checkenv.sh                    |     49 +
+ scrabble_app/server/data.atd                       |     67 +
+ scrabble_app/server/data_j.ml                      |   2310 +
+ scrabble_app/server/data_j.mli                     |    305 +
+ scrabble_app/server/data_t.ml                      |     57 +
+ scrabble_app/server/data_t.mli                     |     57 +
+ scrabble_app/server/filter.mli                     |     22 +
+ scrabble_app/server/info.json                      |    206 +
+ scrabble_app/server/scrabble_server.ml             |     46 +
+ scrabble_app/server/scrabble_server.mli            |      0
+ scrabble_app/server/scrabble_server.native         |      1 +
+ scrabble_app/server/state.ml                       |    365 +
+ scrabble_app/server/state.mli                      |     12 +
+ scrabble_app/server/utils.ml                       |    191 +
+ scrabble_app/server/utils.mli                      |     80 +
+ scrabble_app/state_test.ml                         |      5 +
+ scrabble_app/tree_test.ml                          |     18 +
+ 94 files changed, 190405 insertions(+), 17 deletions(-)
+
+commit 0cb825f75bcb15bbeafe5749388390ebcb8a935f
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Mon Dec 5 02:21:47 2016 -0500
+
+    tests update
+
+ scrabble/filter_test.ml |  1 -
+ scrabble/player_test.ml |  3 ++-
+ scrabble/tree_test.ml   | 15 ++++++++++++++-
+ 3 files changed, 16 insertions(+), 3 deletions(-)
+
+commit 9e5d1a3dad7f56bc8abb8647f8efcbd567c4757b
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Dec 5 02:11:22 2016 -0500
+
+    smarter
+
+ scrabble/filter_test.ml |  2 +-
+ scrabble/player.ml      | 14 +++++++++-----
+ scrabble/player_test.ml | 14 ++++----------
+ 3 files changed, 14 insertions(+), 16 deletions(-)
+
+commit 6821acff7db6a6bd953949fdd09f10a8bbd40499
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Mon Dec 5 01:56:43 2016 -0500
+
+    README
+
+ scrabble/README.txt | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+commit c95dfe71fc45f0855826a83c734b3b4234cdcfa5
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Dec 5 01:42:23 2016 -0500
+
+    char to string
+
+ scrabble/data.ml   | 12 ++++------
+ scrabble/data.mli  | 12 ++++------
+ scrabble/filter.ml |  2 +-
+ scrabble/gui.ml    |  4 ++--
+ scrabble/player.ml | 64 +++++++++++++++++++-----------------------------------
+ scrabble/state.ml  |  6 ++---
+ scrabble/utils.ml  | 18 +++++++--------
+ scrabble/utils.mli | 10 ++++-----
+ 8 files changed, 50 insertions(+), 78 deletions(-)
+
+commit d089d6e11787c3fe790c9118191183681914e443
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Dec 5 00:35:40 2016 -0500
+
+    utils are actually utils
+
+ scrabble/gui.ml    |   3 +-
+ scrabble/info.json |  28 ++++++++++++++-
+ scrabble/player.ml |  34 ++++++++++++++----
+ scrabble/state.ml  |  70 +++++++++++++++++++++++++++++++++----
+ scrabble/state.mli |   2 +-
+ scrabble/utils.ml  | 101 +++++++++++------------------------------------------
+ scrabble/utils.mli |  15 +-------
+ 7 files changed, 141 insertions(+), 112 deletions(-)
+
+commit a9a9a29743f17d6ef4ff1fe97ec3b2db8f4c7e0c
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Sun Dec 4 18:48:55 2016 -0500
+
+    tree mli
+
+ scrabble/tree.mli | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit 22c7faeb7b52082fb1d250b0287bc056c0e3ef31
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Sun Dec 4 18:24:49 2016 -0500
+
+    AI Specs
+
+ scrabble/player.ml | 60 ++++++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 42 insertions(+), 18 deletions(-)
+
+commit 23c59391629a16d66b15b855a6d48abb9951f3a6
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Sun Dec 4 16:54:00 2016 -0500
+
+    fixed
+
+ scrabble/filter.ml | 12 ++----------
+ scrabble/gui.ml    |  4 ++--
+ scrabble/info.json |  1 -
+ scrabble/state.ml  |  2 +-
+ 4 files changed, 5 insertions(+), 14 deletions(-)
+
+commit 7cec5ff7eb98bc1ffb6f26f73f3ebd0268a4ae2a
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Sun Dec 4 15:46:46 2016 -0500
+
+    spec for GUI and filter
+
+ scrabble/filter.ml  | 34 ++++++++++++++++++++++------------
+ scrabble/filter.mli | 20 +++++++++++++++++++-
+ scrabble/gui.ml     | 38 ++++++++++++++++++++++++++------------
+ scrabble/info.json  | 19 +++++++++++--------
+ scrabble/player.ml  | 48 ++++++++++++++++++++++++++----------------------
+ scrabble/state.ml   |  2 +-
+ 6 files changed, 105 insertions(+), 56 deletions(-)
+
+commit 073ff2eb1f07f20c98b56b55d35d07ae247705e5
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Sun Dec 4 11:20:51 2016 -0500
+
+    improved
+
+ scrabble/gui.ml    | 15 ++++++++-------
+ scrabble/info.json | 22 +++++++++++++---------
+ 2 files changed, 21 insertions(+), 16 deletions(-)
+
+commit 659def5f2585670a50c340da334ba28954aca592
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Sun Dec 4 02:00:04 2016 -0500
+
+    better UI
+
+ scrabble/data.ml        |  18 ++++++-
+ scrabble/data.mli       |  13 ++++++
+ scrabble/filter.ml      |   7 ---
+ scrabble/filter_test.ml |   7 +--
+ scrabble/gui.ml         | 121 +++++++++++++++++++++++++++++-------------------
+ scrabble/gui.mli        |  15 +++---
+ scrabble/info.json      |  22 +++++----
+ scrabble/player.ml      |   4 +-
+ scrabble/player_test.ml |   9 +++-
+ scrabble/state_test.ml  |   2 +-
+ 10 files changed, 135 insertions(+), 83 deletions(-)
+
+commit fe201b097b9a0e1f3616f02fffd2b5495653dc81
+Author: edj36 <edj36@cornell.edu>
+Date:   Sat Dec 3 12:37:00 2016 -0500
+
+    complete GET and POST requests send and receive
+
+ scrabble/scrabble_client.ml | 9 ++++++---
+ scrabble/scrabble_server.ml | 4 ++--
+ 2 files changed, 8 insertions(+), 5 deletions(-)
+
+commit cd613caaab00b16e5141002432cf4cd96ffed413
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Sat Dec 3 12:01:13 2016 -0500
+
+    AI plays level
+
+ scrabble/data.ml        |  6 +++---
+ scrabble/data.mli       |  2 +-
+ scrabble/filter_test.ml | 17 +++++------------
+ scrabble/gui.ml         | 25 +++++++++++++------------
+ scrabble/player.ml      | 17 +++++++++++------
+ scrabble/player_test.ml |  9 ++++++---
+ scrabble/state.ml       |  2 +-
+ scrabble/utils.ml       |  2 +-
+ 8 files changed, 41 insertions(+), 39 deletions(-)
+
+commit 49db27fe519973847bda862658493c93c23a7e65
+Merge: faf4206 1466a9a
+Author: edj36 <edj36@cornell.edu>
+Date:   Sat Dec 3 02:55:19 2016 -0500
+
+    Merge branch 'master' of https://github.com/edj36/CS3110
+
+commit faf42067ef6709536c5d5c76db10e5dd7129115e
+Author: edj36 <edj36@cornell.edu>
+Date:   Sat Dec 3 02:54:49 2016 -0500
+
+    server can send and receive GET and POST
+
+ scrabble/scrabble_client.ml | 19 ++++++++++++++-----
+ scrabble/scrabble_server.ml | 24 +++++++++++++++++-------
+ 2 files changed, 31 insertions(+), 12 deletions(-)
+
+commit 1466a9aef46c3e69c1532c7ab41e197ee704be94
+Author: pehuenmoure <ppm44@cornell.edu>
+Date:   Fri Dec 2 15:52:50 2016 -0500
+
+    smarter ai
+
+ scrabble/player.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 71a3b5abc3c14b17e53b4767bd37207832ea7a46
+Author: pehuenmoure <ppm44@cornell.edu>
+Date:   Fri Dec 2 14:11:32 2016 -0500
+
+    new ai
+
+ scrabble/player.ml | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+commit 3cfcf09785d6f340373633db00cc924819d8c811
+Merge: 13b95ca 20a2c97
+Author: pehuenmoure <ppm44@cornell.edu>
+Date:   Fri Dec 2 13:55:45 2016 -0500
+
+    smart ai
+
+commit 13b95ca31ce5d90aa94e514c1d7f15d5b06cdbec
+Author: pehuenmoure <ppm44@cornell.edu>
+Date:   Fri Dec 2 13:53:46 2016 -0500
+
+    smart ai
+
+ scrabble/player.ml | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
+
+commit 20a2c97b4cd647bc79c987b52f3fc934c7f9f83e
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Fri Dec 2 13:37:50 2016 -0500
+
+    better gui / comments / exception handling / quit commands
+
+ scrabble/data.ml   |  3 ++-
+ scrabble/data.mli  |  3 ++-
+ scrabble/filter.ml | 30 ++++++++++-----------
+ scrabble/gui.ml    | 78 +++++++++++++++++++++++++++++++++++++++++++-----------
+ scrabble/info.json | 19 ++++++++++++-
+ scrabble/player.ml | 39 ++++++++++++++-------------
+ scrabble/state.ml  | 28 +++++++++++++++-----
+ scrabble/utils.ml  |  4 +--
+ 8 files changed, 143 insertions(+), 61 deletions(-)
+
+commit 77d92717f8435abe0cbfe7b42b2d39f059efa8ca
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Fri Dec 2 11:42:36 2016 -0500
+
+    case insensitive
+
+ scrabble/player.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 6f1b6b653bd78e4bdb7adc502d9618e1e8825770
+Author: edj36 <edj36@cornell.edu>
+Date:   Fri Dec 2 04:01:17 2016 -0500
+
+    initial server code
+
+ scrabble/Makefile            |  6 ++++++
+ scrabble/filter_test.ml      | 36 ++++++++++++++++++++++++++++++------
+ scrabble/scrabble_client.ml  | 17 +++++++++++++++++
+ scrabble/scrabble_client.mli | 18 ++++++++++++++++++
+ scrabble/scrabble_server.ml  | 17 +++++++++++++++++
+ scrabble/scrabble_server.mli |  0
+ 6 files changed, 88 insertions(+), 6 deletions(-)
+
+commit 9bf42bcadc8ebcf4479e1abe37d8fcd4ca6da80f
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Thu Dec 1 22:50:26 2016 -0500
+
+    fix collect/ AI plays valid words
+
+ scrabble/data.ml   | 1 -
+ scrabble/data.mli  | 1 -
+ scrabble/filter.ml | 2 +-
+ scrabble/gui.ml    | 4 +---
+ scrabble/info.json | 5 +----
+ scrabble/state.ml  | 6 ------
+ scrabble/utils.ml  | 4 ++--
+ 7 files changed, 5 insertions(+), 18 deletions(-)
+
+commit a69e9ac4632b0f0c43b0170199fbeb47ffdbe2d9
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Thu Dec 1 21:49:17 2016 -0500
+
+    update
+
+ scrabble/filter.ml | 144 +++--------------------------------------------------
+ scrabble/gui.ml    |   3 +-
+ scrabble/state.ml  |   2 +-
+ 3 files changed, 9 insertions(+), 140 deletions(-)
+
+commit 1e8a0a345b35c86f0cb524a3120441af80418a2b
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Thu Dec 1 20:07:39 2016 -0500
+
+    AI vs. AI2
+
+ scrabble/player.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 489a13423e7bc9d37f08fa4037132257cf9b2af6
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Thu Dec 1 19:56:13 2016 -0500
+
+    AI vs. AI
+
+ scrabble/player.ml | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
+
+commit 38ef9d1c76507c51f2f955ed267f5f9041b91fc6
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Thu Dec 1 18:57:57 2016 -0500
+
+    AI a little better
+
+ scrabble/player.ml | 89 ++++++++++++++++++++++++++++--------------------------
+ 1 file changed, 47 insertions(+), 42 deletions(-)
+
+commit d50a3aa67000efaa2879c0917a81272c6d32503d
+Author: pehuenmoure <ppm44@cornell.edu>
+Date:   Thu Dec 1 02:21:25 2016 -0500
+
+    AI that sucks
+
+ scrabble/player.ml | 54 +++++++++++++++++++++++++++++++-----------------------
+ scrabble/utils.ml  |  2 --
+ 2 files changed, 31 insertions(+), 25 deletions(-)
+
+commit 6c1bef2f99009a42b3ac664d2f4d981f0f391da1
+Author: pehuenmoure <ppm44@cornell.edu>
+Date:   Wed Nov 30 22:01:53 2016 -0500
+
+    super buggy AI
+
+ scrabble/player.ml | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+commit 4abfac759c99bcee0ffbc7df6dc9d95ac970c9ae
+Author: pehuenmoure <ppm44@cornell.edu>
+Date:   Wed Nov 30 21:30:21 2016 -0500
+
+    buggy ai
+
+ scrabble/player.ml | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
+
+commit af04a02ac2f7312a429b92bb8ce1aedab1596cba
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Wed Nov 30 20:23:51 2016 -0500
+
+    error catching
+
+ scrabble/filter.ml | 7 ++++++-
+ scrabble/gui.ml    | 3 ++-
+ scrabble/state.ml  | 5 +----
+ 3 files changed, 9 insertions(+), 6 deletions(-)
+
+commit b4addfc10b6adabb5680f312d1f1b10e680cad5b
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Wed Nov 30 19:37:22 2016 -0500
+
+    filter finished
+
+ scrabble/filter.ml | 90 ++++++++++++++++++++++++++++++++++++++++++------------
+ scrabble/state.ml  | 42 +++++--------------------
+ scrabble/utils.ml  | 28 +++++++++++++++++
+ scrabble/utils.mli | 10 +++++-
+ 4 files changed, 116 insertions(+), 54 deletions(-)
+
+commit 02947f46bdadf3cf174737c6bdc3830683de3612
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Wed Nov 30 16:14:09 2016 -0500
+
+    fixed
+
+ scrabble/state.ml | 69 +++++++++++++++++++++++++++++++++----------------------
+ 1 file changed, 41 insertions(+), 28 deletions(-)
+
+commit efc7caf0d24f1c2cf237412d6d684be1b5f36f9a
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Wed Nov 30 13:29:19 2016 -0500
+
+    more bug fixed
+
+ scrabble/filter.ml | 175 +++++++++++++++++++++++++++--------------------------
+ scrabble/gui.ml    |  19 +++---
+ scrabble/state.ml  |   3 +-
+ 3 files changed, 99 insertions(+), 98 deletions(-)
+
+commit b412110f4f94c829dc6bda88411d902d20c49b14
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Wed Nov 30 11:54:05 2016 -0500
+
+    better REPL
+
+ scrabble/game.ml | 42 +-------------------------
+ scrabble/gui.ml  | 89 +++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ scrabble/gui.mli |  2 +-
+ 3 files changed, 90 insertions(+), 43 deletions(-)
+
+commit ed81355dba2ed90162cb132e4e885eef5df532c0
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Wed Nov 30 02:37:41 2016 -0500
+
+    better GUI
+
+ scrabble/gui.ml    | 27 +++++++++++++++++++++------
+ scrabble/info.json |  3 ++-
+ 2 files changed, 23 insertions(+), 7 deletions(-)
+
+commit 81c3cc4ab34200c2bf2100f9b3509516cbe9a178
+Author: edj36 <edj36@cornell.edu>
+Date:   Wed Nov 30 02:34:02 2016 -0500
+
+    first pass of filter
+
+ scrabble/filter.ml  | 118 ++++++++++++++++++++++++++++++++++++++++++----------
+ scrabble/filter.mli |   2 +-
+ 2 files changed, 96 insertions(+), 24 deletions(-)
+
+commit 7caf564d074816ac9a5ce76e5c682f8b5d2a9103
+Author: pehuenmoure <ppm44@cornell.edu>
+Date:   Wed Nov 30 00:38:55 2016 -0500
+
+    buggy ai
+
+ scrabble/player.ml | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 609a1427fac090b795623f6b2785801c2ab36b01
+Merge: af38bbe da07523
+Author: pehuenmoure <ppm44@cornell.edu>
+Date:   Wed Nov 30 00:17:55 2016 -0500
+
+    repl AI loop
+
+commit af38bbe0d319e24fe5fa477f71e02ad476ed104f
+Author: pehuenmoure <ppm44@cornell.edu>
+Date:   Wed Nov 30 00:15:24 2016 -0500
+
+    repl AI loop
+
+ scrabble/game.ml | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+commit 836db65d6a27302d5f416d981abab15be251a34a
+Author: pehuenmoure <ppm44@cornell.edu>
+Date:   Wed Nov 30 00:15:07 2016 -0500
+
+    repl AI loop
+
+ scrabble/player.ml | 372 ++++++++++++++++++++++++++---------------------------
+ 1 file changed, 179 insertions(+), 193 deletions(-)
+
+commit da07523e3b41883a94c493538384273793b6a5dd
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Tue Nov 29 23:48:48 2016 -0500
+
+    Brute Force AI2
+
+ scrabble/player.ml | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+commit b4d22d1b4865aeb9cb2d220a0a48eb50fc43b141
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Tue Nov 29 23:45:33 2016 -0500
+
+    Brute Force AI
+
+ scrabble/game.ml   | 16 +++++++-----
+ scrabble/player.ml | 76 ++++++++++++++++++++++++++++--------------------------
+ 2 files changed, 50 insertions(+), 42 deletions(-)
+
+commit 4f786f1f1a223a01cd01eff627121758df21e02d
+Author: pehuenmoure <ppm44@cornell.edu>
+Date:   Tue Nov 29 21:22:32 2016 -0500
+
+    naive ai
+
+ scrabble/player.ml | 148 +++++++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 138 insertions(+), 10 deletions(-)
+
+commit 398060ce0a5e8bb62463131232690c86cb21992a
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 29 19:57:34 2016 -0500
+
+    added new field in state
+
+ scrabble/data.ml        |  3 ++-
+ scrabble/data.mli       |  3 ++-
+ scrabble/player_test.ml |  3 ++-
+ scrabble/state.ml       | 18 ++++++++++++------
+ 4 files changed, 18 insertions(+), 9 deletions(-)
+
+commit feea74cfa4496a5bef8913b73877f15041a588b9
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 29 19:52:44 2016 -0500
+
+    play bug fixed
+
+ scrabble/gui.ml    | 4 +++-
+ scrabble/state.ml  | 1 +
+ scrabble/utils.ml  | 9 +++++++++
+ scrabble/utils.mli | 2 ++
+ 4 files changed, 15 insertions(+), 1 deletion(-)
+
+commit cf7fe36ce330890360bb02052ad6d01139f80314
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 29 18:59:22 2016 -0500
+
+    test cases
+
+ scrabble/player.ml      |  2 +-
+ scrabble/player_test.ml | 31 ++++++++++++++++++++++++++++---
+ scrabble/utils.ml       |  8 ++++++++
+ scrabble/utils.mli      |  7 ++++++-
+ 4 files changed, 43 insertions(+), 5 deletions(-)
+
+commit 2f7c4759e6f9c1dcea04fd9954a856c1a1263221
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 29 18:10:10 2016 -0500
+
+    bug fixed
+
+ scrabble/gui.ml    |  6 +++++-
+ scrabble/player.ml |  2 +-
+ scrabble/utils.ml  | 17 ++++++++++-------
+ scrabble/utils.mli |  2 +-
+ 4 files changed, 17 insertions(+), 10 deletions(-)
+
+commit 0699bac2322cfb96c72fd20e1b2d9a95015172e1
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 29 13:47:34 2016 -0500
+
+    clean
+
+ scrabble/game.ml   | 5 ++---
+ scrabble/gui.ml    | 3 ++-
+ scrabble/player.ml | 1 +
+ 3 files changed, 5 insertions(+), 4 deletions(-)
+
+commit faa943bea052da6c9818ebe3f03747d84f8377eb
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 29 13:34:57 2016 -0500
+
+    score fixed (hopefully)
+
+ scrabble/state.ml | 47 +++++++++++++++++++++++++----------------------
+ 1 file changed, 25 insertions(+), 22 deletions(-)
+
+commit 49c04d7499a5f23ba18ef4bedde82a4bf9f03ed8
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 29 13:03:34 2016 -0500
+
+    everyone should endorse my skill in OCaml. This is legend. This is 3110
+
+ scrabble/player.ml | 28 +++++++---------------------
+ scrabble/state.ml  |  6 +++---
+ scrabble/utils.ml  |  6 +++---
+ scrabble/utils.mli |  2 +-
+ 4 files changed, 14 insertions(+), 28 deletions(-)
+
+commit 3234bc0170a0d27741f0d9e90c859eed7ed15df1
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 29 12:41:52 2016 -0500
+
+    construction continues
+
+ scrabble/player.ml | 11 +++++------
+ scrabble/state.ml  | 43 +++++++++++++++++++++++--------------------
+ scrabble/state.mli |  6 ------
+ scrabble/utils.ml  | 11 +++++++----
+ scrabble/utils.mli |  8 +++++++-
+ 5 files changed, 42 insertions(+), 37 deletions(-)
+
+commit b59f228b7d6472697961f21d94ca90d961f8e72f
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 29 12:02:34 2016 -0500
+
+    construction begins
+
+ scrabble/data.ml   |  2 +-
+ scrabble/data.mli  |  2 +-
+ scrabble/player.ml | 10 +++++-----
+ scrabble/state.ml  |  1 +
+ scrabble/state.mli |  6 ++++++
+ scrabble/utils.ml  | 12 +++++++++---
+ 6 files changed, 23 insertions(+), 10 deletions(-)
+
+commit 3d9d08c741a171cb4c0cb545b4bdfa23faefe0be
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 29 11:35:29 2016 -0500
+
+    scoring updates
+
+ scrabble/state.ml | 10 +++++++---
+ scrabble/utils.ml | 10 +++++-----
+ 2 files changed, 12 insertions(+), 8 deletions(-)
+
+commit d686297d1d6f7c18fd4d81e943a5b7273439693f
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 29 11:18:04 2016 -0500
+
+    scoring installed
+
+ scrabble/state.ml | 156 +++++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 95 insertions(+), 61 deletions(-)
+
+commit fbdb4b7f2bd2fd91aec9268d6f40a706ebaed984
+Author: edj36 <edj36@cornell.edu>
+Date:   Tue Nov 29 03:05:42 2016 -0500
+
+    first steps to functional board
+
+ scrabble/filter.ml |  4 +++-
+ scrabble/utils.ml  | 13 ++++++++++++-
+ scrabble/utils.mli | 10 +++++++---
+ 3 files changed, 22 insertions(+), 5 deletions(-)
+
+commit ab81f9e67c0f15404c5bfdeb367d1c3a50f42392
+Merge: 068b696 e0bbd2b
+Author: edj36 <edj36@cornell.edu>
+Date:   Tue Nov 29 02:18:10 2016 -0500
+
+    Merge branch 'master' of https://github.com/edj36/CS3110
+
+commit 068b696e53be8669b4e80b7d6ab02a98eac860b9
+Author: edj36 <edj36@cornell.edu>
+Date:   Tue Nov 29 02:17:56 2016 -0500
+
+    implementation of filter with unimplemented helper functions
+
+ scrabble/filter.ml | 52 ++++++++++++++++++++++++++++++++++++++++++----------
+ scrabble/tree.mli  |  3 +++
+ 2 files changed, 45 insertions(+), 10 deletions(-)
+
+commit e0bbd2bc4d46b1231ecd8bbb5796252873bcf0b3
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 29 01:56:58 2016 -0500
+
+    more debugging
+
+ scrabble/gui.ml   |  1 +
+ scrabble/utils.ml | 24 +++++++++++++++++-------
+ 2 files changed, 18 insertions(+), 7 deletions(-)
+
+commit f8fa41e43d7e63a4a94d5ea287895ab95eed7d5d
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 29 01:39:02 2016 -0500
+
+    fix
+
+ scrabble/gui.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit ac65d4c503b488db13aa55ca51f50c1b500a21e8
+Author: edj36 <edj36@cornell.edu>
+Date:   Tue Nov 29 01:37:30 2016 -0500
+
+    updating references to current_player_rack
+
+ scrabble/filter.ml | 49 ++++++++++++++++++++++++++++++++++++++++++-------
+ scrabble/state.ml  |  8 ++++----
+ 2 files changed, 46 insertions(+), 11 deletions(-)
+
+commit 9881d43e4cf959b8623d51860bb983f66d8b591b
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 29 01:34:17 2016 -0500
+
+    premitive score board
+
+ scrabble/gui.ml    | 10 +++++++++-
+ scrabble/state.ml  |  4 ++--
+ scrabble/utils.ml  |  4 +++-
+ scrabble/utils.mli |  4 ++--
+ 4 files changed, 16 insertions(+), 6 deletions(-)
+
+commit ddfb4cf81f1056a89b03914ba4a0d57110ac1bcb
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 29 01:14:34 2016 -0500
+
+    added helper in utils
+
+ scrabble/state.ml  |  4 +++-
+ scrabble/utils.ml  |  7 +++++++
+ scrabble/utils.mli | 11 +++++++++--
+ 3 files changed, 19 insertions(+), 3 deletions(-)
+
+commit d8fcd2261bdbfc0c022d2a4bccc6fbb424c88d39
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 29 00:57:54 2016 -0500
+
+    helper for score
+
+ scrabble/state.ml  |  9 ---------
+ scrabble/utils.ml  | 25 +++++++++++++++++++++++++
+ scrabble/utils.mli |  9 +++++++++
+ 3 files changed, 34 insertions(+), 9 deletions(-)
+
+commit cb0b8f706e03f8dac91e4b0edf0a76d9cfaa991e
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Tue Nov 29 00:55:20 2016 -0500
+
+    player functions
+
+ scrabble/player.ml | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+commit 47d2c57a861c9f4c24375637f5616b30f7744130
+Merge: 357e744 f15fc2f
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Mon Nov 28 23:54:41 2016 -0500
+
+    Merge branch 'master' of https://github.com/edj36/CS3110
+
+commit 357e744db8fc353e8966fbb272545947f2805de2
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Mon Nov 28 23:54:18 2016 -0500
+
+    sd update
+
+ scrabble/tree.ml | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+commit f15fc2fbc68439e577fcce08507418377c2c6703
+Author: edj36 <edj36@cornell.edu>
+Date:   Mon Nov 28 23:46:46 2016 -0500
+
+    updating make file to include radix tree
+
+ scrabble/Makefile  | 4 ++--
+ scrabble/filter.ml | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+commit 593b73bd2075eaf7f6b1f45dfe82b1f28216a9af
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Mon Nov 28 23:36:50 2016 -0500
+
+    tree update2
+
+ scrabble/tree.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 5bf8f7c7f35dda1b4ebde5acf6f0e48a2b0b36ac
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 23:22:10 2016 -0500
+
+    comments
+
+ scrabble/utils.ml | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 249997def592bf161886398233a3b037e09e92e5
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 23:02:27 2016 -0500
+
+    small bug fixed
+
+ scrabble/state.ml | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+commit bb738e8694481db2f8fd68e794496a42e8072e3b
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 22:59:23 2016 -0500
+
+    get_newwords fixed
+
+ scrabble/gui.ml   |  8 ++++----
+ scrabble/state.ml | 37 ++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 40 insertions(+), 5 deletions(-)
+
+commit d08747f687568c764189b066a262d076211ccae2
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Mon Nov 28 22:48:50 2016 -0500
+
+    tree specs
+
+ scrabble/tree.ml | 40 +++++++++++++++++++++++++---------------
+ 1 file changed, 25 insertions(+), 15 deletions(-)
+
+commit af3a4613b18477a798e424f4bb6e034aa221b1ac
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 22:25:28 2016 -0500
+
+    new words
+
+ scrabble/gui.ml    |  5 ++++-
+ scrabble/utils.ml  | 11 +++--------
+ scrabble/utils.mli |  2 +-
+ 3 files changed, 8 insertions(+), 10 deletions(-)
+
+commit 276f40bf1c1cc0d2f24a3e1510caa2668043b96b
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 22:03:27 2016 -0500
+
+    change state field
+
+ scrabble/gui.ml   | 4 +---
+ scrabble/state.ml | 5 ++---
+ 2 files changed, 3 insertions(+), 6 deletions(-)
+
+commit db02b1bdee310b7ca0672b671b12ca7db74496ab
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 21:33:09 2016 -0500
+
+    feel like it
+
+ scrabble/data.ml   | 3 ---
+ scrabble/gui.ml    | 4 ++--
+ scrabble/utils.ml  | 2 --
+ scrabble/utils.mli | 4 ++--
+ 4 files changed, 4 insertions(+), 9 deletions(-)
+
+commit 65083846482d0fbf657ef12b7ec470655bc7954f
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 20:39:55 2016 -0500
+
+    bug fixed
+
+ scrabble/player.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit a80f98b818e249989f4e88deb0c8e04d549fe891
+Author: pehuenmoure <ppm44@cornell.edu>
+Date:   Mon Nov 28 20:04:30 2016 -0500
+
+    updated colors
+
+ scrabble/gui.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit f81832706dbef3545e93516c00526cb89d867266
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 19:57:11 2016 -0500
+
+    fix random
+
+ scrabble/state.ml | 1 +
+ scrabble/utils.ml | 1 +
+ 2 files changed, 2 insertions(+)
+
+commit 4f2ff42bb44bb976d2bdba5f3dd2e13983831ecc
+Merge: de1953f 040590d
+Author: edj36 <edj36@cornell.edu>
+Date:   Mon Nov 28 19:36:20 2016 -0500
+
+    Merge branch 'master' of https://github.com/edj36/CS3110
+
+commit de1953f91b4e90e136c91655f10c8ef759d38750
+Author: edj36 <edj36@cornell.edu>
+Date:   Mon Nov 28 19:35:57 2016 -0500
+
+    updating make file with ansiterminal
+
+ scrabble/Makefile                  |   4 +-
+ scrabble/_build/_digests           |  37 --------
+ scrabble/_build/_log               |  52 -----------
+ scrabble/_build/data.cmi           | Bin 1790 -> 0 bytes
+ scrabble/_build/data.cmo           | Bin 3800 -> 0 bytes
+ scrabble/_build/data.ml            |  59 ------------
+ scrabble/_build/data.ml.depends    |   1 -
+ scrabble/_build/data.mli           |  59 ------------
+ scrabble/_build/data.mli.depends   |   1 -
+ scrabble/_build/filter.cmi         | Bin 367 -> 0 bytes
+ scrabble/_build/filter.cmo         | Bin 3570 -> 0 bytes
+ scrabble/_build/filter.ml          |  46 ----------
+ scrabble/_build/filter.ml.depends  |   1 -
+ scrabble/_build/filter.mli         |   4 -
+ scrabble/_build/filter.mli.depends |   1 -
+ scrabble/_build/game.byte          | Bin 3594751 -> 0 bytes
+ scrabble/_build/game.cmi           | Bin 685 -> 0 bytes
+ scrabble/_build/game.cmo           | Bin 6005 -> 0 bytes
+ scrabble/_build/game.ml            |  41 ---------
+ scrabble/_build/game.ml.depends    |   1 -
+ scrabble/_build/gui.cmi            | Bin 309 -> 0 bytes
+ scrabble/_build/gui.cmo            | Bin 8901 -> 0 bytes
+ scrabble/_build/gui.ml             |  45 ---------
+ scrabble/_build/gui.ml.depends     |   1 -
+ scrabble/_build/gui.mli            |  14 ---
+ scrabble/_build/gui.mli.depends    |   1 -
+ scrabble/_build/ocamlc.where       |   1 -
+ scrabble/_build/player.cmi         | Bin 735 -> 0 bytes
+ scrabble/_build/player.cmo         | Bin 9268 -> 0 bytes
+ scrabble/_build/player.ml          |  82 -----------------
+ scrabble/_build/player.ml.depends  |   1 -
+ scrabble/_build/state.cmi          | Bin 480 -> 0 bytes
+ scrabble/_build/state.cmo          | Bin 28837 -> 0 bytes
+ scrabble/_build/state.ml           | 181 -------------------------------------
+ scrabble/_build/state.ml.depends   |   1 -
+ scrabble/_build/state.mli          |   9 --
+ scrabble/_build/state.mli.depends  |   1 -
+ scrabble/_build/utils.cmi          | Bin 1981 -> 0 bytes
+ scrabble/_build/utils.cmo          | Bin 22307 -> 0 bytes
+ scrabble/_build/utils.ml           | 147 ------------------------------
+ scrabble/_build/utils.ml.depends   |   1 -
+ scrabble/_build/utils.mli          |  52 -----------
+ scrabble/_build/utils.mli.depends  |   1 -
+ scrabble/filter.ml                 |  44 ++++-----
+ scrabble/filter_test.ml            |  11 ++-
+ scrabble/game.byte                 |   1 -
+ 46 files changed, 33 insertions(+), 868 deletions(-)
+
+commit 040590d4abeac1ada51f2818b4af24d2521b6c16
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 19:33:45 2016 -0500
+
+    state fixed
+
+ scrabble/game.byte | 1 -
+ scrabble/state.ml  | 1 +
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+
+commit 46becdcc7a389de094d26a89c134b1af46dcbdd8
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 19:02:13 2016 -0500
+
+    add End
+
+ scrabble/data.ml   | 4 ++--
+ scrabble/data.mli  | 4 ++--
+ scrabble/player.ml | 2 ++
+ 3 files changed, 6 insertions(+), 4 deletions(-)
+
+commit ecd136c542f87403ab1e8aa8d0ec0cf4e5ab52bb
+Author: pehuenmoure <ppm44@cornell.edu>
+Date:   Mon Nov 28 18:57:45 2016 -0500
+
+    tweaked colors
+
+ scrabble/gui.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit a0280fdc1bf06e546c69e6173fad43f6b297c885
+Author: pehuenmoure <ppm44@cornell.edu>
+Date:   Mon Nov 28 18:54:38 2016 -0500
+
+    colored GUI
+
+ scrabble/gui.ml | 25 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
+
+commit 30ef7fce2a313d2ecc474127d5f2d3e45ae53477
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 18:35:10 2016 -0500
+
+    type AI
+
+ scrabble/dictionary.ml | 178694 ----------------------------------------------
+ scrabble/player.ml     |      4 +-
+ 2 files changed, 1 insertion(+), 178697 deletions(-)
+
+commit 5a6b042d486462e009856ec00f62570e6499f672
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Mon Nov 28 18:30:32 2016 -0500
+
+    dictionary.txt
+
+ scrabble/dictionary.txt | 178691 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 178691 insertions(+)
+
+commit 3d39cba6a04cce390430fdfd62e082a0e9744a3c
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Mon Nov 28 18:22:06 2016 -0500
+
+    Successful Tree
+
+ scrabble/tree.ml  | 15 ++++++++++++---
+ scrabble/tree.mli | 20 --------------------
+ 2 files changed, 12 insertions(+), 23 deletions(-)
+
+commit 603964ead93ffa57c868f9cb28ba789fa72f3134
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 18:18:32 2016 -0500
+
+    state done
+
+ scrabble/state.ml | 104 +++++++++++++++++++++++++++++-------------------------
+ scrabble/utils.ml |   6 ++--
+ 2 files changed, 58 insertions(+), 52 deletions(-)
+
+commit 3d197e56f8fd8769d61606746dca7dbb583229c5
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Mon Nov 28 18:00:29 2016 -0500
+
+    tree update
+
+ scrabble/tree.ml | 38 +++++++++++++++++---------------------
+ 1 file changed, 17 insertions(+), 21 deletions(-)
+
+commit 0d639690835450969f4e3464ec8b519eadf35074
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 17:43:02 2016 -0500
+
+    found it
+
+ scrabble/info.json | 2 +-
+ scrabble/state.ml  | 6 ++++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+commit 8099f2d2ce93cb2c970ab21cba0cf6e5feedece9
+Author: pehuenmoure <ppm44@cornell.edu>
+Date:   Mon Nov 28 17:40:20 2016 -0500
+
+    MVP GUI
+
+ scrabble/_build/_digests           |  37 ++++++++
+ scrabble/_build/_log               |  52 +++++++++++
+ scrabble/_build/data.cmi           | Bin 0 -> 1790 bytes
+ scrabble/_build/data.cmo           | Bin 0 -> 3800 bytes
+ scrabble/_build/data.ml            |  59 ++++++++++++
+ scrabble/_build/data.ml.depends    |   1 +
+ scrabble/_build/data.mli           |  59 ++++++++++++
+ scrabble/_build/data.mli.depends   |   1 +
+ scrabble/_build/filter.cmi         | Bin 0 -> 367 bytes
+ scrabble/_build/filter.cmo         | Bin 0 -> 3570 bytes
+ scrabble/_build/filter.ml          |  46 ++++++++++
+ scrabble/_build/filter.ml.depends  |   1 +
+ scrabble/_build/filter.mli         |   4 +
+ scrabble/_build/filter.mli.depends |   1 +
+ scrabble/_build/game.byte          | Bin 0 -> 3594751 bytes
+ scrabble/_build/game.cmi           | Bin 0 -> 685 bytes
+ scrabble/_build/game.cmo           | Bin 0 -> 6005 bytes
+ scrabble/_build/game.ml            |  41 +++++++++
+ scrabble/_build/game.ml.depends    |   1 +
+ scrabble/_build/gui.cmi            | Bin 0 -> 309 bytes
+ scrabble/_build/gui.cmo            | Bin 0 -> 8901 bytes
+ scrabble/_build/gui.ml             |  45 +++++++++
+ scrabble/_build/gui.ml.depends     |   1 +
+ scrabble/_build/gui.mli            |  14 +++
+ scrabble/_build/gui.mli.depends    |   1 +
+ scrabble/_build/ocamlc.where       |   1 +
+ scrabble/_build/player.cmi         | Bin 0 -> 735 bytes
+ scrabble/_build/player.cmo         | Bin 0 -> 9268 bytes
+ scrabble/_build/player.ml          |  82 +++++++++++++++++
+ scrabble/_build/player.ml.depends  |   1 +
+ scrabble/_build/state.cmi          | Bin 0 -> 480 bytes
+ scrabble/_build/state.cmo          | Bin 0 -> 28837 bytes
+ scrabble/_build/state.ml           | 181 +++++++++++++++++++++++++++++++++++++
+ scrabble/_build/state.ml.depends   |   1 +
+ scrabble/_build/state.mli          |   9 ++
+ scrabble/_build/state.mli.depends  |   1 +
+ scrabble/_build/utils.cmi          | Bin 0 -> 1981 bytes
+ scrabble/_build/utils.cmo          | Bin 0 -> 22307 bytes
+ scrabble/_build/utils.ml           | 147 ++++++++++++++++++++++++++++++
+ scrabble/_build/utils.ml.depends   |   1 +
+ scrabble/_build/utils.mli          |  52 +++++++++++
+ scrabble/_build/utils.mli.depends  |   1 +
+ scrabble/game.byte                 |   1 +
+ scrabble/gui.ml                    |  10 +-
+ 44 files changed, 850 insertions(+), 2 deletions(-)
+
+commit de3be7fef88ca81991a1fc2e29f826b64dc732e5
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 17:32:59 2016 -0500
+
+    clean
+
+ scrabble/state.ml | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+commit 4b1233529a9af4370890a218e6adc54942467eec
+Author: edj36 <edj36@cornell.edu>
+Date:   Mon Nov 28 17:05:40 2016 -0500
+
+    testing suite update
+
+ scrabble/filter.ml        | 2 +-
+ scrabble/filter_test.ml   | 5 +++++
+ scrabble/move_test.ml     | 9 ---------
+ scrabble/player_test.ml   | 5 +++++
+ scrabble/scrabble_test.ml | 5 ++++-
+ scrabble/state_test.ml    | 5 +++++
+ scrabble/tree_test.ml     | 5 +++++
+ 7 files changed, 25 insertions(+), 11 deletions(-)
+
+commit 8192d600208854656660ecbe04f241a61d769875
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 16:53:25 2016 -0500
+
+    gui setup
+
+ scrabble/game.ml | 40 ++--------------------------------------
+ scrabble/gui.ml  | 39 +++++++++++++++++++++++++++++++++++++++
+ scrabble/gui.mli | 26 +++++++++++---------------
+ 3 files changed, 52 insertions(+), 53 deletions(-)
+
+commit 730d729e2b463f13449d9cef2fc33306b9dce748
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 16:38:18 2016 -0500
+
+    cleaning
+
+ scrabble/ai.ml      |   0
+ scrabble/ai.mli     |  28 ----------
+ scrabble/game.ml    |   6 ---
+ scrabble/game.mli   |   3 --
+ scrabble/move.ml    | 149 ----------------------------------------------------
+ scrabble/move.mli   |   7 ---
+ scrabble/player.mli |  24 ---------
+ 7 files changed, 217 deletions(-)
+
+commit 3b4123772dd1bac98b7aca91acf765c1e0750bc4
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 16:36:07 2016 -0500
+
+    cleaning up
+
+ scrabble/filter.ml        |  18 +--
+ scrabble/filter.mli       |   6 +-
+ scrabble/game.ml          | 107 +++-----------
+ scrabble/player.ml        |  33 ++---
+ scrabble/scrabble_test.ml |   5 +-
+ scrabble/state.ml         | 345 ++++++++++++++++++++++------------------------
+ scrabble/state.mli        |  13 +-
+ 7 files changed, 216 insertions(+), 311 deletions(-)
+
+commit 6d21133796dd8b1991e89ab0eb9de5086ba6a4bb
+Author: edj36 <edj36@cornell.edu>
+Date:   Mon Nov 28 15:27:05 2016 -0500
+
+    the entire game compiles finally
+
+ scrabble/Makefile         |   2 +-
+ scrabble/data.ml          |   2 +-
+ scrabble/data.mli         |  59 ++++++++--
+ scrabble/filter.ml        |   1 +
+ scrabble/filter.mli       |   2 +
+ scrabble/game.ml          |  38 +++---
+ scrabble/game.mli         |   7 +-
+ scrabble/move.ml          | 282 +++++++++++++++++++++-----------------------
+ scrabble/move.mli         |  13 +-
+ scrabble/player.ml        |  33 ++++--
+ scrabble/player.mli       |   6 +-
+ scrabble/scrabble_test.ml |   1 -
+ scrabble/server.mli       |   4 +-
+ scrabble/state.ml         |  17 +--
+ scrabble/state.mli        |  13 +-
+ scrabble/utils.ml         | 295 ++++++++++++++++++++++------------------------
+ scrabble/utils.mli        |  81 ++++++-------
+ 17 files changed, 420 insertions(+), 436 deletions(-)
+
+commit 1b4ab49e54007e865b5d45262e82e8c2fc2d3406
+Author: edj36 <edj36@cornell.edu>
+Date:   Mon Nov 28 13:46:54 2016 -0500
+
+    adding mli files, cleaning code
+
+ scrabble/filter.ml  |  7 +++----
+ scrabble/filter.mli |  7 +++----
+ scrabble/game.ml    |  8 ++++++--
+ scrabble/game.mli   |  8 ++++++++
+ scrabble/tree.ml    | 20 --------------------
+ scrabble/tree.mli   | 20 ++++++++++++++++++++
+ 6 files changed, 40 insertions(+), 30 deletions(-)
+
+commit 552e821648d42f8311e9f4a4e3eef1835feccc11
+Author: edj36 <edj36@cornell.edu>
+Date:   Mon Nov 28 13:28:50 2016 -0500
+
+    removing sample.ml, cleaning code
+
+ scrabble/Makefile         |   2 +-
+ scrabble/data.ml          |  93 +++++++++++++++----------------
+ scrabble/data.mli         |  27 ++++-----
+ scrabble/game.ml          |   2 +-
+ scrabble/move.ml          |  16 ------
+ scrabble/move.mli         |  14 +++++
+ scrabble/player.ml        |  25 ++++-----
+ scrabble/player.mli       |   9 +--
+ scrabble/sample.ml        | 137 ----------------------------------------------
+ scrabble/scrabble_test.ml |   9 +++
+ scrabble/utils.ml         |   8 +++
+ scrabble/utils.mli        |   2 +
+ 12 files changed, 106 insertions(+), 238 deletions(-)
+
+commit bcee0a47d1528733c80e444c8a1c372f6ec653f7
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 13:09:42 2016 -0500
+
+    json parser
+
+ scrabble/game.ml | 106 +++++++++++++++++++++----------------------------------
+ 1 file changed, 41 insertions(+), 65 deletions(-)
+
+commit 357f979034cd412b77c8bac067d5a12ba9c40411
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 12:06:44 2016 -0500
+
+    json update
+
+ scrabble/info.json | 230 ++++++++++++++++++++++++++---------------------------
+ 1 file changed, 115 insertions(+), 115 deletions(-)
+
+commit 2c0b954856555cc2c4e89cd3aa27f79fd71d1544
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 11:38:48 2016 -0500
+
+    added json
+
+ scrabble/info.json | 157 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 157 insertions(+)
+
+commit 2ab894306aa8dc9fbbaf6e421ea2cc76b560fa00
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 28 10:20:36 2016 -0500
+
+    fixed switch some / collect
+
+ scrabble/game.ml  |  4 +++-
+ scrabble/move.ml  | 17 +++++++++++------
+ scrabble/utils.ml |  6 +++---
+ 3 files changed, 17 insertions(+), 10 deletions(-)
+
+commit 59925b7e5a1ef3a90ebaf5fb0428148e442c1c33
+Author: edj36 <edj36@cornell.edu>
+Date:   Sun Nov 27 23:33:43 2016 -0500
+
+    fixing some type errors, still some left
+
+ scrabble/data.ml    | 26 ++++++++++-------
+ scrabble/data.mli   | 81 ++++++++++++++++++----------------------------------
+ scrabble/filter.mli |  2 --
+ scrabble/game.ml    |  2 +-
+ scrabble/move.ml    |  2 +-
+ scrabble/player.ml  | 20 ++++++-------
+ scrabble/player.mli | 13 ++++++---
+ scrabble/state.ml   |  2 +-
+ scrabble/utils.ml   |  8 ++++++
+ scrabble/utils.mli  | 82 ++++++++++++++++++++++++++++++-----------------------
+ 10 files changed, 117 insertions(+), 121 deletions(-)
+
+commit 711b9abac9237ce9716dc3321c4d81992aea5196
+Author: edj36 <edj36@cornell.edu>
+Date:   Sun Nov 27 21:45:28 2016 -0500
+
+    renaming api to utils for clarity
+
+ scrabble/Makefile  |   3 ++
+ scrabble/api.ml    | 144 -----------------------------------------------------
+ scrabble/api.mli   |  51 -------------------
+ scrabble/filter.ml |   2 +-
+ scrabble/utils.ml  | 144 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ scrabble/utils.mli |  51 +++++++++++++++++++
+ 6 files changed, 199 insertions(+), 196 deletions(-)
+
+commit 8166c26a2773efaa52ced6b4cbae3a83f56a5624
+Author: edj36 <edj36@cornell.edu>
+Date:   Sun Nov 27 21:32:50 2016 -0500
+
+    updating testing suite
+
+ scrabble/Makefile         |  2 +-
+ scrabble/move_test.ml     | 12 ++----------
+ scrabble/scrabble_test.ml |  6 ++++++
+ 3 files changed, 9 insertions(+), 11 deletions(-)
+
+commit 83d872c50cc6181606090d81fbd6ba376b13f4bf
+Author: edj36 <edj36@cornell.edu>
+Date:   Sun Nov 27 20:07:45 2016 -0500
+
+    adding make file
+
+ scrabble/Makefile      |   4 +-
+ scrabble/_tags         |   0
+ scrabble/checktypes.sh | 384 -------------------------------------------------
+ 3 files changed, 2 insertions(+), 386 deletions(-)
+
+commit 32c322a0885877fafe158c82f355a2f310f3f724
+Author: edj36 <edj36@cornell.edu>
+Date:   Sun Nov 27 19:46:07 2016 -0500
+
+    renaming move.ml
+
+ scrabble/Move.ml | 168 -------------------------------------------------------
+ scrabble/move.ml | 168 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 168 insertions(+), 168 deletions(-)
+
+commit 241bc188c2e7e3154b3b1c9ad0d0e0e08d00d57e
+Author: edj36 <edj36@cornell.edu>
+Date:   Sun Nov 27 19:44:28 2016 -0500
+
+    renaming files
+
+ scrabble/API.ml   | 144 ------------------------------------------------------
+ scrabble/API.mli  |  51 -------------------
+ scrabble/Data.mli |  56 ---------------------
+ scrabble/api.ml   | 144 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ scrabble/api.mli  |  51 +++++++++++++++++++
+ scrabble/data.mli |  56 +++++++++++++++++++++
+ 6 files changed, 251 insertions(+), 251 deletions(-)
+
+commit d92924f1238717ff89febe124cd5fac2c9c0d8fc
+Author: edj36 <edj36@cornell.edu>
+Date:   Sun Nov 27 19:41:15 2016 -0500
+
+    updating comments
+
+ scrabble/API.ml   | 4 ++--
+ scrabble/Data.mli | 2 +-
+ scrabble/Move.ml  | 2 +-
+ scrabble/ai.mli   | 2 +-
+ scrabble/data.ml  | 1 +
+ 5 files changed, 6 insertions(+), 5 deletions(-)
+
+commit a42a800b64c0d3f073b1ed367fbaf2ca0120e1d6
+Author: edj36 <edj36@cornell.edu>
+Date:   Sun Nov 27 19:38:43 2016 -0500
+
+    updating names, adding make file
+
+ scrabble/Makefile         |   8 +
+ scrabble/VERSION          |   1 +
+ scrabble/_build/.DS_Store | Bin 6148 -> 0 bytes
+ scrabble/_build/_digests  |  10 --
+ scrabble/_build/_log      |  16 --
+ scrabble/checkenv.sh      |  49 ++++++
+ scrabble/checktypes.sh    | 384 ++++++++++++++++++++++++++++++++++++++++++++++
+ 7 files changed, 442 insertions(+), 26 deletions(-)
+
+commit ed2bce7d72aff53f10ccb5040b673f80a77973cd
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Sun Nov 27 19:05:31 2016 -0500
+
+    new GUI
+
+ scrabble/API.ml   |  6 +++---
+ scrabble/API.mli  |  2 +-
+ scrabble/Move.ml  |  3 ++-
+ scrabble/game.ml  |  6 +++++-
+ scrabble/state.ml | 10 +++++-----
+ 5 files changed, 16 insertions(+), 11 deletions(-)
+
+commit f917d63d15d3241511c4ce1f1178ecc14fd19f38
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Sun Nov 27 17:52:03 2016 -0500
+
+    small bug fix
+
+ scrabble/API.ml  | 10 +++++-----
+ scrabble/API.mli |  4 ++--
+ scrabble/Move.ml |  2 +-
+ 3 files changed, 8 insertions(+), 8 deletions(-)
+
+commit deb8cf169832ceb441052540ec0e6075027d8e42
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Sun Nov 27 17:47:59 2016 -0500
+
+    new function in API / new field in state
+
+ scrabble/API.ml    | 10 ++++++++++
+ scrabble/API.mli   |  4 ++++
+ scrabble/Data.mli  |  3 ++-
+ scrabble/Move.ml   | 16 +++++++++++-----
+ scrabble/data.ml   |  3 ++-
+ scrabble/filter.ml |  2 ++
+ scrabble/game.ml   |  3 ++-
+ scrabble/state.ml  | 17 +++++++++++------
+ 8 files changed, 44 insertions(+), 14 deletions(-)
+
+commit 86b62b7110248d4c8aaa6147f778a3ee396caf95
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Sun Nov 27 17:17:57 2016 -0500
+
+    collect
+
+ scrabble/API.ml     | 34 +++++++++++++++++++++++++++++++++-
+ scrabble/API.mli    |  3 ++-
+ scrabble/Move.ml    |  8 +++++---
+ scrabble/filter.ml  | 16 ++++++++++++++--
+ scrabble/filter.mli |  2 ++
+ 5 files changed, 56 insertions(+), 7 deletions(-)
+
+commit 5c2ff395379de9230b349e0944ee4eb97c5f1d9e
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Sun Nov 27 15:22:06 2016 -0500
+
+    FML
+
+ scrabble/API.mli |  2 ++
+ scrabble/Move.ml | 13 +------------
+ 2 files changed, 3 insertions(+), 12 deletions(-)
+
+commit d125acdaa13c8452d7bf62972312d5f5174afc9c
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Sun Nov 27 14:59:26 2016 -0500
+
+    filter
+
+ scrabble/API.ml     | 15 +++++++++++++++
+ scrabble/API.mli    | 10 +++++++++-
+ scrabble/Move.ml    | 19 ++++++++++++++-----
+ scrabble/filter.ml  | 30 ++++++++++++++++++++++++++++++
+ scrabble/filter.mli | 24 +++++-------------------
+ scrabble/state.ml   | 11 +++++++++++
+ 6 files changed, 84 insertions(+), 25 deletions(-)
+
+commit 8c41f8af893b6caf4eeda0e2cc4bb41776e359cb
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Sat Nov 26 21:03:06 2016 -0500
+
+    bug fixed
+
+ scrabble/API.ml  | 5 +++++
+ scrabble/API.mli | 3 +++
+ scrabble/Move.ml | 2 +-
+ 3 files changed, 9 insertions(+), 1 deletion(-)
+
+commit 419808bccabb63f29aa9f6d0e03528b1d4f0a946
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Sat Nov 26 13:39:07 2016 -0500
+
+    test GUI
+
+ scrabble/Move.ml | 14 --------------
+ scrabble/game.ml | 38 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 38 insertions(+), 14 deletions(-)
+
+commit 021ca4273ca895f58b481a5090f665039752c633
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Sat Nov 26 11:59:22 2016 -0500
+
+    update play command
+
+ scrabble/Human.ml  | 69 ----------------------------------------------
+ scrabble/Move.ml   |  8 ------
+ scrabble/game.ml   |  7 -----
+ scrabble/player.ml | 81 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ scrabble/state.ml  | 28 +++++++++++++------
+ 5 files changed, 101 insertions(+), 92 deletions(-)
+
+commit 0e677567ecce4cbfca0fdae50aaeb122ec50066f
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Sat Nov 26 11:49:41 2016 -0500
+
+    update play command
+
+ scrabble/API.ml   | 131 +++++++++++++++++++++++++++++++-----------------------
+ scrabble/API.mli  |  33 ++++++++++++++
+ scrabble/Data.mli |  55 +++++++++++++++++++++++
+ scrabble/Move.ml  |  26 ++++++++++-
+ scrabble/data.ml  |   2 +-
+ scrabble/game.ml  |   4 +-
+ scrabble/state.ml | 106 ++++++++++++++++++++++++++++++++++++++++++-
+ 7 files changed, 296 insertions(+), 61 deletions(-)
+
+commit 4031031727d4a59c9cc191f912201a38619dbb55
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Sat Nov 26 01:30:20 2016 -0500
+
+    more edit
+
+ scrabble/state.ml | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 52 insertions(+), 2 deletions(-)
+
+commit c2b671523033162927c959ee214c7656586fe192
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Sat Nov 26 01:23:09 2016 -0500
+
+    more edit
+
+ scrabble/Human.ml         |  69 ++++++++++++++++++++++++++++++++++++++++++++++
+ scrabble/Move.ml          |  21 ++++++++++++--
+ scrabble/_build/.DS_Store | Bin 0 -> 6148 bytes
+ scrabble/_build/_digests  |  10 +++++++
+ scrabble/_build/_log      |  16 +++++++++++
+ scrabble/game.ml          |  14 ++++------
+ scrabble/player.mli       |  11 ++------
+ 7 files changed, 123 insertions(+), 18 deletions(-)
+
+commit 39983b6c1f1dcda117bb0f5ec91bf625dc75f681
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Fri Nov 25 20:44:28 2016 -0500
+
+    switch command
+
+ scrabble/API.ml  |  2 +-
+ scrabble/Move.ml | 60 +++++++++++++++++++++++++++++++++++++++++++++-----------
+ scrabble/data.ml |  1 -
+ 3 files changed, 50 insertions(+), 13 deletions(-)
+
+commit 2c91d814568e6859d078ae8d54641eb0c41d798c
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Fri Nov 25 16:20:13 2016 -0500
+
+    Radix Tree
+
+ scrabble/dictionary.ml |  5 ++---
+ scrabble/tree.ml       | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+), 3 deletions(-)
+
+commit f8765ad584332950a6970a6e5c1413296a616662
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Fri Nov 25 15:22:47 2016 -0500
+
+    Scrabble Dictionary
+
+ scrabble/dictionary.ml | 178695 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 178695 insertions(+)
+
+commit 2bd3bec3bbb3934c4267c9d4701159365517b3c7
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Fri Nov 25 15:08:55 2016 -0500
+
+    edited API/ modified data
+
+ scrabble/API.ml  | 40 ++++++++++++++++++++++++++++++----------
+ scrabble/Move.ml |  4 ++--
+ scrabble/data.ml |  2 +-
+ scrabble/game.ml | 54 ++----------------------------------------------------
+ 4 files changed, 35 insertions(+), 65 deletions(-)
+
+commit f646aa8bc9e87c322eda190f00370b850adbd84c
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Fri Nov 25 13:04:25 2016 -0500
+
+    update state / created API
+
+ scrabble/API.ml  | 41 +++++++++++++++++++++++++++++++++++++++++
+ scrabble/Move.ml | 45 ++++++++++++++++++++++++++++++++++++---------
+ 2 files changed, 77 insertions(+), 9 deletions(-)
+
+commit 2ed579b489e9cf84b1fa076ab2aecff3620990d7
+Author: Ubuntu <ericzhang211@gmail.com>
+Date:   Fri Nov 25 12:44:45 2016 -0500
+
+    Initial REPL
+
+ scrabble/Move.ml |   8 -----
+ scrabble/game.ml | 103 +++++++++++++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 96 insertions(+), 15 deletions(-)
+
+commit ed34ab7135e2305f5f6b1a8bb0e40cbbaf6a0b3e
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Fri Nov 25 11:28:39 2016 -0500
+
+    modified data
+
+ scrabble/data.ml | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit be019622d260c0039ce255beb00a594c1d6c5bf5
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Fri Nov 25 11:25:46 2016 -0500
+
+    move edited
+
+ scrabble/Move.ml | 67 +++++++++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 47 insertions(+), 20 deletions(-)
+
+commit 7a0fb18a99fd697caaadd0d78f87c9fecfc83d38
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 23 19:42:54 2016 -0500
+
+    repl
+
+ scrabble/Move.ml | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+commit 7a73ae56ccbf25541e31886cec302d9776f2712e
+Author: Ubuntu <ubuntu@csvm>
+Date:   Wed Nov 23 18:29:59 2016 -0500
+
+    Move Module
+
+ scrabble/Move.ml      | 57 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ scrabble/data.ml      | 12 +++++++++--
+ scrabble/move_test.ml | 17 +++++++++++++++
+ scrabble/player.mli   | 22 ++++++++++----------
+ 4 files changed, 95 insertions(+), 13 deletions(-)
+
+commit f311bde4208cc9b9f113100cf7c9cf4d63b9fc38
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Wed Nov 23 14:27:36 2016 -0500
+
+    comments
+
+ scrabble/sample.ml | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
+
+commit ea20b9c4ade9146371d782a56f9f13d89eeec68e
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Wed Nov 23 11:13:12 2016 -0500
+
+    initial state
+
+ scrabble/game.ml   | 28 ++++++++++++++++++++++++++++
+ scrabble/sample.ml | 44 ++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 70 insertions(+), 2 deletions(-)
+
+commit 95a07157fe27ab27f4fddf6808c2cf6f8dff53d3
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 22 22:04:44 2016 -0500
+
+    initializing game state
+
+ scrabble/data.ml   |  7 ++---
+ scrabble/game.ml   |  7 ++---
+ scrabble/sample.ml | 87 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 92 insertions(+), 9 deletions(-)
+
+commit 09c9c3d3270d85a158a734f244233e86ce5de644
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 22 17:13:05 2016 -0500
+
+    data modified
+
+ scrabble/data.ml | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit 1da82f76737417d99a5686d44e8d98abd54ab700
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 22 16:35:55 2016 -0500
+
+    edit
+
+ scrabble/ai.ml     |  0
+ scrabble/data.ml   | 86 ++++++++++++++++++++++++++++--------------------------
+ scrabble/filter.ml |  0
+ scrabble/game.ml   | 31 +++++++++++++-------
+ scrabble/gui.ml    |  0
+ scrabble/player.ml |  0
+ scrabble/server.ml |  0
+ scrabble/state.ml  | 21 +++++++++++++
+ scrabble/state.mli | 11 +++----
+ 9 files changed, 90 insertions(+), 59 deletions(-)
+
+commit 9162a106b835d0de7a580ade36002795e6c24401
+Author: edj36 <edj36@cornell.edu>
+Date:   Tue Nov 15 10:14:59 2016 -0500
+
+    adding notes from TA meeting
+
+ scrabble_design_review_meeting.rtf | 90 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 90 insertions(+)
+
+commit a83bc8cbae8acefc56b0b7bd91e7d089db668ee0
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Thu Nov 10 18:17:13 2016 -0500
+
+    initial commit
+
+ scrabble/game.ml | 67 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+
+commit b430fb5688f3e915893dc8454484e82db74b82df
+Author: edj36 <edj36@cornell.edu>
+Date:   Thu Nov 10 02:07:57 2016 -0500
+
+    submission for MS1
+
+ 3110-ms1-design.pdf   | Bin 0 -> 108041 bytes
+ interfaces.zip        | Bin 0 -> 3953 bytes
+ interfaces/ai.mli     |  28 ++++++++++++++++++++++++++++
+ interfaces/filter.mli |  21 +++++++++++++++++++++
+ interfaces/gui.mli    |  18 ++++++++++++++++++
+ interfaces/player.mli |  27 +++++++++++++++++++++++++++
+ interfaces/server.mli |  21 +++++++++++++++++++++
+ interfaces/state.mli  |  24 ++++++++++++++++++++++++
+ 8 files changed, 139 insertions(+)
+
+commit 484e51e4be2f35817fc6fa849552185047458342
+Author: edj36 <edj36@cornell.edu>
+Date:   Thu Nov 10 01:26:04 2016 -0500
+
+    mli files for submission with MS1
+
+ scrabble/ai.mli     | 23 +++++++++++++++--------
+ scrabble/data.ml    | 41 +++++++++++++++++++++++++++++++++++++++++
+ scrabble/data.mli   | 39 ---------------------------------------
+ scrabble/filter.mli | 19 +++++++++++--------
+ scrabble/gui.mli    | 15 ++++++++++++---
+ scrabble/player.mli | 39 ++++++++++++++++++++-------------------
+ scrabble/server.mli | 21 +++++++++++++--------
+ scrabble/state.mli  | 24 ++++++++++++++++--------
+ 8 files changed, 128 insertions(+), 93 deletions(-)
+
+commit 060acb1edd25c94e7f7995d5ea83e3f15b5bb822
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Wed Nov 9 23:59:01 2016 -0500
+
+    mli
+
+ scrabble/ai.mli     | 17 ++++-------------
+ scrabble/gui.mli    |  3 ++-
+ scrabble/player.mli | 11 +++++------
+ scrabble/server.mli |  1 +
+ scrabble/state.mli  |  8 ++------
+ 5 files changed, 14 insertions(+), 26 deletions(-)
+
+commit 7663b0e150fee4e74e256d86f97158aa256f4254
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Wed Nov 9 23:54:29 2016 -0500
+
+    mli
+
+ scrabble/gui.mli | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit c764f7de599ec295940ef5d819adf94a9eeeee9a
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Wed Nov 9 23:50:40 2016 -0500
+
+    mli
+
+ scrabble/ai.mli         |  2 +-
+ scrabble/dictionary.mli |  3 ---
+ scrabble/filter.mli     | 18 ++++++++++++++++++
+ scrabble/gui.mli        |  6 +++++-
+ scrabble/player.mli     | 12 ++++--------
+ scrabble/server.mli     | 16 ++++++++++++----
+ scrabble/turn.mli       | 16 ----------------
+ 7 files changed, 40 insertions(+), 33 deletions(-)
+
+commit aa82ec257ea8cb05b68ee045f8c95c872c8d3a31
+Author: pehuenmoure <ppm44@cornell.edu>
+Date:   Wed Nov 9 22:22:10 2016 -0500
+
+    I'm contributing
+
+ scrabble/gui.mli | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 96fa4cf2bdd0bc4498462ed3abec6e73341bbcb2
+Author: edj36 <edj36@cornell.edu>
+Date:   Wed Nov 9 21:25:34 2016 -0500
+
+    cleaning comments
+
+ scrabble/server.mli | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit d56e7039afe03a68b82f1e872d8329a108e11f73
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Wed Nov 9 19:08:33 2016 -0500
+
+    state.mli
+
+ scrabble/state.mli | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
+
+commit 20497a4123fca46280391b72ce08a4296980f586
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Wed Nov 9 15:40:36 2016 -0500
+
+    player.mli
+
+ scrabble/player.mli | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+commit 74de4747897ff2c5c136f5f122ef738345d448ce
+Author: edj36 <edj36@cornell.edu>
+Date:   Tue Nov 8 23:45:07 2016 -0500
+
+    updating mli files
+
+ scrabble/data.mli   | 6 ++++++
+ scrabble/server.mli | 6 +++++-
+ scrabble/state.mli  | 2 +-
+ scrabble/turn.mli   | 2 +-
+ 4 files changed, 13 insertions(+), 3 deletions(-)
+
+commit 234de9bf207822914051d9dffcaea6bf90f0ddf0
+Author: edj36 <edj36@cornell.edu>
+Date:   Tue Nov 8 19:51:29 2016 -0500
+
+    moving repl
+
+ scrabble/repl.mli | 3 ---
+ scrabble/turn.mli | 2 ++
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+commit 779e4c06aa276ae3787061a18f0b68612dc4b5ab
+Author: edj36 <edj36@cornell.edu>
+Date:   Tue Nov 8 18:35:54 2016 -0500
+
+    consolidating server and control into same mli file
+
+ scrabble/control.mli | 3 ---
+ 1 file changed, 3 deletions(-)
+
+commit e6304c0c46cb59c4374e7c009896f96358a58100
+Author: edj36 <edj36@cornell.edu>
+Date:   Tue Nov 8 18:22:24 2016 -0500
+
+    updating files
+
+ scrabble/repl.ml    | 0
+ scrabble/server.mli | 4 ++++
+ 2 files changed, 4 insertions(+)
+
+commit 9ce4d3a097a841c6233b28400fc6af1fecab6827
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 8 16:08:39 2016 -0500
+
+    ai mli
+
+ scrabble/ai.mli   | 22 +++++++++++++++++++---
+ scrabble/turn.mli |  4 ++--
+ 2 files changed, 21 insertions(+), 5 deletions(-)
+
+commit bc16ddcd7e633a1336d6641cfd2d434781f5d172
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 8 09:21:24 2016 -0500
+
+    intial
+
+ scrabble/ai.mli   | 9 +++++++++
+ scrabble/repl.mli | 2 +-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+commit 4ca6f2fac8f6e681a2ed13cf293cec05073bef75
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 8 01:24:55 2016 -0500
+
+    intial
+
+ scrabble/ai.mli     |  3 ++-
+ scrabble/player.mli | 18 +++++++++++++++++-
+ scrabble/state.mli  |  4 ++++
+ scrabble/turn.mli   | 11 ++++++++---
+ 4 files changed, 31 insertions(+), 5 deletions(-)
+
+commit b98c256dcb0fa83b067efedce908f20d222810de
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Tue Nov 8 00:22:01 2016 -0500
+
+    intial
+
+ scrabble/data.mli | 33 +++++++++++++++++++++++++++++++++
+ scrabble/turn.mli |  6 ++++++
+ 2 files changed, 39 insertions(+)
+
+commit 84da15c6a7e34ac55f0630dd98be6e3e2ecb8a17
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 7 23:45:16 2016 -0500
+
+    intial
+
+ scrabble/dictionary.mli | 3 +++
+ scrabble/repl.mli       | 3 +++
+ scrabble/turn.mli       | 3 +++
+ 3 files changed, 9 insertions(+)
+
+commit 8fd4e02413535a0a8f60d171c7baff29462d2217
+Author: Kenta Takatsu <kt426@cornell.edu>
+Date:   Mon Nov 7 23:42:48 2016 -0500
+
+    intial
+
+ scrabble/ai.mli      | 4 ++++
+ scrabble/control.mli | 3 +++
+ scrabble/gui.mli     | 4 ++++
+ scrabble/player.mli  | 4 ++++
+ scrabble/state.mli   | 4 ++++
+ 5 files changed, 19 insertions(+)
+
+commit 6fdb18c9faad94a465051bb6fa26e5a79fd24f8c
+Author: edj36 <edj36@cornell.edu>
+Date:   Mon Nov 7 23:26:05 2016 -0500
+
+    adding scrabble folder
+
+ scrabble/repl.ml | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit e4dcea3504707cecd296b12e0354ca52ecfa90a0
+Author: edj36 <edj36@cornell.edu>
+Date:   Mon Nov 7 23:24:14 2016 -0500
+
+    adding stuff
+
+ gitlog.txt | 69 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
+
 commit deb31917cfb28c613fb1f51976f9a312fe0618b3
 Author: edj36 <edj36@cornell.edu>
 Date:   Thu Oct 6 01:47:33 2016 -0400
