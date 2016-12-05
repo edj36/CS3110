@@ -27,3 +27,6 @@ Game-play:
  * $ make play
 
 Enjoy :)
+
+* If "make" commands don't work, make sure you are in the 
+  folder containing the "Makefile" *
