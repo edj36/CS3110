@@ -1,7 +1,6 @@
 open Utils
 open Data_t
 open Filter
-open State
 
 module type Player = sig
 	(* type for input type *)

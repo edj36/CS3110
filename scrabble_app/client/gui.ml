@@ -1,7 +1,6 @@
 open Data_t
 open Utils
 open Player
-open State
 open Yojson.Basic.Util
 
 (*********** GUI ***********)
@@ -125,10 +124,11 @@ let is_tie lst =
  * If game ends,
  Evaluate the currrent player and call
  * function in Player module. *)
-let rec repl c_state : Data.game_state =
-  if 15 = c_state.counter || c_state.quit
-  then end_game c_state
+let rec repl c_state name =
+  if 15 = c_state.counter || c_state.quit then end_game c_state
   else let pl = fst (current_player_rack c_state) in
+  let pl_n = match pl with `Human n1 -> n1 | `AI (n2,i) -> n2 in
+  if pl_n = name then
   let () = update_gui c_state in
   let new_state = match pl with
     | `AI n -> AI.execute_move c_state c_state
@@ -143,8 +143,9 @@ let rec repl c_state : Data.game_state =
       | Error_not_in_dictionary -> print_message "error_not_in_dictionary"; c_state
       | Error_existing_letter -> print_message "error_existing_letter"; c_state
       | _ -> let () = print_endline "Invalid command" in c_state in
-  let _ = print_endline "" in
-  repl new_state
+    let _ = print_endline "" in
+    repl new_state name
+  else repl c_state name
 
 (* [end_game] : state -> state
  * Displays a window when game is ended. Waits for the next command. Player can
@@ -179,31 +180,34 @@ and end_game state =
  * if there are invalid inputs from users.
  * Initializes state and enter main repl *)
 and initialize_game () =
-   ANSITerminal.print_string [ANSITerminal.green]
-   "\n\nPlease Enter the Players and Names (4 Players Max)\n\n";
-   print_endline "* Type [Human Eric] or [H Eric] for human player";
-   print_endline
-   "* Type [AI Kenta 5] or [A Kenta 5] for level 5 AI player (level: 1 ~ 7)";
-   let () = print_string
-   "(Please do not choose same name for multiple players)\n\n> " in
    let rec helper str =
-      let state_str = Scrabble_client.setup player_list in 
-      let store = match state_str with 
-      | "error" -> print_string "Invalid players"; ""
-      | _ -> state_str in 
-        begin match store with 
+      let temp_state = Scrabble_client.get_state () in
+      match temp_state.player_racks with
+      | [] ->
+        ANSITerminal.print_string [ANSITerminal.green]
+        "\n\nPlease Enter the Players and Names (4 Players Max)\n\n";
+        print_endline "* Type [Human Eric] or [H Eric] for human player";
+        print_endline
+        "* Type [AI Kenta 5] or [A Kenta 5] for level 5 AI player (level: 1 ~ 7)";
+        let () = print_string
+        "(Please do not choose same name for multiple players)\n\n> " in
+        let st = Scrabble_client.setup str in
+        let state_str  = Data_j.string_of_game_state st in
+        let store = begin match state_str with
+        | "error" -> print_string "Invalid players"; ""
+        | x -> x end in
+          begin match store with
           | "" -> helper (read_line ())
-          | _ -> repl (Data_j.game_state_of_string store) 
-        end
-
-      (*let player_list = try get_players split with
-       | Error_duplicate_names -> print_message "error_duplicate_names"; []
-       | Error_too_many_players -> print_message "error_too_many_players"; []
-       | Error_ai_level -> print_message "error_ai_level"; []
-       | Failure _ -> print_string "Invalid players"; [] in
-        match player_list with
-        | [] -> print_string "\n\n> "; helper (read_line ())
-        | _ -> repl (Scrabble_client.setup player_list) in *)
+          | _ -> ANSITerminal.print_string [ANSITerminal.green]
+            "\n\nPlease Enter your name \n\n> ";
+            let name = read_line () in
+            let new_state = Data_j.game_state_of_string store in
+            repl new_state name end
+      | _ ->
+        let _ = ANSITerminal.print_string [ANSITerminal.green]
+        "\n\nPlease Enter your name \n\n> " in
+        let name = read_line () in
+        repl temp_state name in
     helper (read_line ())
 
 (* [main_manu] : unit -> unit

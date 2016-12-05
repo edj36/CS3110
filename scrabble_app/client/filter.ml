@@ -55,7 +55,7 @@ let is_valid move state = match move with
     } ->
     let old_board = state.board in
     let new_board = try place_string str dir (translate_coodinate crd) old_board with
-    | `Failure _ -> old_board in
+    | Failure _ -> old_board in
     if old_board = new_board then false
     else
     (* step 0 : DOES IT FIT ON THE BOARD *)
