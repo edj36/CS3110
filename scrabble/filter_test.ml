@@ -8,7 +8,7 @@ open State
 let players = [Human "A"]
 let state = setup players
 let a_hand = List.map (fun x -> char_to_letter x state.letter_bag )
-  ['A';'B';'C';'D';'E';'F';'G']
+  ["A";"B";"C";"D";"E";"F";"G"]
 
 let test_state =
 {

@@ -266,8 +266,12 @@ module AI : (Player with type t = Data.game_state) =  struct
       empty_move c_state
     else
 	    try check_moves board c_state (0,0) with
-	    | _ -> let hand = snd (current_player_rack c_state) in
-			let n = List.length hand in
+	    | _ -> let hand = [] in
+			match hand with
+			| [] ->  SwitchAll
+			| _ -> failwith "no" in
+
+			(* let n = List.length hand in
 			let sorted_hand = List.rev
 			(List.sort (fun x y -> Pervasives.compare x.pt y.pt) hand) in
 			let ones = List.filter (fun x -> x.character <> "E" || x.character <> "A")
@@ -276,9 +280,9 @@ module AI : (Player with type t = Data.game_state) =  struct
 				if n = 0 then []
 				else get_nth (lst, n-1) :: split (n-1) lst in
 			let high_char = letter_to_char (split (n/2) sorted_hand) in
-			match ones with
-			| [] -> SwitchAll
-			| _ -> SwitchSome (letter_to_char ones) in
+			match ones with *)
+			(* | [] -> SwitchAll
+			| _ -> SwitchSome (letter_to_char ones) in *)
 		validate move s_state
 
 end
