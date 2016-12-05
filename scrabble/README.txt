@@ -1,17 +1,28 @@
 README 
 
+Eric Johnson (edj36)
+Kenta Takatsu (kt426)
+Eric Zhang (ez79)
+Pehuen Moure (ppm44)
 
-Instructions for Setup
+Welcome to Scrabble!
 
- Open Terminal
+(We assume you have Ocaml and OPAM installed per Fall 2016
+ CS 3110 course installation guidelines.)
 
+Installation:
+ * Download .zip file of source code
+ * $ cd /path/to/scrabble/folder
+ * $ update opam 
+ * $ opam install ocaml-radixtree
+ * $ opam install yojson
+ * $ opam install ANSITerminal
 
+Game-play:
+ * $ cd /path/to/scrabble/folder
+ * $ make clean 
+ * $ make play 
 
-
-Radix-Tree Installation
- * cd to the scrabble folder
- * Type “update opam”
- * Type “opam install ocaml-radixtree”
- * Type "Make Play" to start the scrabble game
+Enjoy :) 
 
 

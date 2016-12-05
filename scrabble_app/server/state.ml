@@ -169,9 +169,8 @@ let setup str =
     | [] -> "error"
     | _ -> 
       let src = Yojson.Basic.from_file "info.json" in
-      let initial_bag = init_letter_bag src in
-      let st = 
-        {
+      let initial_bag = init_letter_bag src in 
+      let st = {
           board = initilize_board ();
           score_board = initialize_score players;
           letter_bag = initial_bag;
@@ -180,7 +179,7 @@ let setup str =
           counter = 0;
           quit = false
         } in 
-        Data_j.string_of_game_state st 
+      Data_j.string_of_game_state st
   end 
   
 
