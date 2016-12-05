@@ -1,0 +1,206 @@
+{
+  "letter_bag":
+  [
+    { "character": "A",
+      "pt": 1,
+      "count": 9},
+    { "character": "B",
+      "pt": 3,
+      "count": 2},
+    { "character": "C",
+      "pt": 3,
+      "count": 2},
+    { "character": "D",
+      "pt": 2,
+      "count": 4},
+    { "character": "E",
+      "pt": 1,
+      "count": 12},
+    { "character": "F",
+      "pt": 4,
+      "count": 2},
+    { "character": "G",
+      "pt": 2,
+      "count": 3},
+    { "character": "H",
+      "pt": 4,
+      "count": 2},
+    { "character": "I",
+      "pt": 1,
+      "count": 9},
+    { "character": "J",
+      "pt": 8,
+      "count": 1},
+    { "character": "K",
+      "pt": 5,
+      "count": 1},
+    { "character": "L",
+      "pt": 1,
+      "count": 4},
+    { "character": "M",
+      "pt": 3,
+      "count": 2},
+    { "character": "N",
+      "pt": 1,
+      "count": 6},
+    { "character": "O",
+      "pt": 1,
+      "count": 8},
+    { "character": "P",
+      "pt": 3,
+      "count": 2},
+    { "character": "Q",
+      "pt": 10,
+      "count": 1},
+    { "character": "R",
+      "pt": 1,
+      "count": 6},
+    { "character": "S",
+      "pt": 1,
+      "count": 4},
+    { "character": "T",
+      "pt": 1,
+      "count": 6},
+    { "character": "U",
+      "pt": 1,
+      "count": 4},
+    { "character": "V",
+      "pt": 4,
+      "count": 2},
+    { "character": "W",
+      "pt": 4,
+      "count": 2},
+    { "character": "X",
+      "pt": 8,
+      "count": 1},
+    { "character": "Y",
+      "pt": 4,
+      "count": 2},
+    { "character": "Z",
+      "pt": 10,
+      "count": 1}
+  ],
+  "Center": [
+    {"x" : 7, "y":7}
+  ],
+  "Triple_word": [
+    {"x" : 0, "y":0},
+    {"x" : 0, "y":7},
+    {"x" : 0, "y":14},
+    {"x" : 7, "y":0},
+    {"x" : 7, "y":14},
+    {"x" : 14, "y":0},
+    {"x" : 14, "y":7},
+    {"x" : 14, "y":14}
+  ],
+  "Triple_letter": [
+    {"x" : 1, "y":5},
+    {"x" : 1, "y":9},
+    {"x" : 5, "y":1},
+    {"x" : 5, "y":5},
+    {"x" : 5, "y":9},
+    {"x" : 5, "y":13},
+    {"x" : 9, "y":1},
+    {"x" : 9, "y":5},
+    {"x" : 9, "y":9},
+    {"x" : 9, "y":13},
+    {"x" : 13, "y":5},
+    {"x" : 13, "y":9}
+  ],
+  "Double_word": [
+    {"x" : 1, "y":1},
+    {"x" : 2, "y":2},
+    {"x" : 3, "y":3},
+    {"x" : 4, "y":4},
+    {"x" : 10, "y":4},
+    {"x" : 11, "y":3},
+    {"x" : 12, "y":2},
+    {"x" : 13, "y":1},
+    {"x" : 4, "y":10},
+    {"x" : 3, "y":11},
+    {"x" : 2, "y":12},
+    {"x" : 1, "y":13},
+    {"x" : 10, "y":10},
+    {"x" : 11, "y":11},
+    {"x" : 12, "y":12},
+    {"x" : 13, "y":13}
+  ],
+  "Double_letter":[
+    {"x" : 0, "y":3},
+    {"x" : 0, "y":11},
+    {"x" : 2, "y":6},
+    {"x" : 2, "y":8},
+    {"x" : 3, "y":7},
+    {"x" : 3, "y":0},
+    {"x" : 11, "y":0},
+    {"x" : 6, "y":2},
+    {"x" : 8, "y":2},
+    {"x" : 7, "y":3},
+    {"x" : 14, "y":3},
+    {"x" : 14, "y":11},
+    {"x" : 12, "y":6},
+    {"x" : 12, "y":8},
+    {"x" : 11, "y":7},
+    {"x" : 3, "y":14},
+    {"x" : 11, "y":14},
+    {"x" : 6, "y":12},
+    {"x" : 8, "y":12},
+    {"x" : 7, "y":11},
+    {"x" : 6, "y":6},
+    {"x" : 8, "y":6},
+    {"x" : 8, "y":8},
+    {"x" : 6, "y":8}
+  ],
+  "y_index" : "    A     B     C     D     E     F     G     H     I     J     K     L     M     N     O\n",
+  "commands" : "\n*    [play / p]   -->  Place a word on the board.
+                       ex. [play apple across h 8] or [p banana down h 8]
+
+*  [shuffle / s]  -->  Shuffle your hand. DOES NOT consume a turn.
+
+*  [swapall / sa] -->  Swap all letters in your hand. Consume 1 turn.
+                       If players [swapall] when there is 0 letter left, game ends.
+                       If all players [swapall] 15 times consecutively, game ends.
+
+* [swapsome / ss] -->  Swap some of letters from your hand. Consume 1 turn.
+                       If players [swapsome] when there is 0 letter left, game ends.
+                       ex. [swapsome a b c] or [ss a b c] or [ss abc]
+
+*      [pass]     -->  Pass your turn.
+
+*    [quit / q]   -->  Quit the game.\n\n",
+"error_existing_letter" : "Cannot override exsiting letter",
+"error_word_not_fit" : "Word doesnt fit!",
+"error_not_center" : "You have to play across center!",
+"error_not_in_dictionary" : "Not a valid word!",
+"error_not_have": "You can't use a letter you don't have!",
+"error_not_touching" : "New word has to be adjacent to the existing word!",
+"error_too_many_players" : "Too many players! you can play with up to 4 players",
+"error_duplicate_names" : "Please do not select same name for multiple players!",
+"error_ai_level" : "Please select 1 ~ 7 for AI level",
+"tutorial" : "Scrabble Tutorial\n
+    ==== Game Play ====
+Scrabble is a popular board game in which players score points by placing tiles
+that spell out words onto a 15 x 15 game board. Words either flow from left to
+right in rows or downwards in columns.\n
+    ==== Scoring ====
+Each tile is assigned a point value and positions on the board may have one of
+four bonus values (double letter, triple letter, double word, and triple word).
+The total point value of a word is the sum of the individual tiles that make up
+the word. A tile played on a double or triple letter position multiplies the point
+value of the tile by the appropriate amount, while a word with any tile placed in a
+double or triple word position multiplies the total point value of the word.
+The total point value of the move is the total point value of the word with any
+bonus multipliers factored in. \n
+    ==== Turns ====
+Each turn, a player has the option to play a word (either across or down), shuffle
+their rack, switch out tiles from their rack, or pass. If all the players pass
+during a cycle, the game ends. Playing a word requires players to use only the
+letters from their rack and available letters on the board. The word played must
+be adjacent to at least one tile currently on the board, and all new words by the
+move must be valid according to the scrabble dictionary. \n
+    ==== Conclusion ====
+A game ends if all the letters are used up and the players cannot play a valid
+move with the letters currently in their racks, or if one player uses up all their
+letters and the bag is empty. Alternatively, the game ends if all the players
+pass in a given cycle. The player with the highest scores wins the game. \n\n"
+}
