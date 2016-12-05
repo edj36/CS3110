@@ -245,7 +245,8 @@ let main_menu () =
   match String.trim (String.lowercase_ascii str) with
     | "quit" | "q"-> print_string "Thank you for playing!\n\n";
     | "play" | "p"-> (fun x -> ()) (initialize_game ())
-    | "help" | "h"-> print_string "message. Please type [play / p] or [quit /q]\n\n> ";
+    | "help" | "h"-> print_message "tutorial";
+    print_string "Please type [play / p] or [quit /q]\n\n> ";
       helper2 (read_line ())
     | _ -> print_string "Please type correct command\n\n> "; helper2 (read_line ()) in
   helper2 (read_line())

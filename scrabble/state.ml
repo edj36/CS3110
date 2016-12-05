@@ -4,7 +4,8 @@ open Yojson.Basic.Util
 
 (********** JASON PARSER **********)
 
-(* [init_letter] is a letter list representation of intial letter bag *)
+(* [init_letter] is a letter list representation of intial letter bag
+ * Parse information stored in a Json file and creates a letter bag *)
 let init_letter_bag src =
   let lb = src |> member "letter_bag" |> to_list in
   let chr = List.map (fun x -> x |> member "character" |> to_string) lb in
@@ -33,6 +34,61 @@ let init_tile src name =
     | h1::t1, h2::t2 -> (h1,h2) :: helper t1 t2
     | _ -> failwith "list unbalanced" in
   helper x y
+
+(********** UPDATE LETTER BAG **********)
+
+(* [add_or_draw_char] is a letter list representing the state
+* after adding or drawing a letter from the list
+* [op] : either (+) or (-) *)
+let rec add_or_draw_char c bag op =
+  match bag with
+  | []-> ()
+  | h::t ->
+  if h.character = c then h.count <- op h.count 1
+  else add_or_draw_char c t op
+
+(* [rand_char] is a letter option which is simulated after randomly pick
+* one letter from the letter bag *)
+let rand_char bag =
+  let sum = List.fold_left (fun acc elm -> acc + elm.count) 0 bag in
+  match sum with
+  | 0 -> failwith "Bag is empty!"
+  | _ ->
+  Random.self_init ();
+  let num = Random.int sum in
+  let rec helper num lst = match lst with
+  | [] -> None
+  | h :: t -> if (num <= h.count) && (h.count <> 0) then Some h
+  else helper (num-h.count) t in helper num bag
+
+(* [draw_letters] represents the letter list after drawing specified
+* number of letters from bag. *)
+let rec draw_letters num bag =
+  let sum = List.fold_left (fun a e -> a + e.count) 0 bag in
+  if sum >= num then
+    match num with
+    | 0 -> []
+    | _ -> let l = rand_char bag in
+    (match l with
+    | None -> failwith "Bag is enpty";
+    | Some l -> add_or_draw_char l.character bag (-);
+    l::draw_letters (num-1) bag)
+  else draw_letters sum bag
+
+(* [add_letters] represents the letter list after adding the letters to the list *)
+let rec add_letter hands bag =
+  match hands with
+  | [] -> ()
+  | h :: t -> add_or_draw_char h.character bag (+); add_letter t bag
+
+(* [remove_letters] represents unit type produced after updating mutable field
+ * in letter bag *)
+let remove_string str bag =
+  let rec helper lst bag =
+    match lst with
+      | [] -> ()
+      | h::t -> add_or_draw_char h bag (-); helper t bag in
+  helper (string_to_char_list str) bag
 
 (********** INITIALIZE STATE **********)
 
@@ -70,7 +126,7 @@ let rec initialize_rack (players: player list) bag =
 
 (********** SETUP **********)
 
-(* [initialize_state] is a representation of intial game state *)
+(* [initialize_state] is a type game_state representation of intial game state *)
 let setup players =
   let src = Yojson.Basic.from_file "info.json" in
   let initial_bag = init_letter_bag src in
@@ -84,6 +140,8 @@ let setup players =
     quit = false
   }
 
+
+
 (********** UPDATE STATE **********)
 
 (* [update_racks] is an updated player_rack list after substituting the old
@@ -95,8 +153,6 @@ let update_racks hands s =
     | [] -> []
     | h::t -> if fst h = fst hands then hands::t else h::(helper hands t) in
   helper hands racks
-
-
 
 (* [update_switch_all] is a new type game_state after executing
  * switch all letters *)
@@ -127,14 +183,14 @@ let update_switch_some lst state =
       | h::t -> helper t (remove h hands)
     in helper letters (snd player) in
   let new_hand =
-  (fst player, removed @ (draw_letters (List.length letters) state.letter_bag)) in
+  (fst player, shuffle (removed @ (draw_letters (List.length letters) state.letter_bag))) in
   {
     board = state.board;
     score_board = state.score_board;
     letter_bag = state.letter_bag;
     player_racks = update_racks new_hand state;
     turn = state.turn + 1;
-    counter = 0;
+    counter = state.counter + 1;
     quit = false
   }
 
@@ -171,7 +227,6 @@ let collect_words_on_crd crd board letter_bag=
   (helper crd board Across 1) + (helper crd board Across (-1)) +
   (helper crd board Down 1) + (helper crd board Down (-1)) - 3 * init_pt
 
-
 (* [bonus_score] is an int representation of all bonus points collected from
  * the list of coordinates *)
 let rec bonus_score crds board letter_bag=
@@ -194,6 +249,7 @@ let rec bonus_score crds board letter_bag=
   | Center -> bonus_score t board letter_bag
   | Normal -> bonus_score t board letter_bag
 
+(* [update_score] calculates the result score of previous move *)
 let update_score old_w old_c new_board state =
   let new_w = get_newwords (collect new_board) old_w in
   let new_c = get_newcoordinates (collect_coordinates new_board) old_c in

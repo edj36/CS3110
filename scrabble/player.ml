@@ -27,6 +27,14 @@ module Human : (Player with type t = string) = struct
 		 (Char.code lower_x >= Char.code 'a') &&
 		 (Char.code 'o' >= Char.code lower_x)
 
+	(* [string_to_direction] is a type direction representation
+	 * of string type input [s] *)
+	let string_to_direction s =
+	  match s with
+	  | "across"-> Across
+	  | "down" -> Down
+	  | _ -> failwith "Invaild direction"
+
 	(* [execute_move] is the updated state based on string type user input.
 	 * parse the string input and varify the move, send the move type to
 	 * filter module to check the validy of the move. only checks the
@@ -44,18 +52,18 @@ module Human : (Player with type t = string) = struct
 	 * current state, and error message "Invalid command" *)
 	let execute_move s_move c_state =
 		let split = Str.split (Str.regexp " +") (s_move ^ " ") in
-		let move = String.lowercase_ascii (List.nth split 0) in
+		let move = String.lowercase_ascii (get_nth (split,0)) in
 		let n = List.length split in
 		let command = match move with
 		| "play" | "p" ->
-			let coordinate = (String.get (List.nth split 3) 0,
-			(int_of_string (List.nth split 4))) in
+			let coordinate = (String.get (get_nth (split, 3)) 0,
+			(int_of_string (get_nth (split, 4)))) in
 			if n = 5 && (check_coordinate coordinate) then
 			Play
 			{
-				word = List.nth split 1;
+				word = get_nth (split, 1);
 				direction = string_to_direction (String.lowercase_ascii
-          (List.nth split 2));
+          (get_nth (split, 2)));
 				coordinate = coordinate
 			}
 			else raise Invalid
@@ -131,7 +139,7 @@ module AI : (Player with type t = Data.game_state) =  struct
 		 letters from the players rack*)
 	let get_rack_letters rack length =
 	 let (player, rack_letters) = rack in
-		sublist rack_letters length
+		sublist (shuffle rack_letters) length
 
 	(* [make_str] is a string list of single characters from a list of letters*)
 	let rec make_str letterlst = match letterlst with
@@ -278,7 +286,19 @@ module AI : (Player with type t = Data.game_state) =  struct
       empty_move c_state
     else
 	    try check_moves board c_state (0,0) with
-	    | _ -> SwitchAll in
+	    | _ -> let hand = snd (current_player_rack c_state) in
+			let n = List.length hand in
+			let sorted_hand = List.rev
+			(List.sort (fun x y -> Pervasives.compare x.pt y.pt) hand) in
+			let ones = List.filter (fun x -> x.character <> 'E' || x.character <> 'A')
+			sorted_hand in
+			let rec split n lst =
+				if n = 0 then []
+				else get_nth (lst, n-1) :: split (n-1) lst in
+			let high_char = letter_to_char (split (n/2) sorted_hand) in
+			match ones with
+			| [] -> SwitchAll
+			| _ -> SwitchSome (letter_to_char ones) in
 		validate move s_state
 
 end

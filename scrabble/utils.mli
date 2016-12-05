@@ -11,9 +11,6 @@ val get_nth: 'a list * int -> 'a
 (* [letter_to_char] represents chr list of input letter list *)
 val letter_to_char : Data.letter list -> char list
 
-(* [string_to_direction] is a type direction representation of input string *)
-val string_to_direction : string -> Data.direction
-
 (* [remove] represents 'a list after removing specified element from the
  * input list *)
 val remove : 'a -> 'a list -> 'a list
@@ -24,22 +21,12 @@ val string_to_char_list : string -> char list
 (* [shuffle] is an 'a list after shuffling elements *)
 val shuffle : 'a list -> 'a list
 
+(* [translate_coodinate] is an int*int representation of char*int coordinate*)
 val translate_coodinate : (char * int) -> (int * int)
-(*******************  update letter bag  *******************)
 
 (* [char_to_letter] represents letter type of input char *)
 val char_to_letter : char -> Data.letter list -> Data.letter
 
-(* [draw_letters] represents specified length of letter list drawn from
- * letter bag. letter bag will update its field *)
-val draw_letters : int -> Data.letter list -> Data.letter list
-
-(* [add_letters] represents unit resulting from updating the field of letter bag
- * after adding letter list to the letter bag *)
-val add_letter : Data.letter list -> Data.letter list -> unit
-
-(* [remove_string] updates the letter bag so that it removes specified string *)
-val remove_string : string -> Data.letter list -> unit
 (*******************  update state  *******************)
 
 (* [current_player_rack] represents the player_rack of current player_rack*)
